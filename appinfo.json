@@ -1,0 +1,9 @@
+{
+	"id": "net.sytes.zelmo.fivedice",
+	"version": "0.5.0",
+	"vendor": "Daren Beattie",
+	"type": "web",
+	"main": "index.html",
+	"title": "Five Dice",
+	"icon": "images/Die5Plain.png"
+}
