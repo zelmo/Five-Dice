@@ -1,3 +1,8 @@
+//Declare a namespace and some constants.
+FiveDice = {};
+FiveDice.suggestedScoreColor = "teal";
+FiveDice.setScoreColor = "black";
+
 function StageAssistant() {
 }
 
