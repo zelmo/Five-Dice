@@ -13,6 +13,12 @@ body {
 	width: 50%;
 }
 
+#subtotal {
+	position: relative;
+	top: 25px;
+	left: 17px;
+}
+
 .scoreRow {
 	height: 45px;
 }
@@ -29,7 +35,7 @@ body {
 }
 
 .scoreButton .palm-button-wrapper {
-	font-size: small;
+	font-size: medium;
 	text-transform: none;
 }
 
