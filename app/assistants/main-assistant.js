@@ -4,14 +4,15 @@ function MainAssistant(dice) {
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 	  
-	  //Save the arguments for use in the scene.
-	  this.dice = dice;
+	//Create an array of five dice and a collection of models for the buttons.
+	this.dice = [new Dice(), new Dice(), new Dice(), new Dice(), new Dice()];
+	this.buttonModels = new ButtonModels();
 	  
-	  //Set the roll counter.
-	  this.rollCount = 0;
-	  
-	  //Keep track of how many score buttons have been set so that we know when the game's over.
-	  this.scoreButtonsSet = 0;
+	//Set the roll counter.
+	this.rollCount = 0;
+	
+	//Keep track of how many score buttons have been set so that we know when the game's over.
+	this.scoreButtonsSet = 0;
 }
 
 MainAssistant.prototype.setup = function() {
@@ -21,23 +22,24 @@ MainAssistant.prototype.setup = function() {
 	
 	/* setup widgets here */
 	
+	var buttonModels = this.buttonModels;
 	// topHalf scoreButtons
-	this.controller.setupWidget("buttonOnes", this.attributes = {}, this.model = {label: "Ones", disabled: false});
-	this.controller.setupWidget("buttonTwos", this.attributes = {}, this.model = {label: "Twos", disabled: false});
-	this.controller.setupWidget("buttonThrees", this.attributes = {}, this.model = {label: "Threes", disabled: false});
-	this.controller.setupWidget("buttonFours", this.attributes = {}, this.model = {label: "Fours", disabled: false});
-	this.controller.setupWidget("buttonFives", this.attributes = {}, this.model = {label: "Fives", disabled: false});
-	this.controller.setupWidget("buttonSixes", this.attributes = {}, this.model = {label: "Sixes", disabled: false});
+	this.controller.setupWidget("buttonOnes", this.attributes = {}, this.model = buttonModels.ones);
+	this.controller.setupWidget("buttonTwos", this.attributes = {}, this.model = buttonModels.twos);
+	this.controller.setupWidget("buttonThrees", this.attributes = {}, this.model = buttonModels.threes);
+	this.controller.setupWidget("buttonFours", this.attributes = {}, this.model = buttonModels.fours);
+	this.controller.setupWidget("buttonFives", this.attributes = {}, this.model = buttonModels.fives);
+	this.controller.setupWidget("buttonSixes", this.attributes = {}, this.model = buttonModels.sixes);
 	this.controller.setupWidget("labelBonus", this.attributes = {}, this.model = {value: "Bonus"});
 	
 	// bottomHalf scoreButtons
-	this.controller.setupWidget("buttonThreeOfAKind", this.attributes = {}, this.model = {label: "Three of a kind", disabled: false});
-	this.controller.setupWidget("buttonFourOfAKind", this.attributes = {}, this.model = {label: "Four of a kind", disabled: false});
-	this.controller.setupWidget("buttonFullHouse", this.attributes = {}, this.model = {label: "Full house", disabled: false});
-	this.controller.setupWidget("buttonSmallStraight", this.attributes = {}, this.model = {label: "Small straight", disabled: false});
-	this.controller.setupWidget("buttonLargeStraight", this.attributes = {}, this.model = {label: "Large straight", disabled: false});
-	this.controller.setupWidget("buttonFiveOfAKind", this.attributes = {}, this.model = {label: "Five of a kind", disabled: false});
-	this.controller.setupWidget("buttonChance", this.attributes = {}, this.model = {label: "Chance", disabled: false});
+	this.controller.setupWidget("buttonThreeOfAKind", this.attributes = {}, this.model = buttonModels.threeOfAKind);
+	this.controller.setupWidget("buttonFourOfAKind", this.attributes = {}, this.model = buttonModels.fourOfAKind);
+	this.controller.setupWidget("buttonFullHouse", this.attributes = {}, this.model = buttonModels.fullHouse);
+	this.controller.setupWidget("buttonSmallStraight", this.attributes = {}, this.model = buttonModels.smallStraight);
+	this.controller.setupWidget("buttonLargeStraight", this.attributes = {}, this.model = buttonModels.largeStraight);
+	this.controller.setupWidget("buttonFiveOfAKind", this.attributes = {}, this.model = buttonModels.fiveOfAKind);
+	this.controller.setupWidget("buttonChance", this.attributes = {}, this.model = buttonModels.chance);
 	
 	// set all scoreValues to 0
 	this.resetAllScores();
@@ -53,13 +55,13 @@ MainAssistant.prototype.setup = function() {
 	die3Element.innerHTML = "<img src=\"images/Die" + this.dice[3].value + "Plain.png\"></img>";
 	var die4Element = this.controller.get("die4");
 	die4Element.innerHTML = "<img src=\"images/Die" + this.dice[4].value + "Plain.png\"></img>";
-	this.controller.setupWidget("buttonRoll", this.attributes = {}, this.model = {label: "Roll 1", disabled: false});
+	this.controller.setupWidget("buttonRoll", this.attributes = {}, this.model = buttonModels.roll);
 
 	/* add event handlers to listen to events from widgets */
 	
-	//HACK: For testing, restart the game if the "Upper subtotal" text is clicked.
+	//HACK: For testing, restart the game if the "Subtotal" text is clicked.
 	//this.hack = this.playAgain.bindAsEventListener(this);
-	//this.controller.listen("labelSubtotal", Mojo.Event.tap, this.hack);
+	//this.controller.listen("subtotal", Mojo.Event.tap, this.hack);
 	
 	//Dice tap listeners
 	this.die0Handler = this.toggleDie0.bindAsEventListener(this);
@@ -160,8 +162,8 @@ MainAssistant.prototype.resetAllScores = function() {
 	this.controller.get("scoreValueFours").innerHTML = 0;
 	this.controller.get("scoreValueFives").innerHTML = 0;
 	this.controller.get("scoreValueSixes").innerHTML = 0;
+	this.controller.get("subtotal").innerHTML = "Subtotal &nbsp;&nbsp; 0 / +0";
 	this.controller.get("scoreValueBonus").innerHTML = 0;
-	this.controller.get("scoreValueSubtotal").innerHTML = 0;
 	this.controller.get("scoreValueThreeOfAKind").innerHTML = 0;
 	this.controller.get("scoreValueFourOfAKind").innerHTML = 0;
 	this.controller.get("scoreValueFullHouse").innerHTML = 0;
@@ -208,16 +210,18 @@ MainAssistant.prototype.toggleDie = function(index) {
 //Die roller
 MainAssistant.prototype.roll = function() {
 	//In case the shake API was used to roll, check that the Roll button isn't disabled.
-	if (this.controller.get("buttonRoll").disabled) {
+	if (this.buttonModels.roll.disabled) {
 		return;
 	}
 	//Increment the roll counter and check if all our rolls are used up.
 	this.rollCount++;
 	if (this.rollCount == 3) {
-		this.controller.setWidgetModel("buttonRoll", {label: "Roll 3", disabled: true});
+		this.buttonModels.roll.disabled = true;
+		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	}
 	else {
-		this.controller.setWidgetModel("buttonRoll", {label: "Roll " + (this.rollCount + 1)});
+		this.buttonModels.roll.label = "Roll " + (this.rollCount + 1);
+		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	}
 	//Call the roll() method on all dice that are not on hold.
 	for (var i = 0; i < this.dice.length; i++) {
@@ -234,30 +238,36 @@ MainAssistant.prototype.roll = function() {
 
 //Upper half score buttons
 MainAssistant.prototype.setOnes = function() {
-	this.setUpperHalfScore("Ones", 1);
+	this.buttonModels.ones.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.ones, 1);
 }
 MainAssistant.prototype.setTwos = function() {
-	this.setUpperHalfScore("Twos", 2);
+	this.buttonModels.twos.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.twos, 2);
 }
 MainAssistant.prototype.setThrees = function() {
-	this.setUpperHalfScore("Threes", 3);
+	this.buttonModels.threes.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.threes, 3);
 }
 MainAssistant.prototype.setFours = function() {
-	this.setUpperHalfScore("Fours", 4);
+	this.buttonModels.fours.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.fours, 4);
 }
 MainAssistant.prototype.setFives = function() {
-	this.setUpperHalfScore("Fives", 5);
+	this.buttonModels.fives.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.fives, 5);
 }
 MainAssistant.prototype.setSixes = function() {
-	this.setUpperHalfScore("Sixes", 6);
+	this.buttonModels.sixes.disabled = true;
+	this.setUpperHalfScore(this.buttonModels.sixes, 6);
 }
-MainAssistant.prototype.setUpperHalfScore = function(buttonLabel, targetValue) {
+MainAssistant.prototype.setUpperHalfScore = function(buttonModel, targetValue) {
 	//Make sure the dice have been rolled.
 	if (this.dice[0].value == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("button" + buttonLabel, {label: buttonLabel, disabled: true});
+	this.controller.setWidgetModel("button" + buttonModel.label, buttonModel);
 	//Total up the applicable dice.
 	var score = 0;
 	for (var i = 0; i < this.dice.length; i++) {
@@ -266,7 +276,7 @@ MainAssistant.prototype.setUpperHalfScore = function(buttonLabel, targetValue) {
 		}
 	}
 	//Display the score and re-calculate the total.
-	this.controller.get("scoreValue" + buttonLabel).innerHTML = score;
+	this.controller.get("scoreValue" + buttonModel.label).innerHTML = score;
 	this.setTotal();
 	this.releaseDice();
 	this.checkForEndOfGame();
@@ -279,7 +289,8 @@ MainAssistant.prototype.setThreeOfAKind = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonThreeOfAKind", {label: "Three of a kind", disabled: true});
+	this.buttonModels.threeOfAKind.disabled = true;
+	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
 	//Look for three of a kind.
 	var matches = [];
 	for (var startingDie = 0; startingDie < 3 && matches.length < 3; startingDie++) {
@@ -304,7 +315,8 @@ MainAssistant.prototype.setFourOfAKind = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonFourOfAKind", {label: "Four of a kind", disabled: true});
+	this.buttonModels.fourOfAKind.disabled = true;
+	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
 	//Look for four of a kind.
 	var matches = [];
 	for (var startingDie = 0; startingDie < 4 && matches.length < 4; startingDie++) {
@@ -329,7 +341,8 @@ MainAssistant.prototype.setFullHouse = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonFullHouse", {label: "Full house", disabled: true});
+	this.buttonModels.fullHouse.disabled = true;
+	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
 	//Sort the values of the dice.
 	var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
 	//See if we got a full house by checking that the first two values match,
@@ -351,7 +364,8 @@ MainAssistant.prototype.setSmallStraight = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonSmallStraight", {label: "Small straight", disabled: true});
+	this.buttonModels.smallStraight.disabled = true;
+	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
 	//See if we got five of a kind, which can substitute for a straight.
 	var score = 0;
 	if (this.checkForFiveOfAKind()) {
@@ -394,7 +408,8 @@ MainAssistant.prototype.setLargeStraight = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonLargeStraight", {label: "Large straight", disabled: true});
+	this.buttonModels.largeStraight.disabled = true;
+	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
 	//See if we got five of a kind, which can substitute for a straight.
 	var score = 0;
 	if (this.checkForFiveOfAKind()) {
@@ -421,7 +436,8 @@ MainAssistant.prototype.setFiveOfAKind = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonFiveOfAKind", {label: "Five of a kind", disabled: true});
+	this.buttonModels.fiveOfAKind.disabled = true;
+	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
 	//Look for five of a kind.
 	var score = (this.checkForFiveOfAKind() ? 50 : 0);
 	//Display the score and re-calculate the total.
@@ -437,7 +453,8 @@ MainAssistant.prototype.setChance = function() {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("buttonChance", {label: "Chance", disabled: true});
+	this.buttonModels.chance.disabled = true;
+	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
 	//Add up all the dice.
 	var score = 0;
 	for (var i = 0; i < this.dice.length; i++) {
@@ -467,22 +484,44 @@ MainAssistant.prototype.reactToFiveOfAKind = function() {
 		//TODO: Notify the user they've earned 100 bonus points for rolling five of a kind again.
 	}
 	//Freeze the Roll button.
-	this.controller.setWidgetModel("buttonRoll", {label: "Roll", disabled: true});
+	this.buttonModels.roll.disabled = true;
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 }
 
 MainAssistant.prototype.setTotal = function() {
 	//Count up the upper half first to see if the bonus is earned.
+	//Get the benchmark subtotal along the way.
 	var total = 0;
-	total += +this.controller.get("scoreValueOnes").innerHTML;
-	total += +this.controller.get("scoreValueTwos").innerHTML;
-	total += +this.controller.get("scoreValueThrees").innerHTML;
-	total += +this.controller.get("scoreValueFours").innerHTML;
-	total += +this.controller.get("scoreValueFives").innerHTML;
-	total += +this.controller.get("scoreValueSixes").innerHTML;
+	var benchmark = 0;
+	if (this.buttonModels.ones.disabled) {
+		total += +this.controller.get("scoreValueOnes").innerHTML;
+		benchmark += 3;
+	}
+	if (this.buttonModels.twos.disabled) {
+		total += +this.controller.get("scoreValueTwos").innerHTML;
+		benchmark += 6;
+	}
+	if (this.buttonModels.threes.disabled) {
+		total += +this.controller.get("scoreValueThrees").innerHTML;
+		benchmark += 9;
+	}
+	if (this.buttonModels.fours.disabled) {
+		total += +this.controller.get("scoreValueFours").innerHTML;
+		benchmark += 12;
+	}
+	if (this.buttonModels.fives.disabled) {
+		total += +this.controller.get("scoreValueFives").innerHTML;
+		benchmark += 15;
+	}
+	if (this.buttonModels.sixes.disabled) {
+		total += +this.controller.get("scoreValueSixes").innerHTML;
+		benchmark += 18;
+	}
+	var difference = total - benchmark;
+	this.controller.get("subtotal").innerHTML = "Subtotal &nbsp;&nbsp; " + total + " / " + (difference < 0 ? "" : "+") + (difference);
+	//Add in the bonus.
 	this.controller.get("scoreValueBonus").innerHTML = (total >= 63 ? 35 : 0);
-	//Add in the bonus to get the subtotal.
 	total += +this.controller.get("scoreValueBonus").innerHTML;
-	this.controller.get("scoreValueSubtotal").innerHTML = total;
 	//Add in the lower half scores to get the total.
 	total += +this.controller.get("scoreValueThreeOfAKind").innerHTML;
 	total += +this.controller.get("scoreValueFourOfAKind").innerHTML;
@@ -502,7 +541,8 @@ MainAssistant.prototype.releaseDice = function() {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice[i].value + "Plain.png\"></img>";
 	}
 	//Enable the Roll button and reset the roll counter.
-	this.controller.setWidgetModel("buttonRoll", {label: "Roll 1", disabled: false});
+	this.buttonModels.roll = {label: "Roll 1", disabled: false};
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	this.rollCount = 0;
 }
 
@@ -517,10 +557,8 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	}
 	
 	//Disable the Roll button.
-	this.controller.setWidgetModel("buttonRoll", {
-		label: "Roll 3",
-		disabled: true
-	});
+	this.buttonModels.roll.disabled = true;
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	
 	//Hide the dice and show the "Play Again" text.
 	this.controller.get("die0").style.visibility = "hidden";
@@ -537,19 +575,20 @@ MainAssistant.prototype.playAgain = function() {
 	this.resetAllScores();
 	
 	//Enable all the score buttons and reset the counter.
-	this.controller.setWidgetModel("buttonOnes", {label: "Ones", disabled: false});
-	this.controller.setWidgetModel("buttonTwos", {label: "Twos", disabled: false});
-	this.controller.setWidgetModel("buttonThrees", {label: "Threes", disabled: false});
-	this.controller.setWidgetModel("buttonFours", {label: "Fours", disabled: false});
-	this.controller.setWidgetModel("buttonFives", {label: "Fives", disabled: false});
-	this.controller.setWidgetModel("buttonSixes", {label: "Sixes", disabled: false});
-	this.controller.setWidgetModel("buttonThreeOfAKind", {label: "Three of a kind", disabled: false});
-	this.controller.setWidgetModel("buttonFourOfAKind", {label: "Four of a kind", disabled: false});
-	this.controller.setWidgetModel("buttonFullHouse", {label: "Full house", disabled: false});
-	this.controller.setWidgetModel("buttonSmallStraight", {label: "Small straight", disabled: false});
-	this.controller.setWidgetModel("buttonLargeStraight", {label: "Large straight", disabled: false});
-	this.controller.setWidgetModel("buttonFiveOfAKind", {label: "Five of a kind", disabled: false});
-	this.controller.setWidgetModel("buttonChance", {label: "Chance", disabled: false});
+	this.buttonModels = new ButtonModels();
+	this.controller.setWidgetModel("buttonOnes", this.buttonModels.ones);
+	this.controller.setWidgetModel("buttonTwos", this.buttonModels.twos);
+	this.controller.setWidgetModel("buttonThrees", this.buttonModels.threes);
+	this.controller.setWidgetModel("buttonFours", this.buttonModels.fours);
+	this.controller.setWidgetModel("buttonFives", this.buttonModels.fives);
+	this.controller.setWidgetModel("buttonSixes", this.buttonModels.sixes);
+	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
+	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
+	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
+	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
+	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
+	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
+	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
 	this.scoreButtonsSet = 0;
 	
 	//Hide the "Play Again" text and show the dice.
