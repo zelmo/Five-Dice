@@ -575,19 +575,34 @@ MainAssistant.prototype.playAgain = function() {
 	this.resetAllScores();
 	
 	//Enable all the score buttons and reset the counter.
-	this.buttonModels = new ButtonModels();
+	//You would think we could get fresh button models by calling the constructor,
+	//but somehow that doesn't work--the buttons all remain disabled.
+	//So we have to go through them all and explicitly enable them.
+	this.buttonModels.ones.disabled = false;
 	this.controller.setWidgetModel("buttonOnes", this.buttonModels.ones);
+	this.buttonModels.twos.disabled = false;
 	this.controller.setWidgetModel("buttonTwos", this.buttonModels.twos);
+	this.buttonModels.threes.disabled = false;
 	this.controller.setWidgetModel("buttonThrees", this.buttonModels.threes);
+	this.buttonModels.fours.disabled = false;
 	this.controller.setWidgetModel("buttonFours", this.buttonModels.fours);
+	this.buttonModels.fives.disabled = false;
 	this.controller.setWidgetModel("buttonFives", this.buttonModels.fives);
+	this.buttonModels.sixes.disabled = false;
 	this.controller.setWidgetModel("buttonSixes", this.buttonModels.sixes);
+	this.buttonModels.threeOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
+	this.buttonModels.fourOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
+	this.buttonModels.fullHouse.disabled = false;
 	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
+	this.buttonModels.smallStraight.disabled = false;
 	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
+	this.buttonModels.largeStraight.disabled = false;
 	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
+	this.buttonModels.fiveOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
+	this.buttonModels.chance.disabled = false;
 	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
 	this.scoreButtonsSet = 0;
 	
