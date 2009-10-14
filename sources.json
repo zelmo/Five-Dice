@@ -7,7 +7,10 @@
         "scenes": "main"
     },
 	{
-		"source": "app\/models\/dice.js"
+		"source": "app\/models\/sixSidedDie.js"
+	},
+	{
+		"source": "app\/models\/yahtzeeDice.js"
 	},
 	{
 		"source": "app\/models\/buttons.js"

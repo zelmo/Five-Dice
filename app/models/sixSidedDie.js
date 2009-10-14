@@ -1,4 +1,4 @@
-var Dice = Class.create ({
+var SixSidedDie = Class.create ({
 	held: false,
 	value: 0,
 	roll: function() {

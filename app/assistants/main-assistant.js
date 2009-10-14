@@ -1,18 +1,12 @@
-function MainAssistant(dice) {
+function MainAssistant() {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 	  
-	//Create an array of five dice and a collection of models for the buttons.
-	this.dice = [new Dice(), new Dice(), new Dice(), new Dice(), new Dice()];
+	//Create a Yahtzee dice object and a collection of models for the buttons.
+	this.dice = new YahtzeeDice();
 	this.buttonModels = new ButtonModels();
-	  
-	//Set the roll counter.
-	this.rollCount = 0;
-	
-	//Keep track of how many score buttons have been set so that we know when the game's over.
-	this.scoreButtonsSet = 0;
 };
 
 MainAssistant.prototype.setup = function() {
@@ -46,15 +40,15 @@ MainAssistant.prototype.setup = function() {
 	
 	//dice and roll button
 	var die0Element = this.controller.get("die0");
-	die0Element.innerHTML = "<img src=\"images/Die" + this.dice[0].value + "Plain.png\"></img>";
+	die0Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[0].value + "Plain.png\"></img>";
 	var die1Element = this.controller.get("die1");
-	die1Element.innerHTML = "<img src=\"images/Die" + this.dice[1].value + "Plain.png\"></img>";
+	die1Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[1].value + "Plain.png\"></img>";
 	var die2Element = this.controller.get("die2");
-	die2Element.innerHTML = "<img src=\"images/Die" + this.dice[2].value + "Plain.png\"></img>";
+	die2Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[2].value + "Plain.png\"></img>";
 	var die3Element = this.controller.get("die3");
-	die3Element.innerHTML = "<img src=\"images/Die" + this.dice[3].value + "Plain.png\"></img>";
+	die3Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[3].value + "Plain.png\"></img>";
 	var die4Element = this.controller.get("die4");
-	die4Element.innerHTML = "<img src=\"images/Die" + this.dice[4].value + "Plain.png\"></img>";
+	die4Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[4].value + "Plain.png\"></img>";
 	this.controller.setupWidget("buttonRoll", this.attributes = {}, this.model = buttonModels.roll);
 
 	/* add event handlers to listen to events from widgets */
@@ -196,19 +190,19 @@ MainAssistant.prototype.toggleDie4 = function() {
 	this.toggleDie(4);
 };
 MainAssistant.prototype.toggleDie = function(index) {
-	//Make sure the die has a value (i.e., the dice have been rolled at least once this turn).
-	if (this.dice[index].value == 0) {
+	//Make sure the dice have been rolled at least once this turn.
+	if (this.dice.chanceScore == 0) {
 		return;
 	}
 	//Toggle the held state of the die.
-	this.dice[index].held = !this.dice[index].held;
+	this.dice.dice[index].held = !this.dice.dice[index].held;
 	//Find the die's div in the scene and change its image to reflect the new state.
 	var dieElement = this.controller.get("die" + index);
-	if (this.dice[index].held) {
-		dieElement.innerHTML = "<img src=\"images/Die" + this.dice[index].value + "Held.png\"></img>";
+	if (this.dice.dice[index].held) {
+		dieElement.innerHTML = "<img src=\"images/Die" + this.dice.dice[index].value + "Held.png\"></img>";
 	}
 	else {
-		dieElement.innerHTML = "<img src=\"images/Die" + this.dice[index].value + "Plain.png\"></img>";
+		dieElement.innerHTML = "<img src=\"images/Die" + this.dice.dice[index].value + "Plain.png\"></img>";
 	}
 };
 
@@ -218,22 +212,20 @@ MainAssistant.prototype.roll = function() {
 	if (this.buttonModels.roll.disabled) {
 		return;
 	}
-	//Increment the roll counter and check if all our rolls are used up.
-	this.rollCount++;
-	if (this.rollCount == 3) {
+	//Roll the dice and check if all our rolls are used up.
+	this.dice.roll();
+	if (this.dice.rollCount > 3) {
 		this.buttonModels.roll.disabled = true;
 		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	}
 	else {
-		this.buttonModels.roll.label = "Roll " + (this.rollCount + 1);
+		this.buttonModels.roll.label = "Roll " + (this.dice.rollCount);
 		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	}
-	//Call the roll() method on all dice that are not on hold.
-	for (var i = 0; i < this.dice.length; i++) {
-		if (!this.dice[i].held) {
-			this.dice[i].roll();
-			this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice[i].value + "Plain.png\"></img>";
-		}
+	//Set the dice images.
+	for (var i = 0; i < this.dice.dice.length; i++) {
+		var imageStyle = (this.dice.dice[i].held ? "Held" : "Plain");
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + imageStyle + ".png\"></img>";
 	}
 	//React to five of a kind if merited.
 	if (this.checkForFiveOfAKind()) {
@@ -259,63 +251,26 @@ MainAssistant.prototype.showPossibleScores = function() {
 	if (!this.buttonModels.chance.disabled)			{ this.showChance(); }
 };
 MainAssistant.prototype.showUpperHalfScore = function(scoreValueId, targetValue) {
-	//Total up the applicable dice.
-	var score = 0;
-	for (var i = 0; i < this.dice.length; i++) {
-		if (this.dice[i].value == targetValue) {
-			score += this.dice[i].value;
-		}
-	}
 	//Display the score in the "suggested" color.
-	this.controller.get(scoreValueId).innerHTML = (score > 0 ? score : "");
+	this.controller.get(scoreValueId).innerHTML = (this.dice.upperHalfScore(targetValue) > 0 ? this.dice.upperHalfScore(targetValue) : "");
 	this.controller.get(scoreValueId).style.color = FiveDice.suggestedScoreColor;
 };
 
 MainAssistant.prototype.showThreeOfAKind = function() {
-	//Look for three of a kind.
-	var matches = [];
-	for (var startingDie = 0; startingDie < 3 && matches.length < 3; startingDie++) {
-		matches = [this.dice[startingDie].value];
-		for (var i = startingDie + 1; i < this.dice.length; i++) {
-			if (this.dice[i].value == this.dice[startingDie].value) {
-				matches.push(this.dice[i].value);
-			}
-		}
-	}
-	var score = (matches.length >= 3 ? this.dice[0].value + this.dice[1].value + this.dice[2].value + this.dice[3].value + this.dice[4].value : 0);
 	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueThreeOfAKind").innerHTML = (score > 0 ? score : "");
+	this.controller.get("scoreValueThreeOfAKind").innerHTML = (this.dice.threeOfAKindScore() > 0 ? this.dice.threeOfAKindScore() : "");
 	this.controller.get("scoreValueThreeOfAKind").style.color = FiveDice.suggestedScoreColor;
 };
 
 MainAssistant.prototype.showFourOfAKind = function() {
-	//Look for four of a kind.
-	var matches = [];
-	for (var startingDie = 0; startingDie < 4 && matches.length < 4; startingDie++) {
-		matches = [this.dice[startingDie].value];
-		for (var i = startingDie + 1; i < this.dice.length; i++) {
-			if (this.dice[i].value == this.dice[startingDie].value) {
-				matches.push(this.dice[i].value);
-			}
-		}
-	}
-	var score = (matches.length >= 4 ? this.dice[0].value + this.dice[1].value + this.dice[2].value + this.dice[3].value + this.dice[4].value : 0);
 	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFourOfAKind").innerHTML = (score > 0 ? score : "");
+	this.controller.get("scoreValueFourOfAKind").innerHTML = (this.dice.fourOfAKindScore() > 0 ? this.dice.fourOfAKindScore() : "");
 	this.controller.get("scoreValueFourOfAKind").style.color = FiveDice.suggestedScoreColor;
 };
 
 MainAssistant.prototype.showFullHouse = function() {
-	//Sort the values of the dice.
-	var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
-	//See if we got a full house by checking that the first two values match,
-	//the last two values match, and the middle value matches one of the adjacent values.
-	var score = 0;
-	if (values[0] == values[1] && values[3] == values[4] && (values[1] == values[2] || values[2] == values[3])) {
-		score = 25;
-	}
 	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFullHouse").innerHTML = (score > 0 ? score : "");
+	this.controller.get("scoreValueFullHouse").innerHTML = (this.dice.fullHouseScore() > 0 ? this.dice.fullHouseScore() : "");
 	this.controller.get("scoreValueFullHouse").style.color = FiveDice.suggestedScoreColor;
 };
 
@@ -326,28 +281,7 @@ MainAssistant.prototype.showSmallStraight = function() {
 		score = 30;
 	}
 	else {
-		//Sort the values of the dice.
-		var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
-		//To eliminate having to work around duplicate values, get an array of distinct values.
-		var distinctValues = [values[0]];
-		for (var i = 1; i < values.length; i++) {
-			if (values[i] != values[i - 1]) { distinctValues.push(values[i]); }
-		}
-		//We can only have a small straight if we have four or more distinct values.
-		if (distinctValues.length == 5) {
-			//See if we got a straight across the middle three values, plus one of the outer values.
-			var centerStraight = (distinctValues[1] == (distinctValues[2] - 1) && distinctValues[2] == (distinctValues[3] - 1));
-			var consecutiveEnd = (distinctValues[0] == (distinctValues[1] - 1) || distinctValues[3] == (distinctValues[4] - 1));
-			if (centerStraight && consecutiveEnd) {
-				score = 30;
-			}
-		}
-		else if (distinctValues.length == 4) {
-			//See if we got a straight across all four distinct values.
-			if (distinctValues[0] == (distinctValues[1] - 1) && distinctValues[1] == (distinctValues[2] - 1) && distinctValues[2] == (distinctValues[3] - 1)) {
-				score = 30;
-			}
-		}
+		score = this.dice.smallStraightScore();
 	}
 	//Display the score in the "suggested" color.
 	this.controller.get("scoreValueSmallStraight").innerHTML = (score > 0 ? score : "");
@@ -361,12 +295,7 @@ MainAssistant.prototype.showLargeStraight = function() {
 		score = 40;
 	}
 	else {
-		//Sort the values of the dice.
-		var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
-		//See if we got a straight across all the dice.
-		if (values[0] == (values[1] - 1) && values[1] == (values[2] - 1) && values[2] == (values[3] - 1) && values[3] == (values[4] - 1)) {
-			score = 40;
-		}
+		score = this.dice.largeStraightScore();
 	}
 	//Display the score in the "suggested" color.
 	this.controller.get("scoreValueLargeStraight").innerHTML = (score > 0 ? score : "");
@@ -374,21 +303,14 @@ MainAssistant.prototype.showLargeStraight = function() {
 };
 
 MainAssistant.prototype.showFiveOfAKind = function() {
-	//Look for five of a kind.
-	var score = (this.checkForFiveOfAKind() ? 50 : 0);
 	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFiveOfAKind").innerHTML = (score > 0 ? score : "");
+	this.controller.get("scoreValueFiveOfAKind").innerHTML = (this.dice.fiveOfAKindScore() > 0 ? this.dice.fiveOfAKindScore() : "");
 	this.controller.get("scoreValueFiveOfAKind").style.color = FiveDice.suggestedScoreColor;
 };
 
 MainAssistant.prototype.showChance = function() {
-	//Add up all the dice.
-	var score = 0;
-	for (var i = 0; i < this.dice.length; i++) {
-		score += this.dice[i].value;
-	}
 	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueChance").innerHTML = (score > 0 ? score : "");
+	this.controller.get("scoreValueChance").innerHTML = this.dice.chanceScore();
 	this.controller.get("scoreValueChance").style.color = FiveDice.suggestedScoreColor;
 };
 
@@ -419,7 +341,7 @@ MainAssistant.prototype.setSixes = function() {
 };
 MainAssistant.prototype.setUpperHalfScore = function(buttonModel) {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -440,7 +362,7 @@ MainAssistant.prototype.setUpperHalfScore = function(buttonModel) {
 //Lower half score button handlers
 MainAssistant.prototype.setThreeOfAKind = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -461,7 +383,7 @@ MainAssistant.prototype.setThreeOfAKind = function() {
 
 MainAssistant.prototype.setFourOfAKind = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -482,7 +404,7 @@ MainAssistant.prototype.setFourOfAKind = function() {
 
 MainAssistant.prototype.setFullHouse = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -503,7 +425,7 @@ MainAssistant.prototype.setFullHouse = function() {
 
 MainAssistant.prototype.setSmallStraight = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -524,7 +446,7 @@ MainAssistant.prototype.setSmallStraight = function() {
 
 MainAssistant.prototype.setLargeStraight = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -545,7 +467,7 @@ MainAssistant.prototype.setLargeStraight = function() {
 
 MainAssistant.prototype.setFiveOfAKind = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -562,11 +484,11 @@ MainAssistant.prototype.setFiveOfAKind = function() {
 	this.blankUnsetScores();
 	this.releaseDice();
 	this.checkForEndOfGame();
-}
+};
 
 MainAssistant.prototype.setChance = function() {
 	//Make sure the dice have been rolled.
-	if (this.dice[0].value == 0) {
+	if (this.dice.chanceScore() == 0) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
@@ -583,17 +505,17 @@ MainAssistant.prototype.setChance = function() {
 	this.blankUnsetScores();
 	this.releaseDice();
 	this.checkForEndOfGame();
-}
+};
 
 //Auxiliary functions
 MainAssistant.prototype.checkForFiveOfAKind = function(){
-	 return (this.dice[0].value == this.dice[1].value && this.dice[1].value == this.dice[2].value && this.dice[2].value == this.dice[3].value && this.dice[3].value == this.dice[4].value);
-}
+	 return (this.dice.fiveOfAKindScore() == 50);
+};
 
 MainAssistant.prototype.reactToFiveOfAKind = function() {
 	//See if we've already scored five of a kind.
 	var fiveOfAKindScore = +this.controller.get("scoreValueFiveOfAKind").innerHTML;
-	if (fiveOfAKindScore == 0) {
+	if (fiveOfAKindScore == "") {
 		//TODO: Notify the user that they've rolled five of a kind and should probably score it as such.
 	}
 	else {
@@ -604,7 +526,7 @@ MainAssistant.prototype.reactToFiveOfAKind = function() {
 	//Freeze the Roll button.
 	this.buttonModels.roll.disabled = true;
 	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
-}
+};
 
 MainAssistant.prototype.setTotal = function() {
 	//Count up the upper half first to see if the bonus is earned.
@@ -663,28 +585,22 @@ MainAssistant.prototype.setTotal = function() {
 		total += +this.controller.get("scoreValueChance").innerHTML;
 	}
 	this.controller.get("scoreValueTotal").innerHTML = total;
-}
+};
 
 MainAssistant.prototype.releaseDice = function() {
 	//Blank out and un-hold all the dice.
-	for (var i = 0; i < this.dice.length; i++) {
-		this.dice[i].value = 0;
-		this.dice[i].held = false;
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice[i].value + "Plain.png\"></img>";
+	this.dice.clear();
+	for (var i = 0; i < this.dice.dice.length; i++) {
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
 	}
-	//Enable the Roll button and reset the roll counter.
+	//Enable the Roll button.
 	this.buttonModels.roll = {label: "Roll 1", disabled: false};
 	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
-	this.rollCount = 0;
-}
+};
 
 MainAssistant.prototype.checkForEndOfGame = function() {
-	//Since this function is called exactly once by each score button,
-	//it's easiest to just increment the scoreButtonsSet counter here.
-	this.scoreButtonsSet++;
-	
 	//See if all of the score buttons have been set, which means the game is over.
-	if (this.scoreButtonsSet < 13) {
+	if (!this.buttonModels.allButtonsAreDisabled()) {
 		return;
 	}
 	
@@ -700,50 +616,35 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	this.controller.get("die4").style.visibility = "hidden";
 	this.controller.get("playAgain").style.visibility = "visible";
 	//TODO: Other end-of-game stuff?
-}
+};
 
 MainAssistant.prototype.playAgain = function() {
-	//Enable all the score buttons and reset the counter.
-	//You would think we could get fresh button models by calling the constructor,
-	//but somehow that doesn't work--the buttons all remain disabled.
-	//So we have to go through them all and explicitly enable them.
-	this.buttonModels.ones.disabled = false;
+	//Enable all buttons.
+	this.buttonModels.enableAllButtons();
 	this.controller.setWidgetModel("buttonOnes", this.buttonModels.ones);
-	this.buttonModels.twos.disabled = false;
 	this.controller.setWidgetModel("buttonTwos", this.buttonModels.twos);
-	this.buttonModels.threes.disabled = false;
 	this.controller.setWidgetModel("buttonThrees", this.buttonModels.threes);
-	this.buttonModels.fours.disabled = false;
 	this.controller.setWidgetModel("buttonFours", this.buttonModels.fours);
-	this.buttonModels.fives.disabled = false;
 	this.controller.setWidgetModel("buttonFives", this.buttonModels.fives);
-	this.buttonModels.sixes.disabled = false;
 	this.controller.setWidgetModel("buttonSixes", this.buttonModels.sixes);
-	this.buttonModels.threeOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
-	this.buttonModels.fourOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
-	this.buttonModels.fullHouse.disabled = false;
 	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
-	this.buttonModels.smallStraight.disabled = false;
 	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
-	this.buttonModels.largeStraight.disabled = false;
 	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
-	this.buttonModels.fiveOfAKind.disabled = false;
 	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
-	this.buttonModels.chance.disabled = false;
 	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
-	this.scoreButtonsSet = 0;
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	
 	//Reset the scoreboard. This has to happen after the buttons are re-enabled.
 	this.resetAllScores();
 	
 	//Hide the "Play Again" text and show the dice.
+	this.dice.clear();
 	this.controller.get("playAgain").style.visibility = "hidden";
 	this.controller.get("die0").style.visibility = "visible";
 	this.controller.get("die1").style.visibility = "visible";
 	this.controller.get("die2").style.visibility = "visible";
 	this.controller.get("die3").style.visibility = "visible";
 	this.controller.get("die4").style.visibility = "visible";
-	this.releaseDice();
-}
+};
