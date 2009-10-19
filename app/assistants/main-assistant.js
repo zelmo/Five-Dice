@@ -74,6 +74,7 @@ MainAssistant.prototype.setup = function() {
 	//Roll button listener
 	this.rollHandler = this.roll.bindAsEventListener(this);
 	this.controller.listen("buttonRoll", Mojo.Event.tap, this.rollHandler);
+	this.controller.listen(document, "shakeend", this.rollHandler);
 	
 	//Upper half score button listeners
 	this.onesHandler = this.setOnes.bindAsEventListener(this);
@@ -129,8 +130,9 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("die3", Mojo.Event.tap, this.die3Handler);
 	this.controller.stopListening("die4", Mojo.Event.tap, this.die4Handler);
 	this.controller.stopListening("playAgain", Mojo.Event.tap, this.playAgainHandler);
-	//Roll button listener
+	//Roll button listeners
 	this.controller.stopListening("buttonRoll", Mojo.Event.tap, this.rollHandler);
+	this.controller.stopListening(document, "shakeend", this.rollHandler);
 	//Upper half score button listeners
 	this.controller.stopListening("buttonOnes", Mojo.Event.tap, this.onesHandler);
 	this.controller.stopListening("buttonTwos", Mojo.Event.tap, this.twosHandler);
@@ -212,15 +214,14 @@ MainAssistant.prototype.roll = function() {
 	if (this.buttonModels.roll.disabled) {
 		return;
 	}
-	//Roll the dice and check if all our rolls are used up.
+	//Roll the dice and disable the Roll button.
 	this.dice.roll();
-	if (this.dice.rollCount > 3) {
-		this.buttonModels.roll.disabled = true;
-		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
-	}
-	else {
-		this.buttonModels.roll.label = "Roll " + (this.dice.rollCount);
-		this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.buttonModels.roll.disabled = true;
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	//If we still have rolls left, set a timer to re-enable the button.
+	if (this.dice.rollCount <= 3) {
+		var enableRollButton = this.enableRollButton.bind(this);
+		enableRollButton.delay(1);
 	}
 	//Set the dice images.
 	for (var i = 0; i < this.dice.dice.length; i++) {
@@ -233,6 +234,12 @@ MainAssistant.prototype.roll = function() {
 	}
 	
 	this.showPossibleScores();
+};
+
+MainAssistant.prototype.enableRollButton = function() {
+	this.buttonModels.roll.label = "Roll " + (this.dice.rollCount);
+	this.buttonModels.roll.disabled = false;
+	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 };
 
 MainAssistant.prototype.showPossibleScores = function() {
