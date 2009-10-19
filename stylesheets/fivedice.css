@@ -1,0 +1,83 @@
+/* Put Application specific CSS here. */
+body {
+	font-size: medium;
+}
+
+#topHalf {
+	float: left;
+	width: 50%;
+}
+
+#bottomHalf {
+	float: right;
+	width: 50%;
+}
+
+#subtotal {
+	position: relative;
+	top: 25px;
+	left: 17px;
+}
+
+.scoreRow {
+	height: 45px;
+}
+
+.scoreButton, .scoreLabel {
+	display: inline-block;
+	width: 80%;
+}
+
+.scoreLabel {
+	position: relative;
+	top: 23px;
+	text-align: center;
+}
+
+.scoreButton .palm-button-wrapper {
+	font-size: medium;
+	text-transform: none;
+}
+
+.scoreValue {
+	float: right;
+	position: relative;
+	top: 23px;
+	right: 17px;
+}
+
+#dice, #playAgain {
+	float: left;
+	width: 65%;
+}
+
+#dice {
+	visibility: visible;
+	margin-left: 7px;
+}
+
+#playAgain {
+	visibility: hidden;
+	margin-top: -38px;
+}
+
+.dice {
+	display: inline-block;
+	position: relative;
+	top: 12px;
+	height: 38px;
+	width: 38px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.dice>img {
+	height: 100%;
+	width: 100%;
+}
+
+#roll {
+	float: right;
+	width: 25%;
+}
+ 
