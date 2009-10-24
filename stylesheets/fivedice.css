@@ -1,16 +1,14 @@
-/* Put Application specific CSS here. */
-body {
-	font-size: medium;
-}
-
+/* main */
 #topHalf {
 	float: left;
 	width: 50%;
+	font-size: large;
 }
 
 #bottomHalf {
 	float: right;
 	width: 50%;
+	font-size: large;
 }
 
 #subtotal {
@@ -25,7 +23,7 @@ body {
 
 .scoreButton, .scoreLabel {
 	display: inline-block;
-	width: 80%;
+	width: 75%;
 }
 
 .scoreLabel {
@@ -35,36 +33,28 @@ body {
 }
 
 .scoreButton .palm-button-wrapper {
-	font-size: medium;
+	font-size: large;
 	text-transform: none;
 }
 
 .scoreValue {
 	float: right;
 	position: relative;
-	top: 23px;
+	top: 20px;
 	right: 17px;
-}
-
-#dice, #playAgain {
-	float: left;
-	width: 65%;
 }
 
 #dice {
 	visibility: visible;
+	float: left;
+	width: 70%;
 	margin-left: 7px;
 }
 
-#playAgain {
-	visibility: hidden;
-	margin-top: -38px;
-}
-
 .dice {
-	display: inline-block;
 	position: relative;
-	top: 12px;
+	display: inline-block;
+	top: 15px;
 	height: 38px;
 	width: 38px;
 	margin-left: 0;
@@ -76,8 +66,21 @@ body {
 	width: 100%;
 }
 
+#playAgain {
+	visibility: hidden;
+	float: left;
+	width: 50%;
+	margin-top: -35px;
+}
+
 #roll {
 	float: right;
 	width: 25%;
+	margin-top: -40px;
 }
- 
+
+/* help */
+#headerIcon {
+	margin-top: 10px;
+	margin-left: 15px;
+}

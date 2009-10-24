@@ -16,8 +16,22 @@ MainAssistant.prototype.setup = function() {
 	
 	/* setup widgets here */
 	
+	var i = 0; //General-purpose iteration variable.
 	var buttonModels = this.buttonModels;
-	// topHalf scoreButtons
+	var menuModel = {
+		visible: true,
+		items: [
+			{label: "New Game", command: "do-newGame"},
+			{label: "Preferences", command: "do-preferences"},
+			{label: "Help", command: "do-help"},
+			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
+		]
+	};
+	
+	//Application menu
+	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);
+	
+	//Upper half score buttons
 	this.controller.setupWidget("buttonOnes", this.attributes = {}, this.model = buttonModels.ones);
 	this.controller.setupWidget("buttonTwos", this.attributes = {}, this.model = buttonModels.twos);
 	this.controller.setupWidget("buttonThrees", this.attributes = {}, this.model = buttonModels.threes);
@@ -26,7 +40,7 @@ MainAssistant.prototype.setup = function() {
 	this.controller.setupWidget("buttonSixes", this.attributes = {}, this.model = buttonModels.sixes);
 	this.controller.setupWidget("labelBonus", this.attributes = {}, this.model = {value: "Bonus"});
 	
-	// bottomHalf scoreButtons
+	//Lower half score buttons
 	this.controller.setupWidget("buttonThreeOfAKind", this.attributes = {}, this.model = buttonModels.threeOfAKind);
 	this.controller.setupWidget("buttonFourOfAKind", this.attributes = {}, this.model = buttonModels.fourOfAKind);
 	this.controller.setupWidget("buttonFullHouse", this.attributes = {}, this.model = buttonModels.fullHouse);
@@ -35,27 +49,16 @@ MainAssistant.prototype.setup = function() {
 	this.controller.setupWidget("buttonFiveOfAKind", this.attributes = {}, this.model = buttonModels.fiveOfAKind);
 	this.controller.setupWidget("buttonChance", this.attributes = {}, this.model = buttonModels.chance);
 	
-	// Blank out all scoreValues.
+	//Blank out all scoreValues.
 	this.resetAllScores();
 	
-	//dice and roll button
-	var die0Element = this.controller.get("die0");
-	die0Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[0].value + "Plain.png\"></img>";
-	var die1Element = this.controller.get("die1");
-	die1Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[1].value + "Plain.png\"></img>";
-	var die2Element = this.controller.get("die2");
-	die2Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[2].value + "Plain.png\"></img>";
-	var die3Element = this.controller.get("die3");
-	die3Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[3].value + "Plain.png\"></img>";
-	var die4Element = this.controller.get("die4");
-	die4Element.innerHTML = "<img src=\"images/Die" + this.dice.dice[4].value + "Plain.png\"></img>";
+	//Dice and Roll button
+	for (i = 0; i < this.dice.dice.length; i++) {
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + "Plain.png\"></img>";
+	}
 	this.controller.setupWidget("buttonRoll", this.attributes = {}, this.model = buttonModels.roll);
 
 	/* add event handlers to listen to events from widgets */
-	
-	//HACK: For testing, restart the game if the "Subtotal" text is clicked.
-	//this.hack = this.playAgain.bindAsEventListener(this);
-	//this.controller.listen("subtotal", Mojo.Event.tap, this.hack);
 	
 	//Dice tap listeners
 	this.die0Handler = this.toggleDie0.bindAsEventListener(this);
@@ -68,8 +71,8 @@ MainAssistant.prototype.setup = function() {
 	this.controller.listen("die3", Mojo.Event.tap, this.die3Handler);
 	this.die4Handler = this.toggleDie4.bindAsEventListener(this);
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
-	this.playAgainHandler = this.playAgain.bindAsEventListener(this);
-	this.controller.listen("playAgain", Mojo.Event.tap, this.playAgainHandler);
+	this.newGameHandler = this.newGame.bindAsEventListener(this);
+	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
 	
 	//Roll button listener
 	this.rollHandler = this.roll.bindAsEventListener(this);
@@ -129,7 +132,7 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("die2", Mojo.Event.tap, this.die2Handler);
 	this.controller.stopListening("die3", Mojo.Event.tap, this.die3Handler);
 	this.controller.stopListening("die4", Mojo.Event.tap, this.die4Handler);
-	this.controller.stopListening("playAgain", Mojo.Event.tap, this.playAgainHandler);
+	this.controller.stopListening("playAgain", Mojo.Event.tap, this.newGameHandler);
 	//Roll button listeners
 	this.controller.stopListening("buttonRoll", Mojo.Event.tap, this.rollHandler);
 	this.controller.stopListening(document, "shakeend", this.rollHandler);
@@ -148,6 +151,22 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("buttonLargeStraight", Mojo.Event.tap, this.largeStraightHandler);
 	this.controller.stopListening("buttonFiveOfAKind", Mojo.Event.tap, this.fiveOfAKindHandler);
 	this.controller.stopListening("buttonChance", Mojo.Event.tap, this.chanceHandler);
+};
+
+MainAssistant.prototype.handleCommand = function(event) {
+	if (event.type != Mojo.Event.command) { return; }
+	switch (event.command) {
+		case "do-newGame":
+			this.newGame();
+			break;
+		case "do-preferences":
+			break;
+		case "do-help":
+			Mojo.Controller.stageController.pushScene("help");
+			break;
+		default:
+			break;
+	}
 };
 
 MainAssistant.prototype.resetAllScores = function() {
@@ -220,8 +239,7 @@ MainAssistant.prototype.roll = function() {
 	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	//If we still have rolls left, set a timer to re-enable the button.
 	if (this.dice.rollCount <= 3) {
-		var enableRollButton = this.enableRollButton.bind(this);
-		enableRollButton.delay(1);
+		this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
 	}
 	//Set the dice images.
 	for (var i = 0; i < this.dice.dice.length; i++) {
@@ -616,16 +634,14 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
 	
 	//Hide the dice and show the "Play Again" text.
-	this.controller.get("die0").style.visibility = "hidden";
-	this.controller.get("die1").style.visibility = "hidden";
-	this.controller.get("die2").style.visibility = "hidden";
-	this.controller.get("die3").style.visibility = "hidden";
-	this.controller.get("die4").style.visibility = "hidden";
+	for (var i = 0; i < this.dice.dice.length; i++) {
+		this.controller.get("die" + i).style.visibility = "hidden";
+	}
 	this.controller.get("playAgain").style.visibility = "visible";
 	//TODO: Other end-of-game stuff?
 };
 
-MainAssistant.prototype.playAgain = function() {
+MainAssistant.prototype.newGame = function() {
 	//Enable all buttons.
 	this.buttonModels.enableAllButtons();
 	this.controller.setWidgetModel("buttonOnes", this.buttonModels.ones);
@@ -647,11 +663,9 @@ MainAssistant.prototype.playAgain = function() {
 	this.resetAllScores();
 	
 	//Hide the "Play Again" text and show the dice.
-	this.dice.clear();
+	this.releaseDice();
 	this.controller.get("playAgain").style.visibility = "hidden";
-	this.controller.get("die0").style.visibility = "visible";
-	this.controller.get("die1").style.visibility = "visible";
-	this.controller.get("die2").style.visibility = "visible";
-	this.controller.get("die3").style.visibility = "visible";
-	this.controller.get("die4").style.visibility = "visible";
+	for (var i = 0; i < this.dice.dice.length; i++) {
+		this.controller.get("die" + i).style.visibility = "visible";
+	}
 };
