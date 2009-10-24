@@ -16,8 +16,6 @@ MainAssistant.prototype.setup = function() {
 	
 	/* setup widgets here */
 	
-	var i = 0; //General-purpose iteration variable.
-	var buttonModels = this.buttonModels;
 	var menuModel = {
 		visible: true,
 		items: [
@@ -32,31 +30,30 @@ MainAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);
 	
 	//Upper half score buttons
-	this.controller.setupWidget("buttonOnes", this.attributes = {}, this.model = buttonModels.ones);
-	this.controller.setupWidget("buttonTwos", this.attributes = {}, this.model = buttonModels.twos);
-	this.controller.setupWidget("buttonThrees", this.attributes = {}, this.model = buttonModels.threes);
-	this.controller.setupWidget("buttonFours", this.attributes = {}, this.model = buttonModels.fours);
-	this.controller.setupWidget("buttonFives", this.attributes = {}, this.model = buttonModels.fives);
-	this.controller.setupWidget("buttonSixes", this.attributes = {}, this.model = buttonModels.sixes);
-	this.controller.setupWidget("labelBonus", this.attributes = {}, this.model = {value: "Bonus"});
+	this.controller.setupWidget("buttonOnes", {}, this.buttonModels.ones);
+	this.controller.setupWidget("buttonTwos", {}, this.buttonModels.twos);
+	this.controller.setupWidget("buttonThrees", {}, this.buttonModels.threes);
+	this.controller.setupWidget("buttonFours", {}, this.buttonModels.fours);
+	this.controller.setupWidget("buttonFives", {}, this.buttonModels.fives);
+	this.controller.setupWidget("buttonSixes", {}, this.buttonModels.sixes);
 	
 	//Lower half score buttons
-	this.controller.setupWidget("buttonThreeOfAKind", this.attributes = {}, this.model = buttonModels.threeOfAKind);
-	this.controller.setupWidget("buttonFourOfAKind", this.attributes = {}, this.model = buttonModels.fourOfAKind);
-	this.controller.setupWidget("buttonFullHouse", this.attributes = {}, this.model = buttonModels.fullHouse);
-	this.controller.setupWidget("buttonSmallStraight", this.attributes = {}, this.model = buttonModels.smallStraight);
-	this.controller.setupWidget("buttonLargeStraight", this.attributes = {}, this.model = buttonModels.largeStraight);
-	this.controller.setupWidget("buttonFiveOfAKind", this.attributes = {}, this.model = buttonModels.fiveOfAKind);
-	this.controller.setupWidget("buttonChance", this.attributes = {}, this.model = buttonModels.chance);
+	this.controller.setupWidget("buttonThreeOfAKind", {}, this.buttonModels.threeOfAKind);
+	this.controller.setupWidget("buttonFourOfAKind", {}, this.buttonModels.fourOfAKind);
+	this.controller.setupWidget("buttonFullHouse", {}, this.buttonModels.fullHouse);
+	this.controller.setupWidget("buttonSmallStraight", {}, this.buttonModels.smallStraight);
+	this.controller.setupWidget("buttonLargeStraight", {}, this.buttonModels.largeStraight);
+	this.controller.setupWidget("buttonFiveOfAKind", {}, this.buttonModels.fiveOfAKind);
+	this.controller.setupWidget("buttonChance", {}, this.buttonModels.chance);
 	
 	//Blank out all scoreValues.
 	this.resetAllScores();
 	
 	//Dice and Roll button
-	for (i = 0; i < this.dice.dice.length; i++) {
+	for (var i = 0; i < this.dice.dice.length; i++) {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + "Plain.png\"></img>";
 	}
-	this.controller.setupWidget("buttonRoll", this.attributes = {}, this.model = buttonModels.roll);
+	this.controller.setupWidget("buttonRoll", {}, this.buttonModels.roll);
 
 	/* add event handlers to listen to events from widgets */
 	
@@ -236,7 +233,7 @@ MainAssistant.prototype.roll = function() {
 	//Roll the dice and disable the Roll button.
 	this.dice.roll();
 	this.buttonModels.roll.disabled = true;
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.controller.modelChanged(this.buttonModels.roll);
 	//If we still have rolls left, set a timer to re-enable the button.
 	if (this.dice.rollCount <= 3) {
 		this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
@@ -257,7 +254,7 @@ MainAssistant.prototype.roll = function() {
 MainAssistant.prototype.enableRollButton = function() {
 	this.buttonModels.roll.label = "Roll " + (this.dice.rollCount);
 	this.buttonModels.roll.disabled = false;
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.controller.modelChanged(this.buttonModels.roll);
 };
 
 MainAssistant.prototype.showPossibleScores = function() {
@@ -370,7 +367,7 @@ MainAssistant.prototype.setUpperHalfScore = function(buttonModel) {
 		return;
 	}
 	//Disable the score button for the remainder of the game.
-	this.controller.setWidgetModel("button" + buttonModel.label, buttonModel);
+	this.controller.modelChanged(buttonModel);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValue" + buttonModel.label).innerHTML == "") {
 		this.controller.get("scoreValue" + buttonModel.label).innerHTML = 0;
@@ -392,7 +389,7 @@ MainAssistant.prototype.setThreeOfAKind = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.threeOfAKind.disabled = true;
-	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
+	this.controller.modelChanged(this.buttonModels.threeOfAKind);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueThreeOfAKind").innerHTML == "") {
 		this.controller.get("scoreValueThreeOfAKind").innerHTML = 0;
@@ -413,7 +410,7 @@ MainAssistant.prototype.setFourOfAKind = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.fourOfAKind.disabled = true;
-	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
+	this.controller.modelChanged(this.buttonModels.fourOfAKind);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueFourOfAKind").innerHTML == "") {
 		this.controller.get("scoreValueFourOfAKind").innerHTML = 0;
@@ -434,7 +431,7 @@ MainAssistant.prototype.setFullHouse = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.fullHouse.disabled = true;
-	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
+	this.controller.modelChanged(this.buttonModels.fullHouse);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueFullHouse").innerHTML == "") {
 		this.controller.get("scoreValueFullHouse").innerHTML = 0;
@@ -455,7 +452,7 @@ MainAssistant.prototype.setSmallStraight = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.smallStraight.disabled = true;
-	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
+	this.controller.modelChanged(this.buttonModels.smallStraight);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueSmallStraight").innerHTML == "") {
 		this.controller.get("scoreValueSmallStraight").innerHTML = 0;
@@ -476,7 +473,7 @@ MainAssistant.prototype.setLargeStraight = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.largeStraight.disabled = true;
-	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
+	this.controller.modelChanged(this.buttonModels.largeStraight);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueLargeStraight").innerHTML == "") {
 		this.controller.get("scoreValueLargeStraight").innerHTML = 0;
@@ -497,7 +494,7 @@ MainAssistant.prototype.setFiveOfAKind = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.fiveOfAKind.disabled = true;
-	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
+	this.controller.modelChanged(this.buttonModels.fiveOfAKind);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueFiveOfAKind").innerHTML == "") {
 		this.controller.get("scoreValueFiveOfAKind").innerHTML = 0;
@@ -518,7 +515,7 @@ MainAssistant.prototype.setChance = function() {
 	}
 	//Disable the score button for the remainder of the game.
 	this.buttonModels.chance.disabled = true;
-	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
+	this.controller.modelChanged(this.buttonModels.chance);
 	//Show zero if there's no score on this item.
 	if (this.controller.get("scoreValueChance").innerHTML == "") {
 		this.controller.get("scoreValueChance").innerHTML = 0;
@@ -550,7 +547,7 @@ MainAssistant.prototype.reactToFiveOfAKind = function() {
 	}
 	//Freeze the Roll button.
 	this.buttonModels.roll.disabled = true;
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.controller.modelChanged(this.buttonModels.roll);
 };
 
 MainAssistant.prototype.setTotal = function() {
@@ -619,8 +616,9 @@ MainAssistant.prototype.releaseDice = function() {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
 	}
 	//Enable the Roll button.
-	this.buttonModels.roll = {label: "Roll 1", disabled: false};
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.buttonModels.roll.label = "Roll 1";
+	this.buttonModels.roll.disabled = false;
+	this.controller.modelChanged(this.buttonModels.roll);
 };
 
 MainAssistant.prototype.checkForEndOfGame = function() {
@@ -631,7 +629,7 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	
 	//Disable the Roll button.
 	this.buttonModels.roll.disabled = true;
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.controller.modelChanged(this.buttonModels.roll);
 	
 	//Hide the dice and show the "Play Again" text.
 	for (var i = 0; i < this.dice.dice.length; i++) {
@@ -644,20 +642,20 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 MainAssistant.prototype.newGame = function() {
 	//Enable all buttons.
 	this.buttonModels.enableAllButtons();
-	this.controller.setWidgetModel("buttonOnes", this.buttonModels.ones);
-	this.controller.setWidgetModel("buttonTwos", this.buttonModels.twos);
-	this.controller.setWidgetModel("buttonThrees", this.buttonModels.threes);
-	this.controller.setWidgetModel("buttonFours", this.buttonModels.fours);
-	this.controller.setWidgetModel("buttonFives", this.buttonModels.fives);
-	this.controller.setWidgetModel("buttonSixes", this.buttonModels.sixes);
-	this.controller.setWidgetModel("buttonThreeOfAKind", this.buttonModels.threeOfAKind);
-	this.controller.setWidgetModel("buttonFourOfAKind", this.buttonModels.fourOfAKind);
-	this.controller.setWidgetModel("buttonFullHouse", this.buttonModels.fullHouse);
-	this.controller.setWidgetModel("buttonSmallStraight", this.buttonModels.smallStraight);
-	this.controller.setWidgetModel("buttonLargeStraight", this.buttonModels.largeStraight);
-	this.controller.setWidgetModel("buttonFiveOfAKind", this.buttonModels.fiveOfAKind);
-	this.controller.setWidgetModel("buttonChance", this.buttonModels.chance);
-	this.controller.setWidgetModel("buttonRoll", this.buttonModels.roll);
+	this.controller.modelChanged(this.buttonModels.ones);
+	this.controller.modelChanged(this.buttonModels.twos);
+	this.controller.modelChanged(this.buttonModels.threes);
+	this.controller.modelChanged(this.buttonModels.fours);
+	this.controller.modelChanged(this.buttonModels.fives);
+	this.controller.modelChanged(this.buttonModels.sixes);
+	this.controller.modelChanged(this.buttonModels.threeOfAKind);
+	this.controller.modelChanged(this.buttonModels.fourOfAKind);
+	this.controller.modelChanged(this.buttonModels.fullHouse);
+	this.controller.modelChanged(this.buttonModels.smallStraight);
+	this.controller.modelChanged(this.buttonModels.largeStraight);
+	this.controller.modelChanged(this.buttonModels.fiveOfAKind);
+	this.controller.modelChanged(this.buttonModels.chance);
+	this.controller.modelChanged(this.buttonModels.roll);
 	
 	//Reset the scoreboard. This has to happen after the buttons are re-enabled.
 	this.resetAllScores();
