@@ -11,5 +11,9 @@
     {
         "source": "app\/assistants\/help-assistant.js",
         "scenes": "help"
+    },
+    {
+        "source": "app\/assistants\/preferences-assistant.js",
+        "scenes": "preferences"
     }
 ]

@@ -16,6 +16,7 @@ MainAssistant.prototype.setup = function() {
 	
 	/* setup widgets here */
 	
+	//Application menu
 	var menuModel = {
 		visible: true,
 		items: [
@@ -25,8 +26,6 @@ MainAssistant.prototype.setup = function() {
 			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
 		]
 	};
-	
-	//Application menu
 	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);
 	
 	//Upper half score buttons
@@ -74,7 +73,6 @@ MainAssistant.prototype.setup = function() {
 	//Roll button listener
 	this.rollHandler = this.roll.bindAsEventListener(this);
 	this.controller.listen("buttonRoll", Mojo.Event.tap, this.rollHandler);
-	this.controller.listen(document, "shakeend", this.rollHandler);
 	
 	//Upper half score button listeners
 	this.onesHandler = this.setOnes.bindAsEventListener(this);
@@ -110,12 +108,25 @@ MainAssistant.prototype.setup = function() {
 MainAssistant.prototype.activate = function(event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+	  
+	//Set up listeners that are dependent on the Preferences.
+	if (FiveDice.shakeToRoll) {
+		this.controller.listen(document, "shakeend", this.rollHandler);
+	}
+	
+	//Re-calculate the totals to update the Subtotal display,
+	//in case we're coming back from the Preferences scene
+	//and the subtotal deviation preference was changed.
+	this.setTotal();
 };
 
 
 MainAssistant.prototype.deactivate = function(event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
+	  
+	//Remove listeners that are dependent on the Preferences.
+	this.controller.stopListening(document, "shakeend", this.rollHandler);
 };
 
 MainAssistant.prototype.cleanup = function(event) {
@@ -132,7 +143,6 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("playAgain", Mojo.Event.tap, this.newGameHandler);
 	//Roll button listeners
 	this.controller.stopListening("buttonRoll", Mojo.Event.tap, this.rollHandler);
-	this.controller.stopListening(document, "shakeend", this.rollHandler);
 	//Upper half score button listeners
 	this.controller.stopListening("buttonOnes", Mojo.Event.tap, this.onesHandler);
 	this.controller.stopListening("buttonTwos", Mojo.Event.tap, this.twosHandler);
@@ -157,6 +167,7 @@ MainAssistant.prototype.handleCommand = function(event) {
 			this.newGame();
 			break;
 		case "do-preferences":
+			Mojo.Controller.stageController.pushScene("preferences");
 			break;
 		case "do-help":
 			Mojo.Controller.stageController.pushScene("help");
@@ -169,7 +180,11 @@ MainAssistant.prototype.handleCommand = function(event) {
 MainAssistant.prototype.resetAllScores = function() {
 	//Blank the button-based scores and set the bonus and totals to 0.
 	this.blankUnsetScores();
-	this.controller.get("subtotal").innerHTML = "Subtotal &nbsp;&nbsp; 0 / +0";
+	var subtotalDisplay = "Subtotal &nbsp;&nbsp; 0";
+	if (FiveDice.showSubtotalDeviation) {
+		subtotalDisplay += " / +0";
+	}
+	this.controller.get("subtotal").innerHTML = subtotalDisplay;
 	this.controller.get("scoreValueBonus").innerHTML = 0;
 	this.controller.get("scoreValueTotal").innerHTML = 0;
 };
@@ -234,9 +249,14 @@ MainAssistant.prototype.roll = function() {
 	this.dice.roll();
 	this.buttonModels.roll.disabled = true;
 	this.controller.modelChanged(this.buttonModels.roll);
-	//If we still have rolls left, set a timer to re-enable the button.
+	//If we still have rolls left, re-enable the button (either by timer or immediately).
 	if (this.dice.rollCount <= 3) {
-		this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
+		if (FiveDice.disableRollButtonBetweenRolls) {
+			this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
+		}
+		else {
+			this.enableRollButton();
+		}
 	}
 	//Set the dice images.
 	for (var i = 0; i < this.dice.dice.length; i++) {
@@ -580,7 +600,11 @@ MainAssistant.prototype.setTotal = function() {
 		benchmark += 18;
 	}
 	var difference = total - benchmark;
-	this.controller.get("subtotal").innerHTML = "Subtotal &nbsp;&nbsp; " + total + " / " + (difference < 0 ? "" : "+") + (difference);
+	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + total;
+	if (FiveDice.showSubtotalDeviation) {
+		subtotalDisplay += " / " + (difference < 0 ? "" : "+") + (difference);;
+	}
+	this.controller.get("subtotal").innerHTML = subtotalDisplay;
 	//Add in the bonus.
 	this.controller.get("scoreValueBonus").innerHTML = (total >= 63 ? 35 : 0);
 	total += +this.controller.get("scoreValueBonus").innerHTML;

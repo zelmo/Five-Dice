@@ -79,8 +79,48 @@
 	margin-top: -40px;
 }
 
-/* help */
+/* help & preferences*/
 #headerIcon {
+	background: url(../images/Die5Held.png) no-repeat;
 	margin-top: 10px;
 	margin-left: 15px;
+}
+
+#rollDelayGroup {
+	height: 7em;
+}
+
+.infoIcon {
+	height: 32px;
+	width: 32px;
+}
+
+.listInfoIcon {
+	margin-top: 9px;
+	margin-right: 9px;
+	height: 32px;
+	width: 32px;
+}
+
+.checkBoxLabel.single-line {
+	height: 50px;
+	line-height: 50px;
+}
+
+.checkBoxLabel.multi-line {
+	padding: 5px;
+}
+
+.sliderLabel {
+	padding: 10px;
+}
+
+.sliderMarkerLeft {
+	float: left;
+	padding: 5px;
+}
+
+.sliderMarkerRight {
+	float: right;
+	padding: 5px;
 }

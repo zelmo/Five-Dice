@@ -20,7 +20,8 @@ HelpAssistant.prototype.setup = function() {
 	var menuModel = {
 		visible: true,
 		items: [
-			{label: "About #{appName}...".interpolate({appName: FiveDice.title}), command: "do-about"}
+			{label: "Preferences", command: "do-preferences"},
+			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
 		]
 	};
 	
@@ -63,6 +64,9 @@ HelpAssistant.prototype.cleanup = function(event) {
 HelpAssistant.prototype.handleCommand = function(event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
+		case "do-preferences":
+			Mojo.Controller.stageController.swapScene("preferences");
+			break;
 		case "do-nextPage":
 			this.showNextPage();
 			break;

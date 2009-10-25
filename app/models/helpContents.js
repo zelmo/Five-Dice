@@ -65,7 +65,7 @@ var HelpContents = Class.create ({
 			headerIcon: "Die4Held.png",
 			headerTitle: "Special Features",
 			bodyHtml: "<div class=\"palm-body-text\">" +
-				"<em>Note that many special features can be configured in the game's Preferences.</em>" +
+				"<em>Note that all special features can be configured in the game's Preferences.</em>" +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
 				"<strong>Delay between rolls:</strong> After each roll, the <strong>Roll</strong> button" +
@@ -74,7 +74,7 @@ var HelpContents = Class.create ({
 				" the button, or you have shake enabled during an earthquake." +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
-				"<strong>Subtotal target tracking:</strong> 63 may sound like an arbitrary score to have" +
+				"<strong>Subtotal deviation:</strong> 63 may sound like an arbitrary score to have" +
 				" to reach in the upper half in order to earn your bonus, but it turns out to be the score" +
 				" you get if you score three dice in each upper-half score item. As you play, Five Dice will" +
 				" compare what you've scored in the upper half to what you would score if you got three dice" +
