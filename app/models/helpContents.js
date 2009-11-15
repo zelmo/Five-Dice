@@ -50,15 +50,13 @@ var HelpContents = Class.create ({
 				" reaches or exceeds 63 points." +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
-				"In the current version of Five Dice, if you roll 5 of a kind, the game will insist" +
-				" that you use it. If you roll 5 of a kind later in the same game, the game will" +
-				" automatically give you 100 extra points on your <strong>5 of a kind</strong> score" +
-				" and insist that you also apply that roll to another score item. In that situation," +
-				" all lower-half score items are eligible for scoring at their normal point values." +
-				" There is a slight deviation here from the official rules, in that Five Dice" +
-				" allows you to apply the roll to lower-half items even if the number that you rolled" +
-				" is still available in the upper half. This is likely to change in a future release" +
-				" to match the official rules more precisely." +
+				"If you roll five of a kind after already having a non-zero score on <strong>5 of a kind</strong>," +
+				" you can get an extra 100 points on your <strong>5 of a kind</strong> score." +
+				" To get the extra points, simply assign the score to the upper half item that matches" +
+				" your dice. If that item already has a score on it (even if that score is 0)," +
+				" you can use your roll for any lower-half item and it will count as the normal value" +
+				" for that item. You can keep accumulating extra points on <strong>5 of a kind</strong>" +
+				" each time you roll five of a kind for the remainder of the game." +
 				"</div>"
 		},
 		{

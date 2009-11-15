@@ -263,10 +263,6 @@ MainAssistant.prototype.roll = function() {
 		var imageStyle = (this.dice.dice[i].held ? "Held" : "Plain");
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + imageStyle + ".png\"></img>";
 	}
-	//React to five of a kind if merited.
-	if (this.checkForFiveOfAKind()) {
-		this.reactToFiveOfAKind();
-	}
 	
 	this.showPossibleScores();
 };
@@ -317,9 +313,11 @@ MainAssistant.prototype.showFullHouse = function() {
 };
 
 MainAssistant.prototype.showSmallStraight = function() {
-	//See if we got five of a kind, which can substitute for a straight.
+	//See if we got five of a kind, which can substitute for a straight
+	//if there is already a score for Five of a Kind and for the
+	//upper half item that corresponds to the number on the dice.
 	var score = 0;
-	if (this.checkForFiveOfAKind()) {
+	if (this.checkForExtraFiveOfAKind(false)) {
 		score = 30;
 	}
 	else {
@@ -331,9 +329,11 @@ MainAssistant.prototype.showSmallStraight = function() {
 };
 
 MainAssistant.prototype.showLargeStraight = function() {
-	//See if we got five of a kind, which can substitute for a straight.
+	//See if we got five of a kind, which can substitute for a straight
+	//if there is already a score for Five of a Kind and for the
+	//upper half item that corresponds to the number on the dice.
 	var score = 0;
-	if (this.checkForFiveOfAKind()) {
+	if (this.checkForExtraFiveOfAKind(false)) {
 		score = 40;
 	}
 	else {
@@ -394,6 +394,7 @@ MainAssistant.prototype.setUpperHalfScore = function(buttonModel) {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValue" + buttonModel.label).style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(true);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -416,6 +417,7 @@ MainAssistant.prototype.setThreeOfAKind = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueThreeOfAKind").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -437,6 +439,7 @@ MainAssistant.prototype.setFourOfAKind = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueFourOfAKind").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -458,6 +461,7 @@ MainAssistant.prototype.setFullHouse = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueFullHouse").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -479,6 +483,7 @@ MainAssistant.prototype.setSmallStraight = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueSmallStraight").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -500,6 +505,7 @@ MainAssistant.prototype.setLargeStraight = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueLargeStraight").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -542,6 +548,7 @@ MainAssistant.prototype.setChance = function() {
 	}
 	//Show the score in the "set" color.
 	this.controller.get("scoreValueChance").style.color = FiveDice.setScoreColor;
+	this.setExtraFiveOfAKind(false);
 	//Re-calculate the total and get on with the game.
 	this.setTotal();
 	this.blankUnsetScores();
@@ -550,24 +557,46 @@ MainAssistant.prototype.setChance = function() {
 };
 
 //Auxiliary functions
-MainAssistant.prototype.checkForFiveOfAKind = function(){
-	 return (this.dice.fiveOfAKindScore() == 50);
+MainAssistant.prototype.checkForExtraFiveOfAKind = function(forUpperHalf) {
+	//Rolls that result in five of a kind can score extra points for the
+	//Five of a Kind score if Five of a Kind has already been scored.
+	var isExtra = (this.dice.fiveOfAKindScore() > 0 && +this.controller.get("scoreValueFiveOfAKind").innerHTML > 0);
+	if (forUpperHalf) { return isExtra; }
+	//For a five-of-a-kind roll to substitute for a normal lower-half roll,
+	//there is an extra condition that the upper-half score that corresponds
+	//to the number shows on the dice is already scored.
+	var scoreValueElement = "";
+	switch (this.dice.dice[0].value) {
+		case 1:
+			scoreValueElement = "scoreValueOnes";
+			break;
+		case 2:
+			scoreValueElement = "scoreValueTwos";
+			break;
+		case 3:
+			scoreValueElement = "scoreValueThrees";
+			break;
+		case 4:
+			scoreValueElement = "scoreValueFours";
+			break;
+		case 5:
+			scoreValueElement = "scoreValueFives";
+			break;
+		case 6:
+			scoreValueElement = "scoreValueSixes";
+			break;
+	}
+	return (isExtra && this.controller.get(scoreValueElement).innerHTML != "" && this.controller.get(scoreValueElement).style.color == FiveDice.setScoreColor);  
 };
 
-MainAssistant.prototype.reactToFiveOfAKind = function() {
-	//See if we've already scored five of a kind.
-	var fiveOfAKindScore = +this.controller.get("scoreValueFiveOfAKind").innerHTML;
-	if (fiveOfAKindScore == "") {
-		//TODO: Notify the user that they've rolled five of a kind and should probably score it as such.
+MainAssistant.prototype.setExtraFiveOfAKind = function(forUpperHalf) {
+	//See if an extra five of a kind was rolled.
+	if (this.checkForExtraFiveOfAKind(forUpperHalf)) {
+		//Increase the Five of a Kind score by 100.
+		var score = +this.controller.get("scoreValueFiveOfAKind").innerHTML;
+		score += 100;
+		this.controller.get("scoreValueFiveOfAKind").innerHTML = score;
 	}
-	else {
-		fiveOfAKindScore += 100;
-		this.controller.get("scoreValueFiveOfAKind").innerHTML = fiveOfAKindScore;
-		//TODO: Notify the user they've earned 100 bonus points for rolling five of a kind again.
-	}
-	//Freeze the Roll button.
-	this.buttonModels.roll.disabled = true;
-	this.controller.modelChanged(this.buttonModels.roll);
 };
 
 MainAssistant.prototype.setTotal = function() {

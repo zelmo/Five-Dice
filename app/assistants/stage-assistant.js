@@ -1,7 +1,7 @@
 //Declare a namespace and some constants.
 FiveDice = {};
 FiveDice.title = "Five Dice";
-FiveDice.version = "0.9.0";
+FiveDice.version = "0.9.1";
 FiveDice.suggestedScoreColor = "teal"; //Color of the possible scores displayed after each roll.
 FiveDice.setScoreColor = "black"; //Color of the scores after they've been set.
 FiveDice.MenuAttributes = {	omitDefaultItems: true };
