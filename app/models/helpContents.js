@@ -63,7 +63,7 @@ var HelpContents = Class.create ({
 			headerIcon: "Die4Held.png",
 			headerTitle: "Special Features",
 			bodyHtml: "<div class=\"palm-body-text\">" +
-				"<em>Note that all special features can be configured in the game's Preferences.</em>" +
+				"<em>Note that most special features can be configured in the game's Preferences.</em>" +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
 				"<strong>Delay between rolls:</strong> After each roll, the <strong>Roll</strong> button" +
@@ -81,6 +81,16 @@ var HelpContents = Class.create ({
 				" earning the bonus find this feature very helpful in letting them know whether they can" +
 				" afford to sacrifice one or two dice on an upper-score item, or whether it will be too hard" +
 				" to make up the difference later." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"<strong>Undo:</strong> If you accidentally hit a score button before you're ready," +
+				" you can select the <em>Undo</em> item from the menu to return the game state to" +
+				" what it was before you hit the score button. Aside from not having any dice held," +
+				" everything will be restored: the exact dice values, the score suggestions, and even" +
+				" the roll counter (meaning if you had remaining rolls available before you hit the" +
+				" score button, they'll still be available after you hit <em>Undo</em>)." +
+				" The <em>Undo</em> menu item is available immediately after assigning any score item," +
+				" and becomes disabled once you hit the <em>Roll</em> button (sorry, no re-rolls)." +
 				"</div>"
 		}
 	]
