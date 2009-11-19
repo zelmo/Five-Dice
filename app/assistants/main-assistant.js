@@ -20,7 +20,7 @@ function MainAssistant() {
 		]
 	};
 	
-	//For the Undo menu item to work, store the DOM element of the last item that was scored.
+	//For the Undo menu item to work, keep a state object that gets updated before a score is set.
 	this.lastScoreItem = {buttonModel: null, scoreValueDomElement: null, dice: [], rollCount: 0};
 };
 
@@ -63,15 +63,15 @@ MainAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 	
 	//Dice tap listeners
-	this.die0Handler = this.toggleDie0.bindAsEventListener(this);
+	this.die0Handler = function() {this.toggleDie(0);}.bindAsEventListener(this);
 	this.controller.listen("die0", Mojo.Event.tap, this.die0Handler);
-	this.die1Handler = this.toggleDie1.bindAsEventListener(this);
+	this.die1Handler = function() {this.toggleDie(1);}.bindAsEventListener(this);
 	this.controller.listen("die1", Mojo.Event.tap, this.die1Handler);
-	this.die2Handler = this.toggleDie2.bindAsEventListener(this);
+	this.die2Handler = function() {this.toggleDie(2);}.bindAsEventListener(this);
 	this.controller.listen("die2", Mojo.Event.tap, this.die2Handler);
-	this.die3Handler = this.toggleDie3.bindAsEventListener(this);
+	this.die3Handler = function() {this.toggleDie(3);}.bindAsEventListener(this);
 	this.controller.listen("die3", Mojo.Event.tap, this.die3Handler);
-	this.die4Handler = this.toggleDie4.bindAsEventListener(this);
+	this.die4Handler = function() {this.toggleDie(4);}.bindAsEventListener(this);
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
 	this.newGameHandler = this.newGame.bindAsEventListener(this);
 	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
@@ -81,33 +81,33 @@ MainAssistant.prototype.setup = function() {
 	this.controller.listen("buttonRoll", Mojo.Event.tap, this.rollHandler);
 	
 	//Upper half score button listeners
-	this.onesHandler = this.setOnes.bindAsEventListener(this);
+	this.onesHandler = function() {this.setScore(this.buttonModels.ones, this.controller.get("scoreValueOnes"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonOnes", Mojo.Event.tap, this.onesHandler);
-	this.twosHandler = this.setTwos.bindAsEventListener(this);
+	this.twosHandler = function() {this.setScore(this.buttonModels.twos, this.controller.get("scoreValueTwos"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonTwos", Mojo.Event.tap, this.twosHandler);
-	this.threesHandler = this.setThrees.bindAsEventListener(this);
+	this.threesHandler = function() {this.setScore(this.buttonModels.threes, this.controller.get("scoreValueThrees"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonThrees", Mojo.Event.tap, this.threesHandler);
-	this.foursHandler = this.setFours.bindAsEventListener(this);
+	this.foursHandler = function() {this.setScore(this.buttonModels.fours, this.controller.get("scoreValueFours"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonFours", Mojo.Event.tap, this.foursHandler);
-	this.fivesHandler = this.setFives.bindAsEventListener(this);
+	this.fivesHandler = function() {this.setScore(this.buttonModels.fives, this.controller.get("scoreValueFives"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonFives", Mojo.Event.tap, this.fivesHandler);
-	this.sixesHandler = this.setSixes.bindAsEventListener(this);
+	this.sixesHandler = function() {this.setScore(this.buttonModels.sixes, this.controller.get("scoreValueSixes"), true);}.bindAsEventListener(this);
 	this.controller.listen("buttonSixes", Mojo.Event.tap, this.sixesHandler);
 	
 	//Lower half score button listeners
-	this.threeOfAKindHandler = this.setThreeOfAKind.bindAsEventListener(this);
+	this.threeOfAKindHandler = function() {this.setScore(this.buttonModels.threeOfAKind, this.controller.get("scoreValueThreeOfAKind"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonThreeOfAKind", Mojo.Event.tap, this.threeOfAKindHandler);
-	this.fourOfAKindHandler = this.setFourOfAKind.bindAsEventListener(this);
+	this.fourOfAKindHandler = function() {this.setScore(this.buttonModels.fourOfAKind, this.controller.get("scoreValueFourOfAKind"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFourOfAKind", Mojo.Event.tap, this.fourOfAKindHandler);
-	this.fullHouseHandler = this.setFullHouse.bindAsEventListener(this);
+	this.fullHouseHandler = function() {this.setScore(this.buttonModels.fullHouse, this.controller.get("scoreValueFullHouse"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFullHouse", Mojo.Event.tap, this.fullHouseHandler);
-	this.smallStraightHandler = this.setSmallStraight.bindAsEventListener(this);
+	this.smallStraightHandler = function() {this.setScore(this.buttonModels.smallStraight, this.controller.get("scoreValueSmallStraight"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonSmallStraight", Mojo.Event.tap, this.smallStraightHandler);
-	this.largeStraightHandler = this.setLargeStraight.bindAsEventListener(this);
+	this.largeStraightHandler = function() {this.setScore(this.buttonModels.largeStraight, this.controller.get("scoreValueLargeStraight"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonLargeStraight", Mojo.Event.tap, this.largeStraightHandler);
-	this.fiveOfAKindHandler = this.setFiveOfAKind.bindAsEventListener(this);
+	this.fiveOfAKindHandler = function() {this.setScore(this.buttonModels.fiveOfAKind, this.controller.get("scoreValueFiveOfAKind"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFiveOfAKind", Mojo.Event.tap, this.fiveOfAKindHandler);
-	this.chanceHandler = this.setChance.bindAsEventListener(this);
+	this.chanceHandler = function() {this.setScore(this.buttonModels.chance, this.controller.get("scoreValueChance"), false);}.bindAsEventListener(this);
 	this.controller.listen("buttonChance", Mojo.Event.tap, this.chanceHandler);
 };
 
@@ -215,22 +215,6 @@ MainAssistant.prototype.blankUnsetScores = function() {
 	if (!this.buttonModels.chance.disabled)			{ this.controller.get("scoreValueChance").innerHTML = ""; }
 };
 
-//Die toggles
-MainAssistant.prototype.toggleDie0 = function() {
-	this.toggleDie(0);
-};
-MainAssistant.prototype.toggleDie1 = function() {
-	this.toggleDie(1);
-};
-MainAssistant.prototype.toggleDie2 = function() {
-	this.toggleDie(2);
-};
-MainAssistant.prototype.toggleDie3 = function() {
-	this.toggleDie(3);
-};
-MainAssistant.prototype.toggleDie4 = function() {
-	this.toggleDie(4);
-};
 MainAssistant.prototype.toggleDie = function(index) {
 	//Make sure the dice have been rolled at least once this turn.
 	if (this.dice.chanceScore == 0) {
@@ -284,127 +268,34 @@ MainAssistant.prototype.enableRollButton = function() {
 };
 
 MainAssistant.prototype.showPossibleScores = function() {
-	if (!this.buttonModels.ones.disabled)	{ this.showUpperHalfScore("scoreValueOnes", 1); }
-	if (!this.buttonModels.twos.disabled)	{ this.showUpperHalfScore("scoreValueTwos", 2); }
-	if (!this.buttonModels.threes.disabled)	{ this.showUpperHalfScore("scoreValueThrees", 3); }
-	if (!this.buttonModels.fours.disabled)	{ this.showUpperHalfScore("scoreValueFours", 4); }
-	if (!this.buttonModels.fives.disabled)	{ this.showUpperHalfScore("scoreValueFives", 5); }
-	if (!this.buttonModels.sixes.disabled)	{ this.showUpperHalfScore("scoreValueSixes", 6); }
-	if (!this.buttonModels.threeOfAKind.disabled)	{ this.showThreeOfAKind(); }
-	if (!this.buttonModels.fourOfAKind.disabled)	{ this.showFourOfAKind(); }
-	if (!this.buttonModels.fullHouse.disabled)		{ this.showFullHouse(); }
-	if (!this.buttonModels.smallStraight.disabled)	{ this.showSmallStraight(); }
-	if (!this.buttonModels.largeStraight.disabled)	{ this.showLargeStraight(); }
-	if (!this.buttonModels.fiveOfAKind.disabled)	{ this.showFiveOfAKind(); }
-	if (!this.buttonModels.chance.disabled)			{ this.showChance(); }
+	if (!this.buttonModels.ones.disabled)	{ this.showSuggestedScore("scoreValueOnes", this.dice.upperHalfScore(1)); }
+	if (!this.buttonModels.twos.disabled)	{ this.showSuggestedScore("scoreValueTwos", this.dice.upperHalfScore(2)); }
+	if (!this.buttonModels.threes.disabled)	{ this.showSuggestedScore("scoreValueThrees", this.dice.upperHalfScore(3)); }
+	if (!this.buttonModels.fours.disabled)	{ this.showSuggestedScore("scoreValueFours", this.dice.upperHalfScore(4)); }
+	if (!this.buttonModels.fives.disabled)	{ this.showSuggestedScore("scoreValueFives", this.dice.upperHalfScore(5)); }
+	if (!this.buttonModels.sixes.disabled)	{ this.showSuggestedScore("scoreValueSixes", this.dice.upperHalfScore(6)); }
+	if (!this.buttonModels.threeOfAKind.disabled)	{ this.showSuggestedScore("scoreValueThreeOfAKind", this.dice.threeOfAKindScore()); }
+	if (!this.buttonModels.fourOfAKind.disabled)	{ this.showSuggestedScore("scoreValueFourOfAKind", this.dice.fourOfAKindScore()); }
+	if (!this.buttonModels.fullHouse.disabled)		{ this.showSuggestedScore("scoreValueFullHouse", this.dice.fullHouseScore()); }
+	if (!this.buttonModels.smallStraight.disabled)	{ this.showSuggestedScore("scoreValueSmallStraight", this.dice.smallStraightScore()); }
+	if (!this.buttonModels.largeStraight.disabled)	{ this.showSuggestedScore("scoreValueLargeStraight", this.dice.largeStraightScore()); }
+	if (!this.buttonModels.fiveOfAKind.disabled)	{ this.showSuggestedScore("scoreValueFiveOfAKind", this.dice.fiveOfAKindScore()); }
+	if (!this.buttonModels.chance.disabled)			{ this.showSuggestedScore("scoreValueChance", this.dice.chanceScore()); }
 };
-MainAssistant.prototype.showUpperHalfScore = function(scoreValueId, targetValue) {
+
+MainAssistant.prototype.showSuggestedScore = function(scoreValueId, suggestedScore) {
+	//An extra five-of-a-kind can count for any lower-half item,
+	//provided Five of a Kind already has a score.
+	//The only lower-half items where we need to specify a score
+	//that's different from what the dice show are Three of a Kind
+	//and Four of a Kind, so check explicitly for this condition.
+	if (scoreValueId == "scoreValueThreeOfAKind" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 30; }
+	if (scoreValueId == "scoreValueFourOfAKind" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 40; }
+	//Don't show a suggested score of zero--leave the field blank instead.
+	if (suggestedScore == 0) { suggestedScore = ""; }
 	//Display the score in the "suggested" color.
-	this.controller.get(scoreValueId).innerHTML = (this.dice.upperHalfScore(targetValue) > 0 ? this.dice.upperHalfScore(targetValue) : "");
+	this.controller.get(scoreValueId).innerHTML = suggestedScore;
 	this.controller.get(scoreValueId).style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showThreeOfAKind = function() {
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueThreeOfAKind").innerHTML = (this.dice.threeOfAKindScore() > 0 ? this.dice.threeOfAKindScore() : "");
-	this.controller.get("scoreValueThreeOfAKind").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showFourOfAKind = function() {
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFourOfAKind").innerHTML = (this.dice.fourOfAKindScore() > 0 ? this.dice.fourOfAKindScore() : "");
-	this.controller.get("scoreValueFourOfAKind").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showFullHouse = function() {
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFullHouse").innerHTML = (this.dice.fullHouseScore() > 0 ? this.dice.fullHouseScore() : "");
-	this.controller.get("scoreValueFullHouse").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showSmallStraight = function() {
-	//See if we got five of a kind, which can substitute for a straight
-	//if there is already a score for Five of a Kind and for the
-	//upper half item that corresponds to the number on the dice.
-	var score = 0;
-	if (this.checkForExtraFiveOfAKind(false)) {
-		score = 30;
-	}
-	else {
-		score = this.dice.smallStraightScore();
-	}
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueSmallStraight").innerHTML = (score > 0 ? score : "");
-	this.controller.get("scoreValueSmallStraight").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showLargeStraight = function() {
-	//See if we got five of a kind, which can substitute for a straight
-	//if there is already a score for Five of a Kind and for the
-	//upper half item that corresponds to the number on the dice.
-	var score = 0;
-	if (this.checkForExtraFiveOfAKind(false)) {
-		score = 40;
-	}
-	else {
-		score = this.dice.largeStraightScore();
-	}
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueLargeStraight").innerHTML = (score > 0 ? score : "");
-	this.controller.get("scoreValueLargeStraight").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showFiveOfAKind = function() {
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueFiveOfAKind").innerHTML = (this.dice.fiveOfAKindScore() > 0 ? this.dice.fiveOfAKindScore() : "");
-	this.controller.get("scoreValueFiveOfAKind").style.color = FiveDice.suggestedScoreColor;
-};
-
-MainAssistant.prototype.showChance = function() {
-	//Display the score in the "suggested" color.
-	this.controller.get("scoreValueChance").innerHTML = this.dice.chanceScore();
-	this.controller.get("scoreValueChance").style.color = FiveDice.suggestedScoreColor;
-};
-
-//Score button handlers
-MainAssistant.prototype.setOnes = function() {
-	this.setScore(this.buttonModels.ones, this.controller.get("scoreValueOnes"), true);
-};
-MainAssistant.prototype.setTwos = function() {
-	this.setScore(this.buttonModels.twos, this.controller.get("scoreValueTwos"), true);
-};
-MainAssistant.prototype.setThrees = function() {
-	this.setScore(this.buttonModels.threes, this.controller.get("scoreValueThrees"), true);
-};
-MainAssistant.prototype.setFours = function() {
-	this.setScore(this.buttonModels.fours, this.controller.get("scoreValueFours"), true);
-};
-MainAssistant.prototype.setFives = function() {
-	this.setScore(this.buttonModels.fives, this.controller.get("scoreValueFives"), true);
-};
-MainAssistant.prototype.setSixes = function() {
-	this.setScore(this.buttonModels.sixes, this.controller.get("scoreValueSixes"), true);
-};
-MainAssistant.prototype.setThreeOfAKind = function() {
-	this.setScore(this.buttonModels.threeOfAKind, this.controller.get("scoreValueThreeOfAKind"), false);
-};
-MainAssistant.prototype.setFourOfAKind = function() {
-	this.setScore(this.buttonModels.fourOfAKind, this.controller.get("scoreValueFourOfAKind"), false);
-};
-MainAssistant.prototype.setFullHouse = function() {
-	this.setScore(this.buttonModels.fullHouse, this.controller.get("scoreValueFullHouse"), false);
-};
-MainAssistant.prototype.setSmallStraight = function() {
-	this.setScore(this.buttonModels.smallStraight, this.controller.get("scoreValueSmallStraight"), false);
-};
-MainAssistant.prototype.setLargeStraight = function() {
-	this.setScore(this.buttonModels.largeStraight, this.controller.get("scoreValueLargeStraight"), false);
-};
-MainAssistant.prototype.setFiveOfAKind = function() {
-	this.setScore(this.buttonModels.fiveOfAKind, this.controller.get("scoreValueFiveOfAKind"), false);
-};
-MainAssistant.prototype.setChance = function() {
-	this.setScore(this.buttonModels.chance, this.controller.get("scoreValueChance"), false);
 };
 
 MainAssistant.prototype.setScore = function(buttonModel, scoreValueDomElement, isUpperHalf) {
