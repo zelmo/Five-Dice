@@ -1,5 +1,7 @@
-var HelpContents = Class.create ({
-	pages: [
+//Closure for HTML content of the Help scene.
+FiveDice.helpContents = function() {
+	//Private variables:
+	var _pages = [
 		{
 			headerIcon: "Die1Held.png",
 			headerTitle: "Overview",
@@ -93,5 +95,8 @@ var HelpContents = Class.create ({
 				" and becomes disabled once you hit the <em>Roll</em> button (sorry, no re-rolls)." +
 				"</div>"
 		}
-	]
-});
+	];
+	
+	//Public API:
+	return { pages: _pages };
+};

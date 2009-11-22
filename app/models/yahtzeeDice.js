@@ -1,72 +1,91 @@
-var YahtzeeDice = Class.create ({
-	dice: [new SixSidedDie(), new SixSidedDie(), new SixSidedDie(), new SixSidedDie(), new SixSidedDie()],
+//Closure for the group of dice.
+FiveDice.yahtzeeDice = function() {
+	//Private variables and accessors:
+	var _dieArray = [FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie()];
+	function _getDie(index) {
+		return _dieArray[index];
+	};
 	
-	rollCount: 1,
+	var _rollCount = 1;
+	function _getRollCount() { return _rollCount; };
 	
-	roll: function() {
-		for (var i = 0; i < this.dice.length; i++){
-			if (!this.dice[i].held) {
-				this.dice[i].roll();
+	var _previousRollCount = _rollCount;
+	
+	//Private functions:
+	function _numberOfDice() {
+		return _dieArray.length;
+	};
+	
+	function _roll() {
+		for (var i = 0; i < _dieArray.length; i++){
+			if (!_dieArray[i].getHeld()) {
+				_dieArray[i].roll();
 			}
 		}
-		this.rollCount++;
-	},
+		_rollCount++;
+	};
 	
-	clear: function(){
-		for (var i = 0; i < this.dice.length; i++) {
-			this.dice[i].value = 0;
-			this.dice[i].held = false;
+	function _clear() {
+		for (var i = 0; i < _dieArray.length; i++) {
+			_dieArray[i].clear();
 		}
-		this.rollCount = 1;
-	},
+		_rollCount = 1;
+	};
 	
-	upperHalfScore: function(targetValue) {
+	function _revert() {
+		for (var i = 0; i < _dieArray.length; i++) {
+			_dieArray[i].revert();
+		}
+		_rollCount = _previousRollCount;
+	};
+	
+	function _upperHalfScore(targetValue) {
 		var score = 0;
-		for (var i = 0; i < this.dice.length; i++) {
-			if (this.dice[i].value == targetValue) {
-				score += this.dice[i].value;
+		for (var i = 0; i < _dieArray.length; i++) {
+			if (_dieArray[i].getValue() == targetValue) {
+				score += _dieArray[i].getValue();
 			}
 		}
 		return score;
-	},
+	};
 	
-	threeOfAKindScore: function() {
+	function _threeOfAKindScore() {
 		var matches = [];
 		for (var startingDie = 0; startingDie < 3 && matches.length < 3; startingDie++) {
-			matches = [this.dice[startingDie].value];
-			for (var i = startingDie + 1; i < this.dice.length; i++) {
-				if (this.dice[i].value == this.dice[startingDie].value) {
-					matches.push(this.dice[i].value);
+			matches = [_dieArray[startingDie].getValue()];
+			for (var i = startingDie + 1; i < _dieArray.length; i++) {
+				if (_dieArray[i].getValue() == _dieArray[startingDie].getValue()) {
+					matches.push(_dieArray[i].getValue());
 				}
 			}
 		}
 		var score = 0;
 		if (matches.length >= 3) {
-			score = this.dice[0].value + this.dice[1].value + this.dice[2].value + this.dice[3].value + this.dice[4].value;
+			score = _dieArray[0].getValue() + _dieArray[1].getValue() + _dieArray[2].getValue() + _dieArray[3].getValue() + _dieArray[4].getValue();
 		}
 		return score;
-	},
+	};
 	
-	fourOfAKindScore: function() {
+	function _fourOfAKindScore() {
 		var matches = [];
 		for (var startingDie = 0; startingDie < 4 && matches.length < 4; startingDie++) {
-			matches = [this.dice[startingDie].value];
-			for (var i = startingDie + 1; i < this.dice.length; i++) {
-				if (this.dice[i].value == this.dice[startingDie].value) {
-					matches.push(this.dice[i].value);
+			matches = [_dieArray[startingDie].getValue()];
+			for (var i = startingDie + 1; i < _dieArray.length; i++) {
+				if (_dieArray[i].getValue() == _dieArray[startingDie].getValue()) {
+					matches.push(_dieArray[i].getValue());
 				}
 			}
 		}
 		var score = 0;
 		if (matches.length >= 4) {
-			score = this.dice[0].value + this.dice[1].value + this.dice[2].value + this.dice[3].value + this.dice[4].value;
+			score = _dieArray[0].getValue() + _dieArray[1].getValue() + _dieArray[2].getValue() + _dieArray[3].getValue() + _dieArray[4].getValue();
 		}
 		return score;
-	},
+	};
 	
-	fullHouseScore: function() {
+	function _fullHouseScore() {
 		//Sort the values of the dice.
-		var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
+		var values = [_dieArray[0].getValue(), _dieArray[1].getValue(), _dieArray[2].getValue(), _dieArray[3].getValue(), _dieArray[4].getValue()].sort();
 		//See if we got a full house by checking that the first two values match,
 		//the last two values match, and the middle value matches one of the adjacent values.
 		var score = 0;
@@ -74,12 +93,12 @@ var YahtzeeDice = Class.create ({
 			score = 25;
 		}
 		return score;
-	},
+	};
 	
-	smallStraightScore: function() {
+	function _smallStraightScore() {
 		var score = 0;
 		//Sort the values of the dice.
-		var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
+		var values = [_dieArray[0].getValue(), _dieArray[1].getValue(), _dieArray[2].getValue(), _dieArray[3].getValue(), _dieArray[4].getValue()].sort();
 		//To eliminate having to work around duplicate values, get an array of distinct values.
 		var distinctValues = [values[0]];
 		for (var i = 1; i < values.length; i++) {
@@ -101,21 +120,21 @@ var YahtzeeDice = Class.create ({
 			}
 		}
 		return score;
-	},
+	};
 	
-	largeStraightScore: function() {
+	function _largeStraightScore() {
 		var score = 0;
 		//Sort the values of the dice.
-		var values = [this.dice[0].value, this.dice[1].value, this.dice[2].value, this.dice[3].value, this.dice[4].value].sort();
+		var values = [_dieArray[0].getValue(), _dieArray[1].getValue(), _dieArray[2].getValue(), _dieArray[3].getValue(), _dieArray[4].getValue()].sort();
 		//See if we got a straight across all the dice.
 		if (values[0] == (values[1] - 1) && values[1] == (values[2] - 1) && values[2] == (values[3] - 1) && values[3] == (values[4] - 1)) {
 			score = 40;
 		}
 		return score;
-	},
+	};
 	
-	fiveOfAKindScore: function() {
-		if (this.dice[0].value == this.dice[1].value && this.dice[1].value == this.dice[2].value && this.dice[2].value == this.dice[3].value && this.dice[3].value == this.dice[4].value)
+	function _fiveOfAKindScore() {
+		if (_dieArray[0].getValue() == _dieArray[1].getValue() && _dieArray[1].getValue() == _dieArray[2].getValue() && _dieArray[2].getValue() == _dieArray[3].getValue() && _dieArray[3].getValue() == _dieArray[4].getValue())
 		{
 			return 50;
 		}
@@ -123,13 +142,31 @@ var YahtzeeDice = Class.create ({
 		{
 			return 0;
 		}
-	},
+	};
 	
-	chanceScore: function() {
+	function _chanceScore() {
 		var score = 0;
-		for (var i = 0; i < this.dice.length; i++) {
-			score += this.dice[i].value;
+		for (var i = 0; i < _dieArray.length; i++) {
+			score += _dieArray[i].getValue();
 		}
 		return score;
-	}
-});
+	};
+	
+	//Public API:
+	return {
+		getDie: _getDie,
+		getRollCount: _getRollCount,
+		numberOfDice: _numberOfDice,
+		roll: _roll,
+		clear: _clear,
+		revert: _revert,
+		upperHalfScore: _upperHalfScore,
+		threeOfAKindScore: _threeOfAKindScore,
+		fourOfAKindScore: _fourOfAKindScore,
+		fullHouseScore: _fullHouseScore,
+		smallStraightScore: _smallStraightScore,
+		largeStraightScore: _largeStraightScore,
+		fiveOfAKindScore: _fiveOfAKindScore,
+		chanceScore: _chanceScore
+	};
+};

@@ -63,7 +63,7 @@ PreferencesAssistant.prototype.setup = function() {
 		visible: true,
 		items: [
 			{label: "Help", command: "do-help"},
-			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
+			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
 		]
 	};
 	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);

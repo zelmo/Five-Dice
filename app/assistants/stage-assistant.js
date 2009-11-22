@@ -1,7 +1,5 @@
-//Declare a namespace and some constants.
-FiveDice = {};
-FiveDice.title = "Five Dice";
-FiveDice.version = "0.9.2";
+//Declare a global object to act as a namespace for general values and models.
+var FiveDice = {};
 FiveDice.suggestedScoreColor = "teal"; //Color of the possible scores displayed after each roll.
 FiveDice.setScoreColor = "black"; //Color of the scores after they've been set.
 FiveDice.MenuAttributes = {	omitDefaultItems: true };
@@ -33,8 +31,8 @@ function StageAssistant() {
 					break;
 			}
 		},
-		title: "#{appName} #{version}".interpolate({appName: FiveDice.title, version: FiveDice.version}),
-		message: "Copyleft 2009, Daren Beattie",
+		title: "#{appName} #{version}".interpolate({appName: FiveDice.title, version: Mojo.Controller.appInfo.version}),
+		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
 		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}]
 	};
 };

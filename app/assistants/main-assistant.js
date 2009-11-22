@@ -5,8 +5,8 @@ function MainAssistant() {
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	//Create a Yahtzee dice object and a collection of models for the buttons.
-	this.dice = new YahtzeeDice();
-	this.buttonModels = new ButtonModels();
+	this.dice = FiveDice.yahtzeeDice();
+	this.buttonModels = FiveDice.buttonModels();
 	
 	//Define the application menu model here so that it can be manipulated at run-time.
 	this.menuModel = {
@@ -16,12 +16,12 @@ function MainAssistant() {
 			{label: "Undo", command: "do-undo", disabled: true},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "Help", command: "do-help"},
-			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
+			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
 		]
 	};
 	
-	//For the Undo menu item to work, keep a state object that gets updated before a score is set.
-	this.lastScoreItem = {buttonModel: null, scoreValueDomElement: null, dice: [], rollCount: 0};
+	//For the Undo menu item to work, keep track of which score item was last set.
+	this.lastScoreItem = {buttonModel: null, scoreValueDomElement: null};
 };
 
 MainAssistant.prototype.setup = function() {
@@ -55,8 +55,8 @@ MainAssistant.prototype.setup = function() {
 	this.resetAllScores();
 	
 	//Dice and Roll button
-	for (var i = 0; i < this.dice.dice.length; i++) {
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + "Plain.png\"></img>";
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + "Plain.png\"></img>";
 	}
 	this.controller.setupWidget("buttonRoll", {}, this.buttonModels.roll);
 
@@ -221,15 +221,10 @@ MainAssistant.prototype.toggleDie = function(index) {
 		return;
 	}
 	//Toggle the held state of the die.
-	this.dice.dice[index].held = !this.dice.dice[index].held;
+	this.dice.getDie(index).setHeld(!this.dice.getDie(index).getHeld());
 	//Find the die's div in the scene and change its image to reflect the new state.
-	var dieElement = this.controller.get("die" + index);
-	if (this.dice.dice[index].held) {
-		dieElement.innerHTML = "<img src=\"images/Die" + this.dice.dice[index].value + "Held.png\"></img>";
-	}
-	else {
-		dieElement.innerHTML = "<img src=\"images/Die" + this.dice.dice[index].value + "Plain.png\"></img>";
-	}
+	var imageStyle = (this.dice.getDie(index).getHeld() ? "Held" : "Plain");
+	this.controller.get("die" + index).innerHTML = "<img src=\"images/Die" + this.dice.getDie(index).getValue() + imageStyle + ".png\"></img>";
 };
 
 //Die roller
@@ -243,7 +238,7 @@ MainAssistant.prototype.roll = function() {
 	this.buttonModels.roll.disabled = true;
 	this.controller.modelChanged(this.buttonModels.roll);
 	//If we still have rolls left, re-enable the button (either by timer or immediately).
-	if (this.dice.rollCount <= 3) {
+	if (this.dice.getRollCount() <= 3) {
 		if (FiveDice.disableRollButtonBetweenRolls) {
 			this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
 		}
@@ -252,9 +247,9 @@ MainAssistant.prototype.roll = function() {
 		}
 	}
 	//Set the dice images.
-	for (var i = 0; i < this.dice.dice.length; i++) {
-		var imageStyle = (this.dice.dice[i].held ? "Held" : "Plain");
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + imageStyle + ".png\"></img>";
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
+		imageStyle = (this.dice.getDie(i).getHeld() ? "Held" : "Plain");
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}
 	
 	this.showPossibleScores();
@@ -262,7 +257,7 @@ MainAssistant.prototype.roll = function() {
 };
 
 MainAssistant.prototype.enableRollButton = function() {
-	this.buttonModels.roll.label = "Roll " + (this.dice.rollCount);
+	this.buttonModels.roll.label = "Roll " + (this.dice.getRollCount());
 	this.buttonModels.roll.disabled = false;
 	this.controller.modelChanged(this.buttonModels.roll);
 };
@@ -289,8 +284,8 @@ MainAssistant.prototype.showSuggestedScore = function(scoreValueId, suggestedSco
 	//The only lower-half items where we need to specify a score
 	//that's different from what the dice show are Three of a Kind
 	//and Four of a Kind, so check explicitly for this condition.
-	if (scoreValueId == "scoreValueThreeOfAKind" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 30; }
-	if (scoreValueId == "scoreValueFourOfAKind" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 40; }
+	if (scoreValueId == "scoreValueSmallStraight" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 30; }
+	if (scoreValueId == "scoreValueLargeStraight" && this.checkForExtraFiveOfAKind(false)) { suggestedScore = 40; }
 	//Don't show a suggested score of zero--leave the field blank instead.
 	if (suggestedScore == 0) { suggestedScore = ""; }
 	//Display the score in the "suggested" color.
@@ -333,10 +328,6 @@ MainAssistant.prototype.enableUndo = function(buttonModel, scoreValueDomElement)
 	//Set the members of the state object.
 	this.lastScoreItem.buttonModel = buttonModel;
 	this.lastScoreItem.scoreValueDomElement = scoreValueDomElement;
-	for (var i = 0; i < this.dice.dice.length; i++) {
-		this.lastScoreItem.dice[i] = this.dice.dice[i].value;
-	}
-	this.lastScoreItem.rollCount = this.dice.rollCount;
 	//Enable the menu item.
 	this.menuModel.items[1].disabled = false;
 	this.controller.modelChanged(this.menuModel);
@@ -348,17 +339,17 @@ MainAssistant.prototype.undo = function(lastScoreItem) {
 	this.controller.modelChanged(lastScoreItem.buttonModel);
 	lastScoreItem.scoreValueDomElement.innerHTML = "";
 	this.setTotal();
-	this.dice.rollCount = lastScoreItem.rollCount;
-	this.buttonModels.roll.disabled = (this.dice.rollCount > 3);
-	this.buttonModels.roll.label = "Roll " + (this.dice.rollCount > 3 ? 3 : this.dice.rollCount);
+	this.dice.revert();
+	this.buttonModels.roll.disabled = (this.dice.getRollCount() > 3);
+	this.buttonModels.roll.label = "Roll " + (this.dice.getRollCount() > 3 ? 3 : this.dice.getRollCount());
 	this.controller.modelChanged(this.buttonModels.roll);
-	for (var i = 0; i < lastScoreItem.dice.length; i++) {
-		this.dice.dice[i].value = lastScoreItem.dice[i];
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.dice[i].value + "Plain.png\"></img>";
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
+		imageStyle = (this.dice.getDie(i).getHeld() ? "Held" : "Plain");
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}
 	//Make sure the dice are visible (in case the "Play Again" button came up).
 	this.controller.get("playAgain").style.visibility = "hidden";
-	for (var i = 0; i < this.dice.dice.length; i++) {
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).style.visibility = "visible";
 	}
 	//Re-display the possible scores and disable the Undo menu item.
@@ -375,7 +366,7 @@ MainAssistant.prototype.checkForExtraFiveOfAKind = function(forUpperHalf) {
 	//there is an extra condition that the upper-half score that corresponds
 	//to the number shows on the dice is already scored.
 	var scoreValueElement = "";
-	switch (this.dice.dice[0].value) {
+	switch (this.dice.getDie(0).getValue()) {
 		case 1:
 			scoreValueElement = "scoreValueOnes";
 			break;
@@ -474,7 +465,7 @@ MainAssistant.prototype.setTotal = function() {
 MainAssistant.prototype.releaseDice = function() {
 	//Blank out and un-hold all the dice.
 	this.dice.clear();
-	for (var i = 0; i < this.dice.dice.length; i++) {
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
 	}
 	//Enable the Roll button.
@@ -494,7 +485,7 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	this.controller.modelChanged(this.buttonModels.roll);
 	
 	//Hide the dice and show the "Play Again" text.
-	for (var i = 0; i < this.dice.dice.length; i++) {
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).style.visibility = "hidden";
 	}
 	this.controller.get("playAgain").style.visibility = "visible";
@@ -529,7 +520,7 @@ MainAssistant.prototype.newGame = function() {
 	//Hide the "Play Again" text and show the dice.
 	this.releaseDice();
 	this.controller.get("playAgain").style.visibility = "hidden";
-	for (var i = 0; i < this.dice.dice.length; i++) {
+	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).style.visibility = "visible";
 	}
 };

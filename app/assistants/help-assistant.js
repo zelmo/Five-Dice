@@ -4,8 +4,8 @@ function HelpAssistant() {
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
 	  
-	  //Initialize a HelpContents object for use throughout the scene.
-	  this.helpContents = new HelpContents();
+	  //Assign a local helpContents object.
+	  this.helpContents = FiveDice.helpContents();
 	  //An object-level page index allows the "previous/next" command menu to work.
 	  this.pageIndex = 0;
 };
@@ -21,7 +21,7 @@ HelpAssistant.prototype.setup = function() {
 		visible: true,
 		items: [
 			{label: "Preferences", command: "do-preferences"},
-			{label: "About #{appName}".interpolate({appName: FiveDice.title}), command: "do-about"}
+			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
 		]
 	};
 	
