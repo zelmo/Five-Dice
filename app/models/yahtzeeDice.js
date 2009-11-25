@@ -29,6 +29,7 @@ FiveDice.yahtzeeDice = function() {
 		for (var i = 0; i < _dieArray.length; i++) {
 			_dieArray[i].clear();
 		}
+		_previousRollCount = _rollCount;
 		_rollCount = 1;
 	};
 	

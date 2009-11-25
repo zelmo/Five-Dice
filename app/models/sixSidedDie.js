@@ -1,6 +1,6 @@
 //Closure for individual dice:
 FiveDice.sixSidedDie = function() {
-	//Private variables/accessors:
+	//Private variables and accessors:
 	var _held = false;
 	function _getHeld() { return _held; };
 	function _setHeld(held) { _held = held; };
