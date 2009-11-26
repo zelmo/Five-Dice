@@ -1,0 +1,126 @@
+/* main */
+#topHalf {
+	float: left;
+	width: 50%;
+	font-size: large;
+}
+
+#bottomHalf {
+	float: right;
+	width: 50%;
+	font-size: large;
+}
+
+#subtotal {
+	position: relative;
+	top: 25px;
+	left: 17px;
+}
+
+.scoreRow {
+	height: 45px;
+}
+
+.scoreButton, .scoreLabel {
+	display: inline-block;
+	width: 75%;
+}
+
+.scoreLabel {
+	position: relative;
+	top: 23px;
+	text-align: center;
+}
+
+.scoreButton .palm-button-wrapper {
+	font-size: large;
+	text-transform: none;
+}
+
+.scoreValue {
+	float: right;
+	position: relative;
+	top: 20px;
+	right: 17px;
+}
+
+#dice {
+	visibility: visible;
+	float: left;
+	width: 70%;
+	margin-left: 7px;
+}
+
+.dice {
+	position: relative;
+	display: inline-block;
+	top: 15px;
+	height: 38px;
+	width: 38px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.dice>img {
+	height: 100%;
+	width: 100%;
+}
+
+#playAgain {
+	visibility: hidden;
+	float: left;
+	width: 50%;
+	margin-top: -35px;
+}
+
+#roll {
+	float: right;
+	width: 25%;
+	margin-top: -40px;
+}
+
+/* help & preferences*/
+#headerIcon {
+	background: url(../images/Die5Held.png) no-repeat;
+	margin-top: 10px;
+	margin-left: 15px;
+}
+
+#rollDelayGroup {
+	height: 7em;
+}
+
+.infoIcon {
+	height: 32px;
+	width: 32px;
+}
+
+.listInfoIcon {
+	margin-top: 9px;
+	margin-right: 9px;
+	height: 32px;
+	width: 32px;
+}
+
+.checkBoxLabel.single-line {
+	height: 50px;
+	line-height: 50px;
+}
+
+.checkBoxLabel.multi-line {
+	padding: 5px;
+}
+
+.sliderLabel {
+	padding: 10px;
+}
+
+.sliderMarkerLeft {
+	float: left;
+	padding: 5px;
+}
+
+.sliderMarkerRight {
+	float: right;
+	padding: 5px;
+}
