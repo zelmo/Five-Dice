@@ -31,7 +31,7 @@ function StageAssistant() {
 					break;
 			}
 		},
-		title: "#{appName} #{version}".interpolate({appName: FiveDice.title, version: Mojo.Controller.appInfo.version}),
+		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
 		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
 		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}]
 	};

@@ -1,4 +1,4 @@
-function MainAssistant(player) {
+function MainAssistant(playerName) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
@@ -6,8 +6,9 @@ function MainAssistant(player) {
 	  
 	//Create a Yahtzee dice object.
 	this.dice = FiveDice.yahtzeeDice();
-	//Set the player for this scene. (As of now, no player is being passed in.)
-	this.player = FiveDice.playerState("Daren");
+	//Set the player for this scene.
+	//TODO: Use the playerName that the stage assistant passes in.
+	this.player = FiveDice.playerState("anonymous");
 	//Set a button model for the Roll button.
 	this.rollModel = {label: "Roll 1", disabled: false};
 	
@@ -126,7 +127,7 @@ MainAssistant.prototype.activate = function(event) {
 	//Re-calculate the totals to update the Subtotal display,
 	//in case we're coming back from the Preferences scene
 	//and the subtotal deviation preference was changed.
-	this.setTotal();
+	this.updateTotal();
 };
 
 
@@ -213,14 +214,10 @@ MainAssistant.prototype.blankUnsetScores = function() {
 };
 
 MainAssistant.prototype.toggleDie = function(index) {
-	//Make sure the dice have been rolled at least once this turn.
-	if (this.dice.chanceScore == 0) {
-		return;
-	}
 	//Toggle the held state of the die.
-	this.dice.getDie(index).setHeld(!this.dice.getDie(index).getHeld());
+	this.dice.getDie(index).toggleHeld();
 	//Find the die's div in the scene and change its image to reflect the new state.
-	var imageStyle = (this.dice.getDie(index).getHeld() ? "Held" : "Plain");
+	var imageStyle = (this.dice.getDie(index).isHeld() ? "Held" : "Plain");
 	this.controller.get("die" + index).innerHTML = "<img src=\"images/Die" + this.dice.getDie(index).getValue() + imageStyle + ".png\"></img>";
 };
 
@@ -245,7 +242,7 @@ MainAssistant.prototype.roll = function() {
 	}
 	//Set the dice images.
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		imageStyle = (this.dice.getDie(i).getHeld() ? "Held" : "Plain");
+		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}
 	
@@ -290,7 +287,7 @@ MainAssistant.prototype.setScore = function(itemName) {
 	var fiveOfAKindScore = (this.player.getButtonModel("fiveOfAKind").disabled ? this.player.getScore("fiveOfAKind") : "");
 	this.controller.get("scoreValueFiveOfAKind").innerHTML = fiveOfAKindScore;
 	//Re-calculate the total and get on with the game.
-	this.setTotal();
+	this.updateTotal();
 	this.blankUnsetScores();
 	this.releaseDice();
 	this.checkForEndOfGame();
@@ -315,13 +312,13 @@ MainAssistant.prototype.undo = function() {
 	this.controller.modelChanged(this.player.getButtonModel(undoneItem));
 	//Update the 5 of a kind score in case it was affected.
 	this.controller.get("scoreValueFiveOfAKind").innerHTML = this.player.getScore("fiveOfAKind");
-	this.setTotal();
+	this.updateTotal();
 	this.dice.revert();
 	this.rollModel.disabled = (this.dice.getRollCount() > 3);
 	this.rollModel.label = "Roll " + (this.dice.getRollCount() > 3 ? 3 : this.dice.getRollCount());
 	this.controller.modelChanged(this.rollModel);
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		imageStyle = (this.dice.getDie(i).getHeld() ? "Held" : "Plain");
+		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}
 	//Make sure the dice are visible (in case the "Play Again" button came up).
@@ -334,7 +331,7 @@ MainAssistant.prototype.undo = function() {
 	this.disableUndo();
 };
 
-MainAssistant.prototype.setTotal = function() {
+MainAssistant.prototype.updateTotal = function() {
 	var subtotal = this.player.getSubtotal();
 	var difference = subtotal - this.player.getBenchmark();
 	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + subtotal;
@@ -374,7 +371,6 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 		this.controller.get("die" + i).style.visibility = "hidden";
 	}
 	this.controller.get("playAgain").style.visibility = "visible";
-	//TODO: Other end-of-game stuff?
 };
 
 MainAssistant.prototype.newGame = function() {

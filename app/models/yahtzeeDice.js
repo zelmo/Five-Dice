@@ -18,7 +18,7 @@ FiveDice.yahtzeeDice = function() {
 	
 	function _roll() {
 		for (var i = 0; i < _dieArray.length; i++){
-			if (!_dieArray[i].getHeld()) {
+			if (!_dieArray[i].isHeld()) {
 				_dieArray[i].roll();
 			}
 		}
