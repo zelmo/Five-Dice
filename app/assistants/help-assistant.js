@@ -5,12 +5,12 @@ function HelpAssistant() {
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	  //Assign a local helpContents object.
-	  this.helpContents = FiveDice.helpContents();
+	  this.helpContents = FIVEDICE.helpContents();
 	  //An object-level page index allows the "previous/next" command menu to work.
 	  this.pageIndex = 0;
 };
 
-HelpAssistant.prototype.setup = function() {
+HelpAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
@@ -26,7 +26,7 @@ HelpAssistant.prototype.setup = function() {
 	};
 	
 	//Application menu
-	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);
+	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, menuModel);
 	
 	//Command menu
 	this.commandMenuModel = {
@@ -44,24 +44,24 @@ HelpAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 };
 
-HelpAssistant.prototype.activate = function(event) {
+HelpAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 };
 
 
-HelpAssistant.prototype.deactivate = function(event) {
+HelpAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 };
 
-HelpAssistant.prototype.cleanup = function(event) {
+HelpAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
 	  this.removeListeners();
 };
 
-HelpAssistant.prototype.handleCommand = function(event) {
+HelpAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-preferences":
@@ -76,7 +76,7 @@ HelpAssistant.prototype.handleCommand = function(event) {
 	}
 };
 
-HelpAssistant.prototype.showNextPage = function() {
+HelpAssistant.prototype.showNextPage = function () {
 	if (this.pageIndex < (this.helpContents.pages.length - 1)) {
 		this.removeListeners();
 		this.pageIndex++;
@@ -84,7 +84,7 @@ HelpAssistant.prototype.showNextPage = function() {
 	}
 };
 
-HelpAssistant.prototype.showPreviousPage = function() {
+HelpAssistant.prototype.showPreviousPage = function () {
 	if (this.pageIndex > 0) {
 		this.removeListeners();
 		this.pageIndex--;
@@ -92,7 +92,7 @@ HelpAssistant.prototype.showPreviousPage = function() {
 	}
 };
 
-HelpAssistant.prototype.updateContents = function() {
+HelpAssistant.prototype.updateContents = function () {
 	//Scroll to the top of the page.
 	this.controller.getSceneScroller().mojo.revealTop(0);
 	//Set the icon, title, and body text, and set up any listeners needed.
@@ -103,12 +103,15 @@ HelpAssistant.prototype.updateContents = function() {
 	//Show the appropriate command menu buttons.
 	switch (this.pageIndex) {
 		case 0:
+			//First page--don't show the back arrow.
 			this.commandMenuModel.items[0] = {};
 			break;
 		case (this.helpContents.pages.length - 1):
+			//Last page--don't show the forward arrow.
 			this.commandMenuModel.items[2] = {};
 			break;
 		default:
+			//Show back and forward arrows if they're not already shown.
 			if (!this.commandMenuModel.items[0].hasOwnProperty("items")) {
 				this.commandMenuModel.items[0] = {items: [{icon: "back", command: "do-previousPage"}]};
 			}
@@ -120,7 +123,7 @@ HelpAssistant.prototype.updateContents = function() {
 	this.controller.modelChanged(this.commandMenuModel);
 };
 
-HelpAssistant.prototype.setupListeners = function() {
+HelpAssistant.prototype.setupListeners = function () {
 	//Set up any listeners needed by the new body text.
 	switch (this.pageIndex) {
 		case 0:
@@ -130,7 +133,7 @@ HelpAssistant.prototype.setupListeners = function() {
 	} 
 };
 
-HelpAssistant.prototype.removeListeners = function() {
+HelpAssistant.prototype.removeListeners = function () {
 	//Remove any listeners from the body text that's about to go away.
 	switch (this.pageIndex) {
 		case 0:
@@ -139,7 +142,7 @@ HelpAssistant.prototype.removeListeners = function() {
 	}
 };
 
-HelpAssistant.prototype.showWikipedia = function() {
+HelpAssistant.prototype.showWikipedia = function () {
 	//Define the parameters for the service request object.
 	var serviceParameters = {
 		id: "com.palm.app.browser",

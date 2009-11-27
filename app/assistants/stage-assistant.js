@@ -1,15 +1,15 @@
 function StageAssistant() {
 	//TODO: Players are being added here for testing. Ultimately there should be a scene that sets the player list.
-	FiveDice.players = FiveDice.playerStateList();
-	FiveDice.players.addPlayer("Daren");
-	FiveDice.players.addPlayer("Not Daren");
+	FIVEDICE.players = FIVEDICE.playerStateList();
+	FIVEDICE.players.addPlayer("Daren");
+	FIVEDICE.players.addPlayer("Not Daren");
 
 	//Define the About dialog model.
 	this.aboutDialogModel = {
 		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
 		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
 		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}],
-		onChoose: function(value) {
+		onChoose: function (value) {
 			switch (value) {
 				case "license":
 					//Define the parameters for the service request object.
@@ -30,12 +30,12 @@ function StageAssistant() {
 	};
 };
 
-StageAssistant.prototype.setup = function() {
+StageAssistant.prototype.setup = function () {
 	this.loadPreferences();
-	this.controller.pushScene('main', FiveDice.players.firstPlayer());
+	this.controller.pushScene('main', FIVEDICE.players.firstPlayer());
 };
 
-StageAssistant.prototype.handleCommand = function(event) {
+StageAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-about":
@@ -44,13 +44,13 @@ StageAssistant.prototype.handleCommand = function(event) {
 	}
 };
 
-StageAssistant.prototype.loadPreferences = function() {
+StageAssistant.prototype.loadPreferences = function () {
 	//Update globals with stored preferences.
-	var storedPreferences = FiveDice.cookie.get();
+	var storedPreferences = FIVEDICE.cookie.get();
 	if (storedPreferences) {
-		if (storedPreferences.hasOwnProperty("shakeToRoll")) { FiveDice.shakeToRoll = storedPreferences.shakeToRoll; }
-		if (storedPreferences.hasOwnProperty("disableRollButtonBetweenRolls")) {FiveDice.disableRollButtonBetweenRolls = storedPreferences.disableRollButtonBetweenRolls; }
-		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) {FiveDice.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
-		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) {FiveDice.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
+		if (storedPreferences.hasOwnProperty("shakeToRoll")) { FIVEDICE.shakeToRoll = storedPreferences.shakeToRoll; }
+		if (storedPreferences.hasOwnProperty("disableRollButtonBetweenRolls")) { FIVEDICE.disableRollButtonBetweenRolls = storedPreferences.disableRollButtonBetweenRolls; }
+		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) { FIVEDICE.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
+		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
 	}
 };

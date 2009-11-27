@@ -1,5 +1,5 @@
 //Closure for a player's state object.
-FiveDice.playerState = function(playerName) {
+FIVEDICE.playerState = function (playerName) {
 	//Private variables and accessors:
 	var _playerName = playerName;
 	function _getName() { return _playerName; };

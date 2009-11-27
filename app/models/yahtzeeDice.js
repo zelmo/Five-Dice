@@ -1,7 +1,7 @@
 //Closure for the group of dice.
-FiveDice.yahtzeeDice = function() {
+FIVEDICE.yahtzeeDice = function () {
 	//Private variables and accessors:
-	var _dieArray = [FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie(), FiveDice.sixSidedDie()];
+	var _dieArray = [FIVEDICE.sixSidedDie(), FIVEDICE.sixSidedDie(), FIVEDICE.sixSidedDie(), FIVEDICE.sixSidedDie(), FIVEDICE.sixSidedDie()];
 	function _getDie(index) {
 		return _dieArray[index];
 	};

@@ -1,5 +1,5 @@
 //Closure for the list of players
-FiveDice.playerStateList = function () {
+FIVEDICE.playerStateList = function () {
 	//Private variables and accessors.
 	var _playerStateList = [];
 	
@@ -13,7 +13,7 @@ FiveDice.playerStateList = function () {
 	};
 	
 	function _addPlayer(playerName) {
-		_playerStateList.push(FiveDice.playerState(playerName));
+		_playerStateList.push(FIVEDICE.playerState(playerName));
 	}
 	
 	function _firstPlayer() {

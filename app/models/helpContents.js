@@ -1,5 +1,5 @@
 //Closure for HTML content of the Help scene.
-FiveDice.helpContents = function() {
+FIVEDICE.helpContents = function() {
 	//Private variables:
 	var _pages = [
 		{

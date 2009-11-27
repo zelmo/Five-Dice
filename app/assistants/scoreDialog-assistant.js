@@ -3,9 +3,9 @@ function ScoreDialogAssistant(sceneAssistant, mode) {
 	this.mode = mode;
 };
 
-ScoreDialogAssistant.prototype.setup = function(widget) {
+ScoreDialogAssistant.prototype.setup = function (widget) {
 	this.widget = widget;
-	var scores = FiveDice.players.getScores();
+	var scores = FIVEDICE.players.getScores();
 	
 	//Set the title and buttons according to the mode.
 	switch (this.mode) {
@@ -17,7 +17,7 @@ ScoreDialogAssistant.prototype.setup = function(widget) {
 			break;
 		case "finalScores":
 			//Sort the final scores highest-first.
-			scores = scores.sort(function(a, b) {return b.score - a.score;});
+			scores = scores.sort(function (a, b) {return b.score - a.score;});
 			this.sceneAssistant.controller.get("title").innerHTML = scores[0].name + " Wins!";
 			this.sceneAssistant.controller.get("buttonGroup").innerHTML = '<div id="playAgainButton" x-mojo-element="Button"></div>';
 			this.sceneAssistant.controller.get("buttonGroup").innerHTML += '<div id="changePlayersButton" x-mojo-element="Button"></div>';
@@ -36,7 +36,7 @@ ScoreDialogAssistant.prototype.setup = function(widget) {
 	}
 };
 
-ScoreDialogAssistant.prototype.cleanup = function() {
+ScoreDialogAssistant.prototype.cleanup = function () {
 	//Stop listening to whichever events were set up in the setup method.
 	switch (this.mode) {
 		case "currentScores":
@@ -48,9 +48,9 @@ ScoreDialogAssistant.prototype.cleanup = function() {
 	}
 };
 
-ScoreDialogAssistant.prototype.playAgain = function() {
-	FiveDice.players.resetAllPlayers();
+ScoreDialogAssistant.prototype.playAgain = function () {
+	FIVEDICE.players.resetAllPlayers();
 	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
-	Mojo.Controller.stageController.swapScene(sceneParameters, FiveDice.players.firstPlayer());
+	Mojo.Controller.stageController.swapScene(sceneParameters, FIVEDICE.players.firstPlayer());
 	this.widget.mojo.close;
 };

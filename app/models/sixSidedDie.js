@@ -1,5 +1,5 @@
 //Closure for individual dice:
-FiveDice.sixSidedDie = function() {
+FIVEDICE.sixSidedDie = function () {
 	//Private variables and accessors:
 	var _held = false;
 	function _isHeld() { return _held; };

@@ -5,7 +5,7 @@ function MainAssistant(playerState) {
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	//Create a Yahtzee dice object.
-	this.dice = FiveDice.yahtzeeDice();
+	this.dice = FIVEDICE.yahtzeeDice();
 	//Set the player for this scene.
 	this.player = playerState;
 	//Set a button model for the Roll button.
@@ -28,7 +28,7 @@ function MainAssistant(playerState) {
 	this.scoreItems = ["ones", "twos", "threes", "fours", "fives", "sixes", "threeOfAKind", "fourOfAKind", "fullHouse", "smallStraight", "largeStraight", "fiveOfAKind", "chance"];
 };
 
-MainAssistant.prototype.setup = function() {
+MainAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
@@ -39,7 +39,7 @@ MainAssistant.prototype.setup = function() {
 	/* setup widgets here */
 	
 	//Application menu
-	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, this.menuModel);
+	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, this.menuModel);
 	
 	//Upper half score buttons
 	this.controller.setupWidget("buttonOnes", {}, this.player.getButtonModel("ones"));
@@ -67,15 +67,15 @@ MainAssistant.prototype.setup = function() {
 	/* add event handlers to listen to events from widgets */
 	
 	//Dice tap listeners
-	this.die0Handler = function() {this.toggleDie(0);}.bindAsEventListener(this);
+	this.die0Handler = function () {this.toggleDie(0);}.bindAsEventListener(this);
 	this.controller.listen("die0", Mojo.Event.tap, this.die0Handler);
-	this.die1Handler = function() {this.toggleDie(1);}.bindAsEventListener(this);
+	this.die1Handler = function () {this.toggleDie(1);}.bindAsEventListener(this);
 	this.controller.listen("die1", Mojo.Event.tap, this.die1Handler);
-	this.die2Handler = function() {this.toggleDie(2);}.bindAsEventListener(this);
+	this.die2Handler = function () {this.toggleDie(2);}.bindAsEventListener(this);
 	this.controller.listen("die2", Mojo.Event.tap, this.die2Handler);
-	this.die3Handler = function() {this.toggleDie(3);}.bindAsEventListener(this);
+	this.die3Handler = function () {this.toggleDie(3);}.bindAsEventListener(this);
 	this.controller.listen("die3", Mojo.Event.tap, this.die3Handler);
-	this.die4Handler = function() {this.toggleDie(4);}.bindAsEventListener(this);
+	this.die4Handler = function () {this.toggleDie(4);}.bindAsEventListener(this);
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
 	this.newGameHandler = this.newGame.bindAsEventListener(this);
 	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
@@ -87,42 +87,42 @@ MainAssistant.prototype.setup = function() {
 	this.controller.listen("buttonRoll", Mojo.Event.tap, this.rollHandler);
 	
 	//Upper half score button listeners
-	this.onesHandler = function() {this.setScore("ones", true);}.bindAsEventListener(this);
+	this.onesHandler = function () {this.setScore("ones", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonOnes", Mojo.Event.tap, this.onesHandler);
-	this.twosHandler = function() {this.setScore("twos", true);}.bindAsEventListener(this);
+	this.twosHandler = function () {this.setScore("twos", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonTwos", Mojo.Event.tap, this.twosHandler);
-	this.threesHandler = function() {this.setScore("threes", true);}.bindAsEventListener(this);
+	this.threesHandler = function () {this.setScore("threes", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonThrees", Mojo.Event.tap, this.threesHandler);
-	this.foursHandler = function() {this.setScore("fours", true);}.bindAsEventListener(this);
+	this.foursHandler = function () {this.setScore("fours", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonFours", Mojo.Event.tap, this.foursHandler);
-	this.fivesHandler = function() {this.setScore("fives", true);}.bindAsEventListener(this);
+	this.fivesHandler = function () {this.setScore("fives", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonFives", Mojo.Event.tap, this.fivesHandler);
-	this.sixesHandler = function() {this.setScore("sixes", true);}.bindAsEventListener(this);
+	this.sixesHandler = function () {this.setScore("sixes", true);}.bindAsEventListener(this);
 	this.controller.listen("buttonSixes", Mojo.Event.tap, this.sixesHandler);
 	
 	//Lower half score button listeners
-	this.threeOfAKindHandler = function() {this.setScore("threeOfAKind", false);}.bindAsEventListener(this);
+	this.threeOfAKindHandler = function () {this.setScore("threeOfAKind", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonThreeOfAKind", Mojo.Event.tap, this.threeOfAKindHandler);
-	this.fourOfAKindHandler = function() {this.setScore("fourOfAKind", false);}.bindAsEventListener(this);
+	this.fourOfAKindHandler = function () {this.setScore("fourOfAKind", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFourOfAKind", Mojo.Event.tap, this.fourOfAKindHandler);
-	this.fullHouseHandler = function() {this.setScore("fullHouse", false);}.bindAsEventListener(this);
+	this.fullHouseHandler = function () {this.setScore("fullHouse", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFullHouse", Mojo.Event.tap, this.fullHouseHandler);
-	this.smallStraightHandler = function() {this.setScore("smallStraight", false);}.bindAsEventListener(this);
+	this.smallStraightHandler = function () {this.setScore("smallStraight", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonSmallStraight", Mojo.Event.tap, this.smallStraightHandler);
-	this.largeStraightHandler = function() {this.setScore("largeStraight", false);}.bindAsEventListener(this);
+	this.largeStraightHandler = function () {this.setScore("largeStraight", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonLargeStraight", Mojo.Event.tap, this.largeStraightHandler);
-	this.fiveOfAKindHandler = function() {this.setScore("fiveOfAKind", false);}.bindAsEventListener(this);
+	this.fiveOfAKindHandler = function () {this.setScore("fiveOfAKind", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonFiveOfAKind", Mojo.Event.tap, this.fiveOfAKindHandler);
-	this.chanceHandler = function() {this.setScore("chance", false);}.bindAsEventListener(this);
+	this.chanceHandler = function () {this.setScore("chance", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonChance", Mojo.Event.tap, this.chanceHandler);
 };
 
-MainAssistant.prototype.activate = function(event) {
+MainAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 	  
 	//Set up listeners that are dependent on the Preferences.
-	if (FiveDice.shakeToRoll) {
+	if (FIVEDICE.shakeToRoll) {
 		this.controller.listen(document, "shakeend", this.rollHandler);
 	}
 	
@@ -131,7 +131,7 @@ MainAssistant.prototype.activate = function(event) {
 };
 
 
-MainAssistant.prototype.deactivate = function(event) {
+MainAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 	  
@@ -139,7 +139,7 @@ MainAssistant.prototype.deactivate = function(event) {
 	this.controller.stopListening(document, "shakeend", this.rollHandler);
 };
 
-MainAssistant.prototype.cleanup = function(event) {
+MainAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
 	  
@@ -171,7 +171,7 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("buttonChance", Mojo.Event.tap, this.chanceHandler);
 };
 
-MainAssistant.prototype.handleCommand = function(event) {
+MainAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-newGame":
@@ -194,7 +194,7 @@ MainAssistant.prototype.handleCommand = function(event) {
 	}
 };
 
-MainAssistant.prototype.toggleDie = function(index) {
+MainAssistant.prototype.toggleDie = function (index) {
 	//Toggle the held state of the die.
 	this.dice.getDie(index).toggleHeld();
 	//Find the die's div in the scene and change its image to reflect the new state.
@@ -203,19 +203,17 @@ MainAssistant.prototype.toggleDie = function(index) {
 };
 
 //Die roller
-MainAssistant.prototype.roll = function() {
+MainAssistant.prototype.roll = function () {
 	//In case the shake API was used to roll, check that the Roll button isn't disabled.
-	if (this.rollModel.disabled) {
-		return;
-	}
+	if (this.rollModel.disabled) { return; }
 	//Roll the dice and disable the Roll button.
 	this.dice.roll();
 	this.rollModel.disabled = true;
 	this.controller.modelChanged(this.rollModel);
 	//If we still have rolls left, re-enable the button (either by timer or immediately).
 	if (this.dice.getRollCount() <= 3) {
-		if (FiveDice.disableRollButtonBetweenRolls) {
-			this.controller.window.setTimeout(this.enableRollButton.bind(this), FiveDice.rollButtonDisabledTimeout);
+		if (FIVEDICE.disableRollButtonBetweenRolls) {
+			this.controller.window.setTimeout(this.enableRollButton.bind(this), FIVEDICE.rollButtonDisabledTimeout);
 		}
 		else {
 			this.enableRollButton();
@@ -231,13 +229,13 @@ MainAssistant.prototype.roll = function() {
 	this.disableUndo();
 };
 
-MainAssistant.prototype.enableRollButton = function() {
+MainAssistant.prototype.enableRollButton = function () {
 	this.rollModel.label = "Roll " + (this.dice.getRollCount());
 	this.rollModel.disabled = false;
 	this.controller.modelChanged(this.rollModel);
 };
 
-MainAssistant.prototype.showPossibleScores = function() {
+MainAssistant.prototype.showPossibleScores = function () {
 	this.player.setScoreSuggestions(this.dice);
 	for (var i = 0; i < this.scoreItems.length; i++) {
 		itemName = this.scoreItems[i];
@@ -247,29 +245,29 @@ MainAssistant.prototype.showPossibleScores = function() {
 			var suggestedScore = (this.player.getScore(itemName) == 0 ? "" : this.player.getScore(itemName));
 			//Display the score in the "suggested" color.
 			this.controller.get(scoreValueId).innerHTML = suggestedScore
-			this.controller.get(scoreValueId).style.color = FiveDice.suggestedScoreColor;
+			this.controller.get(scoreValueId).style.color = FIVEDICE.suggestedScoreColor;
 		}
 	}
 };
 
-MainAssistant.prototype.showActualScores = function() {
+MainAssistant.prototype.showActualScores = function () {
 	//Show scores that are set, and blank out any that are unset.
 	for (var i = 0; i < this.scoreItems.length; i++) {
 		itemName = this.scoreItems[i];
 		var scoreValueId = "scoreValue" + itemName.charAt(0).toUpperCase() + itemName.slice(1);
 		if (this.player.getButtonModel(itemName).disabled) {
 			this.controller.get(scoreValueId).innerHTML = this.player.getScore(itemName);
-			this.controller.get(scoreValueId).style.color = FiveDice.setScoreColor;
+			this.controller.get(scoreValueId).style.color = FIVEDICE.setScoreColor;
 		}
 		else {
-			this.controller.get(scoreValueId).innerHTML = ""
+			this.controller.get(scoreValueId).innerHTML = "";
 		}
 	}
 	//Update the subtotal and total displays.
 	var subtotal = this.player.getSubtotal();
-	var difference = subtotal - this.player.getBenchmark();
 	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + subtotal;
-	if (FiveDice.showSubtotalDeviation) {
+	if (FIVEDICE.showSubtotalDeviation) {
+		var difference = subtotal - this.player.getBenchmark();
 		subtotalDisplay += " / " + (difference < 0 ? "" : "+") + (difference);;
 	}
 	this.controller.get("subtotal").innerHTML = subtotalDisplay;
@@ -278,11 +276,9 @@ MainAssistant.prototype.showActualScores = function() {
 	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal() + bonus;
 };
 
-MainAssistant.prototype.setScore = function(itemName) {
+MainAssistant.prototype.setScore = function (itemName) {
 	//Make sure the dice have been rolled.
-	if (this.dice.chanceScore() == 0) {
-		return;
-	}
+	if (this.dice.chanceScore() == 0) { return; }
 	//Disable the Roll button.
 	this.rollModel.disabled = true;
 	this.controller.modelChanged(this.rollModel);
@@ -295,7 +291,7 @@ MainAssistant.prototype.setScore = function(itemName) {
 	//Move along either to the end-of-game stuff, the next player (if there is one), or the next turn.
 	if (!this.checkForEndOfGame()) {
 		this.enableUndo();
-		if (FiveDice.players.count() == 1) {
+		if (FIVEDICE.players.count() == 1) {
 			this.releaseDice();
 		}
 		else {
@@ -303,29 +299,28 @@ MainAssistant.prototype.setScore = function(itemName) {
 			for (var i = 0; i < this.dice.numberOfDice(); i++) {
 				this.controller.get("die" + i).style.visibility = "hidden";
 			}
-			this.controller.get("nextPlayer").innerHTML = "Next Player: " + FiveDice.players.nextPlayer(this.player.getName()).getName();
+			this.controller.get("nextPlayer").innerHTML = "Next Player: " + FIVEDICE.players.nextPlayer(this.player.getName()).getName();
 			this.controller.get("nextPlayer").style.visibility = "visible";
 		}
 	}
 };
 
 //Auxiliary functions
-MainAssistant.prototype.disableUndo = function() {
+MainAssistant.prototype.disableUndo = function () {
 	if (!this.menuModel.items[1].disabled) {
 		this.menuModel.items[1].disabled = true;
 		this.controller.modelChanged(this.menuModel);
 	}
 };
 
-MainAssistant.prototype.enableUndo = function() {
+MainAssistant.prototype.enableUndo = function () {
 	this.menuModel.items[1].disabled = false;
 	this.controller.modelChanged(this.menuModel);
 };
 
-MainAssistant.prototype.undo = function() {
+MainAssistant.prototype.undo = function () {
 	var undoneItem = this.player.undoLastScore();
 	this.controller.modelChanged(this.player.getButtonModel(undoneItem));
-	//this.showActualScores();
 	this.dice.revert();
 	this.rollModel.disabled = (this.dice.getRollCount() > 3);
 	this.rollModel.label = "Roll " + (this.dice.getRollCount() > 3 ? 3 : this.dice.getRollCount());
@@ -345,13 +340,13 @@ MainAssistant.prototype.undo = function() {
 	this.disableUndo();
 };
 
-MainAssistant.prototype.nextPlayer = function() {
+MainAssistant.prototype.nextPlayer = function () {
 	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
-	var nextPlayerState = FiveDice.players.nextPlayer(this.player.getName());
+	var nextPlayerState = FIVEDICE.players.nextPlayer(this.player.getName());
 	Mojo.Controller.stageController.swapScene(sceneParameters, nextPlayerState);
 };
 
-MainAssistant.prototype.releaseDice = function() {
+MainAssistant.prototype.releaseDice = function () {
 	//Blank out and un-hold all the dice.
 	this.dice.clear();
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
@@ -363,12 +358,9 @@ MainAssistant.prototype.releaseDice = function() {
 	this.controller.modelChanged(this.rollModel);
 };
 
-MainAssistant.prototype.checkForEndOfGame = function() {
-	if (!FiveDice.players.allPlayersAreDone()) {
-		return;
-	}
-	
-	if (FiveDice.players.count() == 1) {
+MainAssistant.prototype.checkForEndOfGame = function () {
+	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
+	if (FIVEDICE.players.count() == 1) {
 		//Don't bother with a score rundown for one person. Just offer the Play Again button.
 		for (var i = 0; i < this.dice.numberOfDice(); i++) {
 			this.controller.get("die" + i).style.visibility = "hidden";
@@ -382,10 +374,10 @@ MainAssistant.prototype.checkForEndOfGame = function() {
 	}
 };
 
-MainAssistant.prototype.newGame = function() {
+MainAssistant.prototype.newGame = function () {
 	//TODO: Pop up a dialog and offer buttons to use the same players or change players.
 	//Reset all the players and swap the scene to the first player.
-	FiveDice.players.resetAllPlayers();
+	FIVEDICE.players.resetAllPlayers();
 	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
-	Mojo.Controller.stageController.swapScene(sceneParameters, FiveDice.players.firstPlayer());
+	Mojo.Controller.stageController.swapScene(sceneParameters, FIVEDICE.players.firstPlayer());
 };

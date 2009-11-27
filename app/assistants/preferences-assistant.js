@@ -7,18 +7,18 @@ function PreferencesAssistant() {
 	//Define models for the scene elements.
 	this.widgetModels = {
 		shakeCheckBox: {
-		value: FiveDice.shakeToRoll,
+		value: FIVEDICE.shakeToRoll,
 		disabled: false
 		},
 		disableRollCheckBox: {
-			value: FiveDice.disableRollButtonBetweenRolls,
+			value: FIVEDICE.disableRollButtonBetweenRolls,
 			disabled: false
 		},
 		rollDelaySlider: {
-			value: FiveDice.rollButtonDisabledTimeout / 250
+			value: FIVEDICE.rollButtonDisabledTimeout / 250
 		},
 		subtotalDeviationCheckBox: {
-			value: FiveDice.showSubtotalDeviation,
+			value: FIVEDICE.showSubtotalDeviation,
 			disabled: false
 		}
 	};
@@ -26,14 +26,14 @@ function PreferencesAssistant() {
 	//Define dialog models.
 	this.dialogModels = {
 		shakeInfo: {
-			onChoose: function(value) {},
+			onChoose: function (value) {},
 			title: "Shake to roll",
 			message: "If checked, the game will listen for the phone's accelerometer" +
 				" and roll the dice when the phone is shaken.",
 			choices: [{label: "OK", value: "ok"}]
 		},
 		disableRollInfo: {
-			onChoose: function(value) {},
+			onChoose: function (value) {},
 			title: "Disable roll button",
 			message: "If checked, the Roll button will remain disabled for a short duration" +
 				" after each roll. The duration can be adjusted in increments of 1/4 second," +
@@ -41,7 +41,7 @@ function PreferencesAssistant() {
 			choices: [{label: "OK", value: "ok"}]
 		},
 		showDeviationInfo: {
-			onChoose: function(value) {},
+			onChoose: function (value) {},
 			title: "Show deviation in subtotal",
 			message: "If checked, the Subtotal score will be immediately followed by a number" +
 				" showing how far ahead of or behind the curve your subtotal is, given the items" +
@@ -51,7 +51,7 @@ function PreferencesAssistant() {
 	} ;
 };
 
-PreferencesAssistant.prototype.setup = function() {
+PreferencesAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
@@ -66,7 +66,7 @@ PreferencesAssistant.prototype.setup = function() {
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
 		]
 	};
-	this.controller.setupWidget(Mojo.Menu.appMenu, FiveDice.MenuAttributes, menuModel);
+	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, menuModel);
 	
 	//Preferences widgets
 	var rollDelaySliderAttributes = {
@@ -81,42 +81,42 @@ PreferencesAssistant.prototype.setup = function() {
 	this.controller.setupWidget("subtotalDeviationCheckBox", {}, this.widgetModels.subtotalDeviationCheckBox);
 	
 	/* add event handlers to listen to events from widgets */
-	this.shakeCheckBoxHandler = this.setShake.bindAsEventListener(this);
+	this.shakeCheckBoxHandler = function () {FIVEDICE.shakeToRoll = this.widgetModels.shakeCheckBox.value;}.bindAsEventListener(this);
 	this.controller.listen("shakeCheckBox", Mojo.Event.propertyChange, this.shakeCheckBoxHandler);
-	this.disableRollCheckBoxHandler = this.setDisableRollButton.bindAsEventListener(this);
+	this.disableRollCheckBoxHandler = function () {FIVEDICE.disableRollButtonBetweenRolls = this.widgetModels.disableRollCheckBox.value;}.bindAsEventListener(this);
 	this.controller.listen("disableRollCheckBox", Mojo.Event.propertyChange, this.disableRollCheckBoxHandler);
-	this.rollDelaySliderHandler = this.setRollDelay.bindAsEventListener(this);
+	this.rollDelaySliderHandler = function () {FIVEDICE.rollButtonDisabledTimeout = this.widgetModels.rollDelaySlider.value * 250;}.bindAsEventListener(this);
 	this.controller.listen("rollDelaySlider", Mojo.Event.propertyChange, this.rollDelaySliderHandler);
-	this.subtotalDeviationCheckBoxHandler = this.setSubtotalDeviation.bindAsEventListener(this);
+	this.subtotalDeviationCheckBoxHandler = function () {FIVEDICE.showSubtotalDeviation = this.widgetModels.subtotalDeviationCheckBox.value;}.bindAsEventListener(this);
 	this.controller.listen("subtotalDeviationCheckBox", Mojo.Event.propertyChange, this.subtotalDeviationCheckBoxHandler);
-	this.shakeInfoHandler = this.showShakeInfo.bindAsEventListener(this);
+	this.shakeInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.shakeInfo);}.bindAsEventListener(this);
 	this.controller.listen("shakeInfo", Mojo.Event.tap, this.shakeInfoHandler);
-	this.disableRollInfoHandler = this.showDisableRollInfo.bindAsEventListener(this);
+	this.disableRollInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.disableRollInfo);}.bindAsEventListener(this);
 	this.controller.listen("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
-	this.deviationInfoHandler = this.showDeviationInfo.bindAsEventListener(this);
+	this.deviationInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);}.bindAsEventListener(this);
 	this.controller.listen("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
 };
 
-PreferencesAssistant.prototype.activate = function(event) {
+PreferencesAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 };
 
 
-PreferencesAssistant.prototype.deactivate = function(event) {
+PreferencesAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 	  
 	//Save the preferences to the cookie.
-	FiveDice.cookie.put({
-		shakeToRoll: FiveDice.shakeToRoll,
-		disableRollButtonBetweenRolls: FiveDice.disableRollButtonBetweenRolls,
-		rollButtonDisabledTimeout: FiveDice.rollButtonDisabledTimeout,
-		showSubtotalDeviation: FiveDice.showSubtotalDeviation
+	FIVEDICE.cookie.put({
+		shakeToRoll: FIVEDICE.shakeToRoll,
+		disableRollButtonBetweenRolls: FIVEDICE.disableRollButtonBetweenRolls,
+		rollButtonDisabledTimeout: FIVEDICE.rollButtonDisabledTimeout,
+		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation
 	});
 };
 
-PreferencesAssistant.prototype.cleanup = function(event) {
+PreferencesAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
 	this.controller.stopListening("shakeCheckBox", Mojo.Event.propertyChange, this.shakeCheckBoxHandler);
@@ -128,7 +128,7 @@ PreferencesAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
 };
 
-PreferencesAssistant.prototype.handleCommand = function(event) {
+PreferencesAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-help":
@@ -137,32 +137,4 @@ PreferencesAssistant.prototype.handleCommand = function(event) {
 		default:
 			break;
 	}
-};
-
-PreferencesAssistant.prototype.setShake = function() {
-	FiveDice.shakeToRoll = this.widgetModels.shakeCheckBox.value;
-};
-
-PreferencesAssistant.prototype.setDisableRollButton = function() {
-	FiveDice.disableRollButtonBetweenRolls = this.widgetModels.disableRollCheckBox.value;
-};
-
-PreferencesAssistant.prototype.setRollDelay = function() {
-	FiveDice.rollButtonDisabledTimeout = this.widgetModels.rollDelaySlider.value * 250;
-};
-
-PreferencesAssistant.prototype.setSubtotalDeviation = function() {
-	FiveDice.showSubtotalDeviation = this.widgetModels.subtotalDeviationCheckBox.value;
-};
-
-PreferencesAssistant.prototype.showShakeInfo = function() {
-	this.controller.showAlertDialog(this.dialogModels.shakeInfo);
-};
-
-PreferencesAssistant.prototype.showDisableRollInfo = function() {
-	this.controller.showAlertDialog(this.dialogModels.disableRollInfo);
-};
-
-PreferencesAssistant.prototype.showDeviationInfo = function() {
-	this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);
 };
