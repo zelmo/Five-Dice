@@ -1,4 +1,4 @@
-function MainAssistant(playerName) {
+function MainAssistant(playerState) {
 	/* this is the creator function for your scene assistant object. It will be passed all the 
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
@@ -7,8 +7,7 @@ function MainAssistant(playerName) {
 	//Create a Yahtzee dice object.
 	this.dice = FiveDice.yahtzeeDice();
 	//Set the player for this scene.
-	//TODO: Use the playerName that the stage assistant passes in.
-	this.player = FiveDice.playerState("anonymous");
+	this.player = playerState;
 	//Set a button model for the Roll button.
 	this.rollModel = {label: "Roll 1", disabled: false};
 	
@@ -18,6 +17,7 @@ function MainAssistant(playerName) {
 		items: [
 			{label: "New Game", command: "do-newGame"},
 			{label: "Undo", command: "do-undo", disabled: true},
+			{label: "Current Scores", command: "do-currentScores"},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "Help", command: "do-help"},
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
@@ -32,6 +32,9 @@ MainAssistant.prototype.setup = function() {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
+	
+	//Player name
+	this.controller.get("playerName").innerHTML = this.player.getName();
 	
 	/* setup widgets here */
 	
@@ -55,9 +58,6 @@ MainAssistant.prototype.setup = function() {
 	this.controller.setupWidget("buttonFiveOfAKind", {}, this.player.getButtonModel("fiveOfAKind"));
 	this.controller.setupWidget("buttonChance", {}, this.player.getButtonModel("chance"));
 	
-	//Blank out all scoreValues.
-	this.resetAllScores();
-	
 	//Dice and Roll button
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + "Plain.png\"></img>";
@@ -79,6 +79,8 @@ MainAssistant.prototype.setup = function() {
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
 	this.newGameHandler = this.newGame.bindAsEventListener(this);
 	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
+	this.nextPlayerHandler = this.nextPlayer.bindAsEventListener(this);
+	this.controller.listen("nextPlayer", Mojo.Event.tap, this.nextPlayerHandler);
 	
 	//Roll button listener
 	this.rollHandler = this.roll.bindAsEventListener(this);
@@ -124,10 +126,8 @@ MainAssistant.prototype.activate = function(event) {
 		this.controller.listen(document, "shakeend", this.rollHandler);
 	}
 	
-	//Re-calculate the totals to update the Subtotal display,
-	//in case we're coming back from the Preferences scene
-	//and the subtotal deviation preference was changed.
-	this.updateTotal();
+	//Re-display the scores.
+	this.showActualScores();
 };
 
 
@@ -151,6 +151,7 @@ MainAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening("die3", Mojo.Event.tap, this.die3Handler);
 	this.controller.stopListening("die4", Mojo.Event.tap, this.die4Handler);
 	this.controller.stopListening("playAgain", Mojo.Event.tap, this.newGameHandler);
+	this.controller.stopListening("nextPlayer", Mojo.Event.tap, this.nextPlayerHandler);
 	//Roll button listeners
 	this.controller.stopListening("buttonRoll", Mojo.Event.tap, this.rollHandler);
 	//Upper half score button listeners
@@ -179,6 +180,9 @@ MainAssistant.prototype.handleCommand = function(event) {
 		case "do-undo":
 			this.undo();
 			break;
+		case "do-currentScores":
+		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "currentScores")});
+			break;
 		case "do-preferences":
 			Mojo.Controller.stageController.pushScene("preferences");
 			break;
@@ -187,29 +191,6 @@ MainAssistant.prototype.handleCommand = function(event) {
 			break;
 		default:
 			break;
-	}
-};
-
-MainAssistant.prototype.resetAllScores = function() {
-	//Blank the button-based scores and set the bonus and totals to 0.
-	this.blankUnsetScores();
-	var subtotalDisplay = "Subtotal &nbsp;&nbsp; 0";
-	if (FiveDice.showSubtotalDeviation) {
-		subtotalDisplay += " / +0";
-	}
-	this.controller.get("subtotal").innerHTML = subtotalDisplay;
-	this.controller.get("scoreValueBonus").innerHTML = 0;
-	this.controller.get("scoreValueTotal").innerHTML = 0;
-};
-
-MainAssistant.prototype.blankUnsetScores = function() {
-	//Blank out any scores that aren't set (i.e., where the button has not been disabled).
-	for (var i = 0; i < this.scoreItems.length; i++) {
-		itemName = this.scoreItems[i];
-		if (!this.player.getButtonModel(itemName).disabled) {
-			var scoreValueId = "scoreValue" + itemName.charAt(0).toUpperCase() + itemName.slice(1);
-			this.controller.get(scoreValueId).innerHTML = "";
-		}
 	}
 };
 
@@ -271,27 +252,61 @@ MainAssistant.prototype.showPossibleScores = function() {
 	}
 };
 
+MainAssistant.prototype.showActualScores = function() {
+	//Show scores that are set, and blank out any that are unset.
+	for (var i = 0; i < this.scoreItems.length; i++) {
+		itemName = this.scoreItems[i];
+		var scoreValueId = "scoreValue" + itemName.charAt(0).toUpperCase() + itemName.slice(1);
+		if (this.player.getButtonModel(itemName).disabled) {
+			this.controller.get(scoreValueId).innerHTML = this.player.getScore(itemName);
+			this.controller.get(scoreValueId).style.color = FiveDice.setScoreColor;
+		}
+		else {
+			this.controller.get(scoreValueId).innerHTML = ""
+		}
+	}
+	//Update the subtotal and total displays.
+	var subtotal = this.player.getSubtotal();
+	var difference = subtotal - this.player.getBenchmark();
+	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + subtotal;
+	if (FiveDice.showSubtotalDeviation) {
+		subtotalDisplay += " / " + (difference < 0 ? "" : "+") + (difference);;
+	}
+	this.controller.get("subtotal").innerHTML = subtotalDisplay;
+	var bonus = (subtotal >= 63 ? 35 : 0);
+	this.controller.get("scoreValueBonus").innerHTML = bonus;
+	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal() + bonus;
+};
+
 MainAssistant.prototype.setScore = function(itemName) {
 	//Make sure the dice have been rolled.
 	if (this.dice.chanceScore() == 0) {
 		return;
 	}
+	//Disable the Roll button.
+	this.rollModel.disabled = true;
+	this.controller.modelChanged(this.rollModel);
 	//Get the DOM element based on the item name.
 	var scoreValueDomElement = this.controller.get("scoreValue" + itemName.charAt(0).toUpperCase() + itemName.slice(1));
 	//Set the score and update the UI.
 	this.player.setScore(itemName, this.dice);
 	this.controller.modelChanged(this.player.getButtonModel(itemName));
-	scoreValueDomElement.innerHTML = this.player.getScore(itemName);
-	scoreValueDomElement.style.color = FiveDice.setScoreColor;
-	//Update the 5 of a kind score in case it changed.
-	var fiveOfAKindScore = (this.player.getButtonModel("fiveOfAKind").disabled ? this.player.getScore("fiveOfAKind") : "");
-	this.controller.get("scoreValueFiveOfAKind").innerHTML = fiveOfAKindScore;
-	//Re-calculate the total and get on with the game.
-	this.updateTotal();
-	this.blankUnsetScores();
-	this.releaseDice();
-	this.checkForEndOfGame();
-	this.enableUndo();
+	this.showActualScores();
+	//Move along either to the end-of-game stuff, the next player (if there is one), or the next turn.
+	if (!this.checkForEndOfGame()) {
+		this.enableUndo();
+		if (FiveDice.players.count() == 1) {
+			this.releaseDice();
+		}
+		else {
+			//Hide the dice and show the "Next Player" text.
+			for (var i = 0; i < this.dice.numberOfDice(); i++) {
+				this.controller.get("die" + i).style.visibility = "hidden";
+			}
+			this.controller.get("nextPlayer").innerHTML = "Next Player: " + FiveDice.players.nextPlayer(this.player.getName()).getName();
+			this.controller.get("nextPlayer").style.visibility = "visible";
+		}
+	}
 };
 
 //Auxiliary functions
@@ -310,9 +325,7 @@ MainAssistant.prototype.enableUndo = function() {
 MainAssistant.prototype.undo = function() {
 	var undoneItem = this.player.undoLastScore();
 	this.controller.modelChanged(this.player.getButtonModel(undoneItem));
-	//Update the 5 of a kind score in case it was affected.
-	this.controller.get("scoreValueFiveOfAKind").innerHTML = this.player.getScore("fiveOfAKind");
-	this.updateTotal();
+	//this.showActualScores();
 	this.dice.revert();
 	this.rollModel.disabled = (this.dice.getRollCount() > 3);
 	this.rollModel.label = "Roll " + (this.dice.getRollCount() > 3 ? 3 : this.dice.getRollCount());
@@ -321,7 +334,8 @@ MainAssistant.prototype.undo = function() {
 		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}
-	//Make sure the dice are visible (in case the "Play Again" button came up).
+	//Make sure the dice are visible.
+	this.controller.get("nextPlayer").style.visibility = "hidden";
 	this.controller.get("playAgain").style.visibility = "hidden";
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).style.visibility = "visible";
@@ -331,17 +345,10 @@ MainAssistant.prototype.undo = function() {
 	this.disableUndo();
 };
 
-MainAssistant.prototype.updateTotal = function() {
-	var subtotal = this.player.getSubtotal();
-	var difference = subtotal - this.player.getBenchmark();
-	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + subtotal;
-	if (FiveDice.showSubtotalDeviation) {
-		subtotalDisplay += " / " + (difference < 0 ? "" : "+") + (difference);;
-	}
-	this.controller.get("subtotal").innerHTML = subtotalDisplay;
-	var bonus = (subtotal >= 63 ? 35 : 0);
-	this.controller.get("scoreValueBonus").innerHTML = bonus;
-	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal() + bonus;
+MainAssistant.prototype.nextPlayer = function() {
+	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
+	var nextPlayerState = FiveDice.players.nextPlayer(this.player.getName());
+	Mojo.Controller.stageController.swapScene(sceneParameters, nextPlayerState);
 };
 
 MainAssistant.prototype.releaseDice = function() {
@@ -357,41 +364,28 @@ MainAssistant.prototype.releaseDice = function() {
 };
 
 MainAssistant.prototype.checkForEndOfGame = function() {
-	//See if all of the score buttons have been set, which means the game is over.
-	if (!this.player.allScoresAreSet()) {
+	if (!FiveDice.players.allPlayersAreDone()) {
 		return;
 	}
 	
-	//Disable the Roll button.
-	this.rollModel.disabled = true;
-	this.controller.modelChanged(this.rollModel);
-	
-	//Hide the dice and show the "Play Again" text.
-	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		this.controller.get("die" + i).style.visibility = "hidden";
+	if (FiveDice.players.count() == 1) {
+		//Don't bother with a score rundown for one person. Just offer the Play Again button.
+		for (var i = 0; i < this.dice.numberOfDice(); i++) {
+			this.controller.get("die" + i).style.visibility = "hidden";
+		}
+		this.controller.get("playAgain").style.visibility = "visible";
+		return true;
 	}
-	this.controller.get("playAgain").style.visibility = "visible";
+	else {
+		//Pop up a final score dialog with buttons to play again or change players.
+		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "finalScores")});
+	}
 };
 
 MainAssistant.prototype.newGame = function() {
-	//Disable the Undo menu item.
-	this.menuModel.items[1].disabled = true;
-	this.controller.modelChanged(this.menuModel);
-	
-	//Enable all buttons.
-	this.player.clearAllScores();
-	for (var i = 0; i < this.scoreItems.length; i++) {
-		itemName = this.scoreItems[i];
-		this.controller.modelChanged(this.player.getButtonModel(itemName));
-	}
-	
-	//Reset the scoreboard. This has to happen after the buttons are re-enabled.
-	this.resetAllScores();
-	
-	//Hide the "Play Again" text and show the dice.
-	this.releaseDice();
-	this.controller.get("playAgain").style.visibility = "hidden";
-	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		this.controller.get("die" + i).style.visibility = "visible";
-	}
+	//TODO: Pop up a dialog and offer buttons to use the same players or change players.
+	//Reset all the players and swap the scene to the first player.
+	FiveDice.players.resetAllPlayers();
+	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
+	Mojo.Controller.stageController.swapScene(sceneParameters, FiveDice.players.firstPlayer());
 };

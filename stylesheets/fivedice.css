@@ -1,11 +1,19 @@
 /* main */
-#topHalf {
+#playerName {
+	text-align: center;
+	font-size: large;
+	line-height: 1.4em;
+	margin-bottom: -3px;
+	background-color: white;
+}
+
+#upperHalf {
 	float: left;
 	width: 50%;
 	font-size: large;
 }
 
-#bottomHalf {
+#lowerHalf {
 	float: right;
 	width: 50%;
 	font-size: large;
@@ -73,10 +81,33 @@
 	margin-top: -35px;
 }
 
+#nextPlayer {
+	visibility: hidden;
+	float: left;
+	padding: 0;
+	font-size: large;
+	margin-top: -57px;
+}
+
 #roll {
 	float: right;
 	width: 25%;
-	margin-top: -40px;
+	margin-top: -62px;
+}
+
+/* score dialog */
+#names {
+	float: left;
+	width: 50%;
+}
+
+#scores {
+	float: right;
+	width: 20%;
+}
+
+#buttonGroup {
+	margin-top: 3em;
 }
 
 /* help & preferences*/

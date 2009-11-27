@@ -1,18 +1,14 @@
-//Declare a global object to act as a namespace for general values and models.
-var FiveDice = {};
-FiveDice.suggestedScoreColor = "teal"; //Color of the possible scores displayed after each roll.
-FiveDice.setScoreColor = "black"; //Color of the scores after they've been set.
-FiveDice.MenuAttributes = {	omitDefaultItems: true };
-//Declare and initialize the globals that will be set by the Preferences scene.
-FiveDice.cookie = new Mojo.Model.Cookie("FiveDicePreferences");
-FiveDice.shakeToRoll = false;
-FiveDice.disableRollButtonBetweenRolls = false; 
-FiveDice.rollButtonDisabledTimeout = 500; //Length of time (ms) the Roll button stays disabled between rolls.
-FiveDice.showSubtotalDeviation = true;
-
 function StageAssistant() {
+	//TODO: Players are being added here for testing. Ultimately there should be a scene that sets the player list.
+	FiveDice.players = FiveDice.playerStateList();
+	FiveDice.players.addPlayer("Daren");
+	FiveDice.players.addPlayer("Not Daren");
+
 	//Define the About dialog model.
 	this.aboutDialogModel = {
+		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
+		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
+		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}],
 		onChoose: function(value) {
 			switch (value) {
 				case "license":
@@ -30,24 +26,20 @@ function StageAssistant() {
 					this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
 					break;
 			}
-		},
-		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
-		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
-		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}]
+		}
 	};
 };
 
 StageAssistant.prototype.setup = function() {
 	this.loadPreferences();
-	this.controller.pushScene('main');
+	this.controller.pushScene('main', FiveDice.players.firstPlayer());
 };
 
 StageAssistant.prototype.handleCommand = function(event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-about":
-			var currentScene = this.controller.activeScene();
-			currentScene.showAlertDialog(this.aboutDialogModel);
+			this.controller.activeScene().showAlertDialog(this.aboutDialogModel);
 			break;
 	}
 };

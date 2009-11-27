@@ -13,16 +13,17 @@ FiveDice.sixSidedDie = function() {
 	//Private functions:
 	function _roll() {
 		_value = (Math.round(Math.random() * 5)) + 1;
+		_previousValue = _value;
+		_previousHeld = false;
 	};
 	
 	function _toggleHeld() {
 		//Only allow the die to be held if it has a non-zero value.
 		_held = (_value == 0 ? false : !_held);
+		_previousHeld = _held;
 	};
 	
 	function _clear() {
-		_previousHeld = _held;
-		_previousValue = _value;
 		_held = false;
 		_value = 0;
 	};
