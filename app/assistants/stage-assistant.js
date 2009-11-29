@@ -1,8 +1,8 @@
 function StageAssistant() {
 	//TODO: Players are being added here for testing. Ultimately there should be a scene that sets the player list.
 	FIVEDICE.players = FIVEDICE.playerStateList();
-	FIVEDICE.players.addPlayer("Daren");
-	FIVEDICE.players.addPlayer("Not Daren");
+	FIVEDICE.players.addPlayer("Five Dice");
+	//FIVEDICE.players.addPlayer("Player 2");
 
 	//Define the About dialog model.
 	this.aboutDialogModel = {

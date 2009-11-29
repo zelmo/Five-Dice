@@ -7,37 +7,45 @@
 	background-color: white;
 }
 
-#upperHalf {
-	float: left;
+#upperHalf, #lowerHalf {
 	width: 50%;
 	font-size: large;
+}
+
+#upperHalf {
+	float: left;
 }
 
 #lowerHalf {
 	float: right;
-	width: 50%;
-	font-size: large;
 }
 
 #subtotal {
 	position: relative;
-	top: 25px;
+	margin-top: 13px;
+	margin-bottom: 13px;
 	left: 17px;
 }
 
+#subtotal.pixi {
+	margin-bottom: 7px;
+}
+
 .scoreRow {
-	height: 45px;
+	margin-top: 4px;
+}
+
+.scoreRow.pixi {
+	margin-bottom: -6px;
 }
 
 .scoreButton, .scoreLabel {
 	display: inline-block;
-	width: 75%;
+	width: 80%;
 }
 
-.scoreLabel {
-	position: relative;
-	top: 23px;
-	text-align: center;
+.scoreButton {
+	color: black;
 }
 
 .scoreButton .palm-button-wrapper {
@@ -45,11 +53,22 @@
 	text-transform: none;
 }
 
-.scoreValue {
+.scoreLabel, .scoreLabelValue, #subtotal {
+	color: purple;
+}
+
+.scoreValue, .scoreLabelValue {
 	float: right;
 	position: relative;
-	top: 20px;
 	right: 17px;
+}
+
+.scoreLabel {
+	text-align: center;
+}
+
+.scoreValue {
+	top: 8px;
 }
 
 #dice {
@@ -78,7 +97,7 @@
 	visibility: hidden;
 	float: left;
 	width: 50%;
-	margin-top: -35px;
+	margin-top: -26px;
 }
 
 #nextPlayer {
@@ -86,13 +105,13 @@
 	float: left;
 	padding: 0;
 	font-size: large;
-	margin-top: -57px;
+	margin-top: -36px;
 }
 
 #roll {
 	float: right;
 	width: 25%;
-	margin-top: -62px;
+	margin-top: -50px;
 }
 
 /* score dialog */

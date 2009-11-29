@@ -5,19 +5,19 @@ FIVEDICE.playerState = function (playerName) {
 	function _getName() { return _playerName; };
 	
 	var _scoreItems = {
-		ones:			{buttonModel: {label: "Ones", disabled: false},			score: 0},
-		twos:			{buttonModel: {label: "Twos", disabled: false},			score: 0},
-		threes:			{buttonModel: {label: "Threes", disabled: false},		score: 0},
-		fours:			{buttonModel: {label: "Fours", disabled: false},		score: 0},
-		fives:			{buttonModel: {label: "Fives", disabled: false},		score: 0},
-		sixes:			{buttonModel: {label: "Sixes", disabled: false},		score: 0},
-		threeOfAKind:	{buttonModel: {label: "3 of a kind", disabled: false},	score: 0},
-		fourOfAKind:	{buttonModel: {label: "4 of a kind", disabled: false},	score: 0},
-		fullHouse:		{buttonModel: {label: "Full house", disabled: false},	score: 0},
-		smallStraight:	{buttonModel: {label: "Sm. straight", disabled: false},	score: 0},
-		largeStraight:	{buttonModel: {label: "Lg. straight", disabled: false},	score: 0},
-		fiveOfAKind:	{buttonModel: {label: "5 of a kind", disabled: false},	score: 0},
-		chance:			{buttonModel: {label: "Chance", disabled: false},		score: 0}
+		ones:			{buttonModel: {label: "Ones", disabled: false, buttonClass: "small-button"},		score: 0},
+		twos:			{buttonModel: {label: "Twos", disabled: false, buttonClass: "small-button"},		score: 0},
+		threes:			{buttonModel: {label: "Threes", disabled: false, buttonClass: "small-button"},		score: 0},
+		fours:			{buttonModel: {label: "Fours", disabled: false, buttonClass: "small-button"},		score: 0},
+		fives:			{buttonModel: {label: "Fives", disabled: false, buttonClass: "small-button"},		score: 0},
+		sixes:			{buttonModel: {label: "Sixes", disabled: false, buttonClass: "small-button"},		score: 0},
+		threeOfAKind:	{buttonModel: {label: "3 of a kind", disabled: false, buttonClass: "small-button"},	score: 0},
+		fourOfAKind:	{buttonModel: {label: "4 of a kind", disabled: false, buttonClass: "small-button"},	score: 0},
+		fullHouse:		{buttonModel: {label: "Full house", disabled: false, buttonClass: "small-button"},	score: 0},
+		smallStraight:	{buttonModel: {label: "Sm. straight", disabled: false, buttonClass: "small-button"},score: 0},
+		largeStraight:	{buttonModel: {label: "Lg. straight", disabled: false, buttonClass: "small-button"},score: 0},
+		fiveOfAKind:	{buttonModel: {label: "5 of a kind", disabled: false, buttonClass: "small-button"},	score: 0},
+		chance:			{buttonModel: {label: "Chance", disabled: false, buttonClass: "small-button"},		score: 0}
 	};
 	function _getButtonModel(item) { return _scoreItems[item].buttonModel; };
 	function _getScore(item) { return _scoreItems[item].score; };
@@ -186,6 +186,7 @@ FIVEDICE.playerState = function (playerName) {
 		for (var itemName in _scoreItems) {
 			if (_scoreItems.hasOwnProperty(itemName) && _scoreItems[itemName].buttonModel.disabled) { total += _scoreItems[itemName].score; }
 		}
+		if (_getSubtotal() >= 63) { total += 35; } //Bonus
 		return total;
 	};
 	

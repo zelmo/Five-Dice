@@ -17,12 +17,13 @@ function MainAssistant(playerState) {
 		items: [
 			{label: "New Game", command: "do-newGame"},
 			{label: "Undo", command: "do-undo", disabled: true},
-			{label: "Current Scores", command: "do-currentScores"},
 			{label: "Preferences", command: "do-preferences"},
-			{label: "Help", command: "do-help"},
-			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"}
+			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
+			{label: "Help", command: "do-help"}
 		]
 	};
+	//Add a Current Scores item to the menu if there's more than one player.
+	if (FIVEDICE.players.count() > 1) { this.menuModel.items.splice(2, 0, {label: "Current Scores", command: "do-currentScores"}); }
 	
 	//For convenience, define an array of score items that we can loop over.
 	this.scoreItems = ["ones", "twos", "threes", "fours", "fives", "sixes", "threeOfAKind", "fourOfAKind", "fullHouse", "smallStraight", "largeStraight", "fiveOfAKind", "chance"];
@@ -35,6 +36,15 @@ MainAssistant.prototype.setup = function () {
 	
 	//Player name
 	this.controller.get("playerName").innerHTML = this.player.getName();
+	
+	//Add the "pixi" CSS class to certain elements if the screen height is 400px.
+	if (Mojo.Environment.DeviceInfo.touchableRows < 8) {
+		this.controller.get("subtotal").addClassName("pixi");
+		var scoreRowElements = $$(".scoreRow"); //Prototype's $$ operator returns an array of elements.
+		for (var i = 0; i < scoreRowElements.length; i++) {
+			this.controller.get(scoreRowElements[i]).addClassName("pixi");
+		}
+	}
 	
 	/* setup widgets here */
 	
@@ -59,7 +69,7 @@ MainAssistant.prototype.setup = function () {
 	this.controller.setupWidget("buttonChance", {}, this.player.getButtonModel("chance"));
 	
 	//Dice and Roll button
-	for (var i = 0; i < this.dice.numberOfDice(); i++) {
+	for (i = 0; i < this.dice.numberOfDice(); i++) {
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + "Plain.png\"></img>";
 	}
 	this.controller.setupWidget("buttonRoll", {}, this.rollModel);
@@ -121,6 +131,9 @@ MainAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 	  
+	//Set the card's background color. For some reason, I can't get this to work in the stylesheet.
+	$$("body")[0].style.backgroundColor = FIVEDICE.gameBackgroundColor;
+
 	//Set up listeners that are dependent on the Preferences.
 	if (FIVEDICE.shakeToRoll) {
 		this.controller.listen(document, "shakeend", this.rollHandler);
@@ -135,6 +148,9 @@ MainAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 	  
+	//Reset the background color before showing other scenes.
+	$$("body")[0].style.backgroundColor = FIVEDICE.defaultBackgroundColor;
+
 	//Remove listeners that are dependent on the Preferences.
 	this.controller.stopListening(document, "shakeend", this.rollHandler);
 };
@@ -273,7 +289,7 @@ MainAssistant.prototype.showActualScores = function () {
 	this.controller.get("subtotal").innerHTML = subtotalDisplay;
 	var bonus = (subtotal >= 63 ? 35 : 0);
 	this.controller.get("scoreValueBonus").innerHTML = bonus;
-	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal() + bonus;
+	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal();
 };
 
 MainAssistant.prototype.setScore = function (itemName) {
