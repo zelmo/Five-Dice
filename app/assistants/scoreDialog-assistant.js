@@ -22,8 +22,11 @@ ScoreDialogAssistant.prototype.setup = function (widget) {
 			this.sceneAssistant.controller.get("buttonGroup").innerHTML = '<div id="playAgainButton" x-mojo-element="Button"></div>';
 			this.sceneAssistant.controller.get("buttonGroup").innerHTML += '<div id="changePlayersButton" x-mojo-element="Button"></div>';
 			this.sceneAssistant.controller.setupWidget("playAgainButton", {}, {label: "Play Again", disabled: false});
+			this.sceneAssistant.controller.setupWidget("changePlayersButton", {}, {label: "Change Players", disabled: false});
 			this.playAgainHandler = this.playAgain.bindAsEventListener(this);
 			this.sceneAssistant.controller.listen("playAgainButton", Mojo.Event.tap, this.playAgainHandler);
+			this.changePlayersHandler = function () {Mojo.Controller.stageController.swapScene("playerList");}.bindAsEventListener(this);
+			this.sceneAssistant.controller.listen("changePlayersButton", Mojo.Event.tap, this.changePlayersHandler);
 			break;
 	}
 	
@@ -44,6 +47,7 @@ ScoreDialogAssistant.prototype.cleanup = function () {
 			break;
 		case "finalScores":
 			this.sceneAssistant.controller.stopListening("playAgainButton", Mojo.Event.tap, this.playAgainHandler);
+			this.sceneAssistant.controller.stopListening("changePlayersButton", Mojo.Event.tap, this.changePlayersHandler);
 			break;
 	}
 };

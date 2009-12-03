@@ -108,7 +108,7 @@ PreferencesAssistant.prototype.deactivate = function (event) {
 	   this scene is popped or another scene is pushed on top */
 	  
 	//Save the preferences to the cookie.
-	FIVEDICE.cookie.put({
+	FIVEDICE.preferencesCookie.put({
 		shakeToRoll: FIVEDICE.shakeToRoll,
 		disableRollButtonBetweenRolls: FIVEDICE.disableRollButtonBetweenRolls,
 		rollButtonDisabledTimeout: FIVEDICE.rollButtonDisabledTimeout,

@@ -8,10 +8,6 @@ FIVEDICE.playerStateList = function () {
 		return _playerStateList.length;
 	};
 	
-	function _clear() {
-		_playerStateList = [];
-	};
-	
 	function _addPlayer(playerName) {
 		_playerStateList.push(FIVEDICE.playerState(playerName));
 	}
@@ -61,7 +57,6 @@ FIVEDICE.playerStateList = function () {
 	//Public API.
 	return {
 		count: _count,
-		clear: _clear,
 		addPlayer: _addPlayer,
 		firstPlayer: _firstPlayer,
 		nextPlayer: _nextPlayer,

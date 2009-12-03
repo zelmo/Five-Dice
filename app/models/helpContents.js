@@ -42,7 +42,7 @@ FIVEDICE.helpContents = function() {
 			headerTitle: "Scoring",
 			bodyHtml: "<div class=\"palm-body-text\">" +
 				"After each roll, the game will show you the possible points you can score" +
-				" for each score item, using a teal color. You can click the button representing" +
+				" for each score item, using a yellow color. You can click the button representing" +
 				" the score item of your choice to assign the current score to that item." +
 				" Once a score is assigned to an item, it is displayed in black." +
 				"</div>" +

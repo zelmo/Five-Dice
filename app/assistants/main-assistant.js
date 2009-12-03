@@ -37,7 +37,7 @@ MainAssistant.prototype.setup = function () {
 	//Player name
 	this.controller.get("playerName").innerHTML = this.player.getName();
 	
-	//Add the "pixi" CSS class to certain elements if the screen height is 400px.
+	//Add the "pixi" CSS class to certain elements if DeviceInfo.touchableRows is less than what's defined for Pre.
 	if (Mojo.Environment.DeviceInfo.touchableRows < 8) {
 		this.controller.get("subtotal").addClassName("pixi");
 		var scoreRowElements = $$(".scoreRow"); //Prototype's $$ operator returns an array of elements.
@@ -87,7 +87,7 @@ MainAssistant.prototype.setup = function () {
 	this.controller.listen("die3", Mojo.Event.tap, this.die3Handler);
 	this.die4Handler = function () {this.toggleDie(4);}.bindAsEventListener(this);
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
-	this.newGameHandler = this.newGame.bindAsEventListener(this);
+	this.newGameHandler = function () {Mojo.Controller.stageController.swapScene("playerList");}.bindAsEventListener(this);
 	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
 	this.nextPlayerHandler = this.nextPlayer.bindAsEventListener(this);
 	this.controller.listen("nextPlayer", Mojo.Event.tap, this.nextPlayerHandler);
@@ -131,9 +131,6 @@ MainAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 	  
-	//Set the card's background color. For some reason, I can't get this to work in the stylesheet.
-	$$("body")[0].style.backgroundColor = FIVEDICE.gameBackgroundColor;
-
 	//Set up listeners that are dependent on the Preferences.
 	if (FIVEDICE.shakeToRoll) {
 		this.controller.listen(document, "shakeend", this.rollHandler);
@@ -148,9 +145,6 @@ MainAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 	  
-	//Reset the background color before showing other scenes.
-	$$("body")[0].style.backgroundColor = FIVEDICE.defaultBackgroundColor;
-
 	//Remove listeners that are dependent on the Preferences.
 	this.controller.stopListening(document, "shakeend", this.rollHandler);
 };
@@ -191,7 +185,7 @@ MainAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
 		case "do-newGame":
-			this.newGame();
+			Mojo.Controller.stageController.swapScene("playerList");
 			break;
 		case "do-undo":
 			this.undo();
@@ -388,12 +382,4 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 		//Pop up a final score dialog with buttons to play again or change players.
 		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "finalScores")});
 	}
-};
-
-MainAssistant.prototype.newGame = function () {
-	//TODO: Pop up a dialog and offer buttons to use the same players or change players.
-	//Reset all the players and swap the scene to the first player.
-	FIVEDICE.players.resetAllPlayers();
-	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
-	Mojo.Controller.stageController.swapScene(sceneParameters, FIVEDICE.players.firstPlayer());
 };

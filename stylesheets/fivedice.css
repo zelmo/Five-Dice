@@ -1,4 +1,24 @@
+/* playerList */
+#playerListScrollerContent {
+	height: 170px;
+}
+
+#playerListScrollerContent.pixi {
+	height: 90px;
+}
+
+#playerListWidget .palm-row-wrapper{
+	min-height: 30px;
+	height: 30px;
+	margin-top: -10px;
+	padding-bottom: 11px;
+}
+
 /* main */
+#mojo-scene-main-scene-scroller {
+	background-color: #3C6;
+}
+
 #playerName {
 	text-align: center;
 	font-size: large;
@@ -153,8 +173,8 @@
 }
 
 .checkBoxLabel.single-line {
-	height: 50px;
-	line-height: 50px;
+	height: 51px;
+	line-height: 51px;
 }
 
 .checkBoxLabel.multi-line {
