@@ -5,7 +5,7 @@ function PlayerListAssistant() {
 	   that needs the scene controller should be done in the setup function below. */
 	  
 	  //Define a model for the Play button that starts disabled until a player is selected.
-	  this.startButtonModel = {label: "Start Game", disabled: false};
+	  this.startButtonModel = {label: "Start Game", disabled: true};
 };
 
 PlayerListAssistant.prototype.setup = function () {
@@ -17,6 +17,9 @@ PlayerListAssistant.prototype.setup = function () {
 	if (Mojo.Environment.DeviceInfo.touchableRows < 8) {
 		this.controller.get("playerListScrollerContent").addClassName("pixi");
 	}
+	
+	//Enable the start button if players are selected.
+	this.checkForSelectedPlayers();
 
 	/* setup widgets here */
 	
@@ -38,6 +41,12 @@ PlayerListAssistant.prototype.setup = function () {
 	this.controller.setupWidget("startButton", {}, this.startButtonModel);
 	
 	/* add event handlers to listen to events from widgets */
+	this.addPlayerHandler = this.addPlayer.bindAsEventListener(this);
+	this.controller.listen("playerListWidget", Mojo.Event.listAdd, this.addPlayerHandler);
+	this.deletePlayerHandler = this.deletePlayer.bindAsEventListener(this);
+	this.controller.listen("playerListWidget", Mojo.Event.listDelete, this.deletePlayerHandler);
+	this.selectPlayerHandler = this.checkForSelectedPlayers.bindAsEventListener(this);
+	this.controller.listen("playerListWidget", Mojo.Event.propertyChange, this.selectPlayerHandler);
 	this.startButtonHandler = this.startGame.bindAsEventListener(this);
 	this.controller.listen("startButton", Mojo.Event.tap, this.startButtonHandler);
 };
@@ -52,13 +61,42 @@ PlayerListAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
 	
-	//TODO: Store the player names and selected states in a cookie.
+	//Store the player names and selected states in a cookie.
+	FIVEDICE.storedPlayersCookie.put(FIVEDICE.storedPlayers);
 };
 
 PlayerListAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
+	this.controller.stopListening("playerListWidget", Mojo.Event.listAdd, this.addPlayerHandler);
+	this.controller.stopListening("playerListWidget", Mojo.Event.listDelete, this.deletePlayerHandler);
+	this.controller.stopListening("playerListWidget", Mojo.Event.propertyChanged, this.selectPlayerHandler);
 	this.controller.stopListening("startButton", Mojo.Event.tap, this.startButtonHandler);
+};
+
+PlayerListAssistant.prototype.addPlayer = function (event) {
+	//Add a generic new player to the end of the list.
+	var newPlayerName = "Player " + (FIVEDICE.storedPlayers.items.length + 1);
+	FIVEDICE.storedPlayers.items.push({name: newPlayerName, selected: false});
+	this.controller.modelChanged(FIVEDICE.storedPlayers);
+};
+
+PlayerListAssistant.prototype.deletePlayer = function (event) {
+	FIVEDICE.storedPlayers.items.splice(event.index, 1);
+};
+
+PlayerListAssistant.prototype.checkForSelectedPlayers = function () {
+	//See if any players have been selected to play.
+	var selectedPlayersExist = false;
+	for (var i = 0; i < FIVEDICE.storedPlayers.items.length; i++) {
+		if (FIVEDICE.storedPlayers.items[i].selected) {
+			selectedPlayersExist = true;
+			break;
+		}
+	}
+	//Enable or disable the start button depending on whether a player is selected.
+	this.startButtonModel.disabled = !selectedPlayersExist;
+	this.controller.modelChanged(this.startButtonModel); 
 };
 
 PlayerListAssistant.prototype.startGame = function () {

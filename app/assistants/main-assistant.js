@@ -87,8 +87,8 @@ MainAssistant.prototype.setup = function () {
 	this.controller.listen("die3", Mojo.Event.tap, this.die3Handler);
 	this.die4Handler = function () {this.toggleDie(4);}.bindAsEventListener(this);
 	this.controller.listen("die4", Mojo.Event.tap, this.die4Handler);
-	this.newGameHandler = function () {Mojo.Controller.stageController.swapScene("playerList");}.bindAsEventListener(this);
-	this.controller.listen("playAgain", Mojo.Event.tap, this.newGameHandler);
+	this.playAgainHandler = this.playAgain.bindAsEventListener(this);
+	this.controller.listen("playAgain", Mojo.Event.tap, this.playAgainHandler);
 	this.nextPlayerHandler = this.nextPlayer.bindAsEventListener(this);
 	this.controller.listen("nextPlayer", Mojo.Event.tap, this.nextPlayerHandler);
 	
@@ -160,7 +160,7 @@ MainAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("die2", Mojo.Event.tap, this.die2Handler);
 	this.controller.stopListening("die3", Mojo.Event.tap, this.die3Handler);
 	this.controller.stopListening("die4", Mojo.Event.tap, this.die4Handler);
-	this.controller.stopListening("playAgain", Mojo.Event.tap, this.newGameHandler);
+	this.controller.stopListening("playAgain", Mojo.Event.tap, this.playAgainHandler);
 	this.controller.stopListening("nextPlayer", Mojo.Event.tap, this.nextPlayerHandler);
 	//Roll button listeners
 	this.controller.stopListening("buttonRoll", Mojo.Event.tap, this.rollHandler);
@@ -382,4 +382,9 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 		//Pop up a final score dialog with buttons to play again or change players.
 		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "finalScores")});
 	}
+};
+
+MainAssistant.prototype.playAgain = function () {
+	FIVEDICE.players.resetAllPlayers();
+	Mojo.Controller.stageController.swapScene("main", FIVEDICE.players.firstPlayer());
 };

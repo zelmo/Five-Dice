@@ -54,7 +54,6 @@ ScoreDialogAssistant.prototype.cleanup = function () {
 
 ScoreDialogAssistant.prototype.playAgain = function () {
 	FIVEDICE.players.resetAllPlayers();
-	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
-	Mojo.Controller.stageController.swapScene(sceneParameters, FIVEDICE.players.firstPlayer());
+	Mojo.Controller.stageController.swapScene("main", FIVEDICE.players.firstPlayer());
 	this.widget.mojo.close;
 };

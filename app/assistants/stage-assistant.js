@@ -59,12 +59,4 @@ StageAssistant.prototype.loadPlayers = function () {
 			FIVEDICE.storedPlayers.items.push({name: storedPlayerObject.items[i].name, selected: storedPlayerObject.items[i].selected});
 		}
 	}
-	//If there are no stored players, set up a default one.
-	if (FIVEDICE.storedPlayers.items.length == 0) {
-		FIVEDICE.storedPlayers.items.push({name: "Player 1", selected: true});
-		FIVEDICE.storedPlayers.items.push({name: "Player 2", selected: false});
-		FIVEDICE.storedPlayers.items.push({name: "Player 3", selected: false});
-		FIVEDICE.storedPlayers.items.push({name: "Player 4", selected: false});
-		FIVEDICE.storedPlayers.items.push({name: "Player 5", selected: false});
-	}
 };
