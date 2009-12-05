@@ -20,12 +20,37 @@ FIVEDICE.helpContents = function() {
 		},
 		{
 			headerIcon: "Die2Held.png",
+			headerTitle: "Selecting Players",
+			bodyHtml: "<div class=\"palm-body-text\">" +
+				"Upon launching the application, you're greeted with a player selection screen." +
+				" If you haven't set up any players yet, you'll see a <strong>Players</strong> list" +
+				" with only an <em>Add a player</em> item, and a <strong>Start Game</strong> button" +
+				" that's disabled." +
+				"</div>" +
+				"<div class='palm-body-text'>" +
+				"You can add as many players to the list as you like. When you tap on the <em>Add a player</em>" +
+				" item, a new row will be added to the list with a generic player name and a check box." +
+				" The keyboard cursor will automatically be placed next to the new player's name so that you can" +
+				" back-space over it and type in a name of your choosing. As with most webOS lists, players can" +
+				" be re-ordered in the list by holding down on the player name and dragging it to a new spot," +
+				" or deleted by swiping the row off the screen to the left or right." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"The check box next to each player's name indicates who is selected to play the game." +
+				" Players who are checked will take turns playing (in the same order that they appear on the list)" +
+				" after the <strong>Start Game</strong> button is pressed. You must select at least one player" +
+				" before you can start a game." +
+				"</div>"
+		},
+		{
+			headerIcon: "Die3Held.png",
 			headerTitle: "Rolling the Dice",
 			bodyHtml: "<div class=\"palm-body-text\">" +
-				"The game starts out with five blank dice on the bottom left of the screen." +
-				" You can roll the dice up to three times per turn either by tapping the <strong>Roll</strong> button" +
-				" on the bottom right of the screen, or (if enabled in the Preferences) by shaking the phone." +
-				" The <strong>Roll</strong> button indicates which roll number you are on." +
+				"The game starts out with the current player's name at the top of the screen, and five blank dice" +
+				" at the bottom left of the screen. You can roll the dice up to three times per turn" +
+				" either by tapping the <strong>Roll</strong> button on the bottom right of the screen," +
+				" or (if enabled in the Preferences) by shaking the phone. The <strong>Roll</strong> button" +
+				" indicates which roll number you are on." +
 				"</div>" +
 				"<div class='palm-body-text'>" +
 				"After each roll, you can \"freeze\" any dice you want by tapping on them." +
@@ -34,11 +59,14 @@ FIVEDICE.helpContents = function() {
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
 				"After three rolls, the <strong>Roll</strong> button is disabled, and you must choose a score." +
-				" Once a score is chosen, the <strong>Roll</strong> button is re-enabled and the dice are blanked out." +
+				" After a score is chosen, if there's only one player, the <strong>Roll</strong> button is then" +
+				" re-enabled and the dice are blanked out, leaving the game ready for your next turn." +
+				" If there are multiple players, the dice are replaced by a button that shows who the next player is." +
+				" Pressing that button will move the game to the next player." +
 				"</div>"
 		},
 		{
-			headerIcon: "Die3Held.png",
+			headerIcon: "Die4Held.png",
 			headerTitle: "Scoring",
 			bodyHtml: "<div class=\"palm-body-text\">" +
 				"After each roll, the game will show you the possible points you can score" +
@@ -62,7 +90,7 @@ FIVEDICE.helpContents = function() {
 				"</div>"
 		},
 		{
-			headerIcon: "Die4Held.png",
+			headerIcon: "Die5Held.png",
 			headerTitle: "Special Features",
 			bodyHtml: "<div class=\"palm-body-text\">" +
 				"<em>Note that most special features can be configured in the game's Preferences.</em>" +
@@ -93,6 +121,11 @@ FIVEDICE.helpContents = function() {
 				" score button, they'll still be available after you hit <em>Undo</em>)." +
 				" The <em>Undo</em> menu item is available immediately after assigning any score item," +
 				" and becomes disabled once you hit the <em>Roll</em> button (sorry, no re-rolls)." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"<strong>Current Scores:</strong> When playing a multi-player game, a menu item" +
+				" called <em>Current Scores</em> is available from the main game screen. This item" +
+				" can be selected at any point during the game to see a list of all players and their scores." +
 				"</div>"
 		}
 	];

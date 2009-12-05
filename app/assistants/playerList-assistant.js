@@ -26,7 +26,17 @@ PlayerListAssistant.prototype.setup = function () {
 
 	/* setup widgets here */
 	
-	//TODO: Set up the application menu.
+	//Application menu
+	var menuModel = {
+		visible: true,
+		items: [
+			Mojo.Menu.editItem,
+			{label: "Preferences", command: "do-preferences"},
+			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
+			{label: "Help", command: "do-help"}
+		]
+	};
+	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, menuModel);
 	
 	//Player list
 	var listAttributes = {
@@ -79,6 +89,20 @@ PlayerListAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("playerListWidget", Mojo.Event.listReorder, this.reorderPlayersHandler);
 	this.controller.stopListening("playerListWidget", Mojo.Event.propertyChanged, this.selectPlayerHandler);
 	this.controller.stopListening("startButton", Mojo.Event.tap, this.startButtonHandler);
+};
+
+PlayerListAssistant.prototype.handleCommand = function (event) {
+	if (event.type != Mojo.Event.command) { return; }
+	switch (event.command) {
+		case "do-preferences":
+			Mojo.Controller.stageController.pushScene("preferences");
+			break;
+		case "do-help":
+			Mojo.Controller.stageController.pushScene("help");
+			break;
+		default:
+			break;
+	}
 };
 
 PlayerListAssistant.prototype.addPlayer = function (event) {
