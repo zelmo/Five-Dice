@@ -10,11 +10,14 @@ function PlayerListAssistant() {
 
 PlayerListAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
-		
+	
+	this.playerList = this.controller.get("playerListWidget");
+	
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
 	
 	//Add the "pixi" CSS class to certain elements if DeviceInfo.touchableRows is less than what's defined for Pre.
 	if (Mojo.Environment.DeviceInfo.touchableRows < 8) {
+		this.controller.get("playerListGroup").addClassName("pixi");
 		this.controller.get("playerListScrollerContent").addClassName("pixi");
 	}
 	
@@ -23,15 +26,16 @@ PlayerListAssistant.prototype.setup = function () {
 
 	/* setup widgets here */
 	
+	//TODO: Set up the application menu.
+	
 	//Player list
 	var listAttributes = {
 		listTemplate: "playerList/playerListTemplate",
 		itemTemplate: "playerList/playerListRow",
-		fixedHeightItems: true,
-		initialAverageRowHeight: 57,
 		addItemLabel: "Add a player...",
 		reorderable: true,
-		swipeToDelete: true
+		swipeToDelete: true,
+		autoconfirmDelete: true
 	};
 	this.controller.setupWidget("playerListWidget", listAttributes, FIVEDICE.storedPlayers)
 	this.controller.setupWidget("playerListCheckBox", {modelProperty: "selected"});
@@ -45,6 +49,8 @@ PlayerListAssistant.prototype.setup = function () {
 	this.controller.listen("playerListWidget", Mojo.Event.listAdd, this.addPlayerHandler);
 	this.deletePlayerHandler = this.deletePlayer.bindAsEventListener(this);
 	this.controller.listen("playerListWidget", Mojo.Event.listDelete, this.deletePlayerHandler);
+	this.reorderPlayersHandler = this.reorderPlayers.bindAsEventListener(this);
+	this.controller.listen("playerListWidget", Mojo.Event.listReorder, this.reorderPlayersHandler);
 	this.selectPlayerHandler = this.checkForSelectedPlayers.bindAsEventListener(this);
 	this.controller.listen("playerListWidget", Mojo.Event.propertyChange, this.selectPlayerHandler);
 	this.startButtonHandler = this.startGame.bindAsEventListener(this);
@@ -70,19 +76,27 @@ PlayerListAssistant.prototype.cleanup = function (event) {
 	   a result of being popped off the scene stack */
 	this.controller.stopListening("playerListWidget", Mojo.Event.listAdd, this.addPlayerHandler);
 	this.controller.stopListening("playerListWidget", Mojo.Event.listDelete, this.deletePlayerHandler);
+	this.controller.stopListening("playerListWidget", Mojo.Event.listReorder, this.reorderPlayersHandler);
 	this.controller.stopListening("playerListWidget", Mojo.Event.propertyChanged, this.selectPlayerHandler);
 	this.controller.stopListening("startButton", Mojo.Event.tap, this.startButtonHandler);
 };
 
 PlayerListAssistant.prototype.addPlayer = function (event) {
 	//Add a generic new player to the end of the list.
-	var newPlayerName = "Player " + (FIVEDICE.storedPlayers.items.length + 1);
-	FIVEDICE.storedPlayers.items.push({name: newPlayerName, selected: false});
-	this.controller.modelChanged(FIVEDICE.storedPlayers);
+	var newPlayerName = "Player " + (event.model.items.length + 1);
+	event.model.items.push({name: newPlayerName, selected: false});
+	this.controller.modelChanged(event.model);
+	//Set focus on the player name.
+	this.playerList.mojo.focusItem(event.model.items[event.model.items.length - 1], "name");
 };
 
 PlayerListAssistant.prototype.deletePlayer = function (event) {
-	FIVEDICE.storedPlayers.items.splice(event.index, 1);
+	event.model.items.splice(event.index, 1);
+};
+
+PlayerListAssistant.prototype.reorderPlayers = function (event) {
+	event.model.items.splice(event.fromIndex, 1);
+	event.model.items.splice(event.toIndex, 0, event.item);
 };
 
 PlayerListAssistant.prototype.checkForSelectedPlayers = function () {

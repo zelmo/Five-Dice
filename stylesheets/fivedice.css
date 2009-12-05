@@ -1,14 +1,36 @@
 /* playerList */
-#playerListScrollerContent {
-	height: 170px;
+#mojo-scene-playerList-scene-scroller {
+	background-color: AliceBlue;
 }
 
-#playerListScrollerContent.pixi {
-	height: 90px;
+#playerListScene h2 {
+	color: #68E;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: -20px;
+	padding-bottom: 0;
 }
 
-#playerListWidget .palm-row-wrapper{
-	min-height: 30px;
+#playerListScene p {
+	padding: 10px;
+	padding-bottom: 0;
+}
+
+#playerListScene h2 img {
+	margin-bottom: -5px;
+}
+
+#playerListGroup, #playerListScrollerContent {
+	height: 210px;
+}
+
+#playerListGroup.pixi, #playerListScrollerContent.pixi {
+	height: 130px;
+}
+
+#playerListWidget .palm-row-wrapper,
+#playerListWidget .palm-swipe-delete {
+	min-height: 0;
 	height: 30px;
 	margin-top: -10px;
 	padding-bottom: 11px;
