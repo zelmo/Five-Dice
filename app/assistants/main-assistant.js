@@ -289,6 +289,8 @@ MainAssistant.prototype.showActualScores = function () {
 MainAssistant.prototype.setScore = function (itemName) {
 	//Make sure the dice have been rolled.
 	if (this.dice.chanceScore() == 0) { return; }
+	//For multi-player games, make sure we haven't already set a score this turn.
+	if (this.controller.get("nextPlayer").style.visibility == "visible") { return; }
 	//Disable the Roll button.
 	this.rollModel.disabled = true;
 	this.controller.modelChanged(this.rollModel);
