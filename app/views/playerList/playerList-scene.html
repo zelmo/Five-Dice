@@ -1,0 +1,21 @@
+<div id="playerListScene">
+	<h2>
+		Five
+		<img src="images/Die5Held.png" />
+		Dice
+	</h2>
+	<p>
+		Select the players from the list below and tap the "Start Game" button to begin.
+	</p>
+	<div id="playerListGroup" class="palm-group">
+		<div class="palm-group-title">Players</div>
+		<div id="playerListScrollFadeTop" x-mojo-scroll-fade="top" style="z-index: 100000"></div>
+		<div id="playerListScroller" x-mojo-element="Scroller">
+			<div id="playerListScrollerContent">
+				<div id="playerListWidget" x-mojo-element="List"></div>
+			</div>
+		</div>
+		<div id="playerListScrollFadeBottom" x-mojo-scroll-fade="bottom" style="z-index: 100000"></div>
+	</div>
+	<div id="startButton" x-mojo-element="Button"></div>
+</div>
