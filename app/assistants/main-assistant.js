@@ -17,6 +17,7 @@ function MainAssistant(playerState) {
 		items: [
 			{label: "New Game", command: "do-newGame"},
 			{label: "Undo", command: "do-undo", disabled: true},
+			{label: "High Scores", command: "do-highScores"},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
 			{label: "Help", command: "do-help"}
@@ -32,9 +33,9 @@ function MainAssistant(playerState) {
 MainAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
-	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
-	
-	//Player name
+	//Define a database object so we can store final scores.
+	this.highScores = FIVEDICE.highScoreDatabaseWrapper();
+	//Display the current player's name
 	this.controller.get("playerName").innerHTML = this.player.getName();
 	
 	//Add the "pixi" CSS class to certain elements if DeviceInfo.touchableRows is less than what's defined for Pre.
@@ -45,6 +46,8 @@ MainAssistant.prototype.setup = function () {
 			this.controller.get(scoreRowElements[i]).addClassName("pixi");
 		}
 	}
+	
+	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
 	
 	/* setup widgets here */
 	
@@ -372,9 +375,18 @@ MainAssistant.prototype.releaseDice = function () {
 
 MainAssistant.prototype.checkForEndOfGame = function () {
 	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
+	
+	//Add the scores to the database.
+	var currentDateTime = new Date();
+	var scores = FIVEDICE.players.getScores();
+	for (var i = 0; i < scores.length; i++) {
+		this.highScores.addScore(scores[i].name, currentDateTime, scores[i].score);
+	}
+	
+	//Show end-of-game info and options.
 	if (FIVEDICE.players.count() == 1) {
 		//Don't bother with a score rundown for one person. Just offer the Play Again button.
-		for (var i = 0; i < this.dice.numberOfDice(); i++) {
+		for (i = 0; i < this.dice.numberOfDice(); i++) {
 			this.controller.get("die" + i).style.visibility = "hidden";
 		}
 		this.controller.get("playAgain").style.visibility = "visible";

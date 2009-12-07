@@ -21,9 +21,6 @@ PlayerListAssistant.prototype.setup = function () {
 		this.controller.get("playerListScrollerContent").addClassName("pixi");
 	}
 	
-	//Enable the start button if players are selected.
-	this.checkForSelectedPlayers();
-
 	/* setup widgets here */
 	
 	//Application menu
@@ -70,6 +67,9 @@ PlayerListAssistant.prototype.setup = function () {
 PlayerListAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+
+	//Enable the start button if players are selected.
+	this.checkForSelectedPlayers();
 };
 
 

@@ -36,6 +36,17 @@
 	padding-bottom: 11px;
 }
 
+/* highScores */
+#names {
+	float: left;
+	width: 30%;
+}
+
+#timeStamps {
+	float: right;
+	width: 30%;
+}
+
 /* main */
 #mojo-scene-main-scene-scroller {
 	background-color: #3C6;

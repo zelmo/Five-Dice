@@ -34,6 +34,9 @@ StageAssistant.prototype.setup = function () {
 StageAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
+		case "do-highScores":
+			this.controller.pushScene("highScores");
+			break;
 		case "do-about":
 			this.controller.activeScene().showAlertDialog(this.aboutDialogModel);
 			break;
