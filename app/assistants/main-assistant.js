@@ -33,8 +33,6 @@ function MainAssistant(playerState) {
 MainAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
 		
-	//Define a database object so we can store final scores.
-	this.highScores = FIVEDICE.highScoreDatabaseWrapper();
 	//Display the current player's name
 	this.controller.get("playerName").innerHTML = this.player.getName();
 	
@@ -324,13 +322,11 @@ MainAssistant.prototype.setScore = function (itemName) {
 MainAssistant.prototype.disableUndo = function () {
 	if (!this.menuModel.items[1].disabled) {
 		this.menuModel.items[1].disabled = true;
-		this.controller.modelChanged(this.menuModel);
 	}
 };
 
 MainAssistant.prototype.enableUndo = function () {
 	this.menuModel.items[1].disabled = false;
-	this.controller.modelChanged(this.menuModel);
 };
 
 MainAssistant.prototype.undo = function () {
@@ -377,10 +373,10 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
 	
 	//Add the scores to the database.
-	var currentDateTime = new Date();
+	var unixTime = new Date().getTime();
 	var scores = FIVEDICE.players.getScores();
 	for (var i = 0; i < scores.length; i++) {
-		this.highScores.addScore(scores[i].name, currentDateTime, scores[i].score);
+		FIVEDICE.highScores.addScore(scores[i].name, unixTime, scores[i].score);
 	}
 	
 	//Show end-of-game info and options.

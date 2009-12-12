@@ -23,6 +23,9 @@ function StageAssistant() {
 			}
 		}
 	};
+	
+	//Define a namespace-wide high scores database object.
+	FIVEDICE.highScores = FIVEDICE.highScoreDatabaseWrapper();
 };
 
 StageAssistant.prototype.setup = function () {

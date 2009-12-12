@@ -1,18 +1,27 @@
 //Wrapper for storage and retrieval of scores in the database.
 FIVEDICE.highScoreDatabaseWrapper = function () {
 	//Private variables:
-	var _depot = new Mojo.Depot({name: "highScores"}, _initializeScores, function (result) {Mojo.Log.error("Can't open the high scores database:", result)});
+	var _depot = new Mojo.Depot(
+		{name: "ext:highScores", version: 1, replace: false},
+		_initializeScores,
+		function (result) {Mojo.Log.error("Can't open the high scores database:", result);}
+	);
 	var _scores = {items: []};
 	var _failedAttemptsAtSaving = 0;
 	
 	//Private functions:
 	function _initializeScores() {
-		_depot.get("scores", function (storedScores) {_scores = storedScores;}, function () {Mojo.Log.warn("No scores were found in the depot.");});
+		_depot.get(
+			"scores",
+			function (storedScores) {if (storedScores != null ) { _scores = storedScores; }},
+			//function () {_depot.removeAll();}, //for clearing out the database
+			function () {Mojo.Log.warn("No scores were found in the depot.");}
+		);
 	};
 	
-	function _addScore(name, timeStamp, score) {
+	function _addScore(name, unixTime, score) {
 		//Add the score to the private array and update the depot.
-		_scores.items.push({"name": name, "timeStamp": timeStamp, "score": score});
+		_scores.items.push({"name": name, "timeStamp": unixTime, "score": score});
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
 	};
 	

@@ -28,6 +28,7 @@ PlayerListAssistant.prototype.setup = function () {
 		visible: true,
 		items: [
 			Mojo.Menu.editItem,
+			{label: "High Scores", command: "do-highScores"},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
 			{label: "Help", command: "do-help"}

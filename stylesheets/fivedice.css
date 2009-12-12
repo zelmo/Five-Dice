@@ -37,14 +37,53 @@
 }
 
 /* highScores */
+#highScoresHeader {
+	background-color: navy;
+	color: white;
+	height: 50px;
+}
+
+#nameHeader {
+	position: relative;
+	top: 10px;
+	left: 5%;
+}
+
+#scoreHeader {
+	position: relative;
+	top: 10px;
+	left: 24%;
+}
+
+#timeStampHeader {
+	position: relative;
+	top: 10px;
+	left: 35%;
+}
+
+#highScoreScrollerContent {
+	height: 400px;
+}
+
+#highScoreScrollerContent.pixi {
+	height: 320px;
+}
+
 #names {
-	float: left;
-	width: 30%;
+	position: absolute;
+	left: 3%;
+	width: 42%;
+}
+
+#scores {
+	position: absolute;
+	left: 45%;
 }
 
 #timeStamps {
-	float: right;
-	width: 30%;
+	position: absolute;
+	right: 0;
+	width: 35%;
 }
 
 /* main */
