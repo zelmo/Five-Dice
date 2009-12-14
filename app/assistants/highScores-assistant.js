@@ -44,20 +44,20 @@ HighScoresAssistant.prototype.setup = function () {
 //	this.controller.listen("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
 //	this.timeStampHeaderHandler = function () {this.changeSort("timeStamp");}.bindAsEventListener(this);
 //	this.controller.listen("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
-};
+};//setup
 
 HighScoresAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 
 	this.showScores(this.sortCriteria);
-};
+};//activate
 
 
 HighScoresAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
-};
+};//deactivate
 
 HighScoresAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
@@ -65,21 +65,21 @@ HighScoresAssistant.prototype.cleanup = function (event) {
 //	this.controller.stopListening("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
 //	this.controller.stopListening("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
 //	this.controller.stopListening("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
-};
+};//cleanup
 
 HighScoresAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
-		case "do-preferences":
-			Mojo.Controller.stageController.pushScene("preferences");
-			break;
-		case "do-help":
-			Mojo.Controller.stageController.pushScene("help");
-			break;
-		default:
-			break;
+	case "do-preferences":
+		Mojo.Controller.stageController.pushScene("preferences");
+		break;
+	case "do-help":
+		Mojo.Controller.stageController.pushScene("help");
+		break;
+	default:
+		break;
 	}
-};
+};//handleCommand
 
 //HighScoresAssistant.prototype.changeSort = function (column) {
 //	//Either reverse the sort order or change the sort column.
@@ -91,7 +91,7 @@ HighScoresAssistant.prototype.handleCommand = function (event) {
 //	}
 //	//Show the results.
 //	this.showScores(this.sortCriteria);
-//};
+//};//changeSort
 
 HighScoresAssistant.prototype.showScores = function (sortCriteria) {
 	//Blank the scores and scroll to the top.
@@ -160,4 +160,4 @@ HighScoresAssistant.prototype.showScores = function (sortCriteria) {
 		this.scores.innerHTML += highScores[i].score + "<br />";
 		this.timeStamps.innerHTML += formattedTimeStamp + "<br />";
 	}
-};
+};//showScores

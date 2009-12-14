@@ -33,24 +33,24 @@ FIVEDICE.playerState = function (playerName) {
 		//on the upper-half item that matches the dice's face value.
 		var upperHalfItem = null;
 		switch (dice.getDie(0).getValue()) {
-			case 1:
-				upperHalfItem = _scoreItems.ones;
-				break;
-			case 2:
-				upperHalfItem = _scoreItems.twos;
-				break;
-			case 3:
-				upperHalfItem = _scoreItems.threes;
-				break;
-			case 4:
-				upperHalfItem = _scoreItems.fours;
-				break;
-			case 5:
-				upperHalfItem = _scoreItems.fives;
-				break;
-			case 6:
-				upperHalfItem = _scoreItems.sixes;
-				break;
+		case 1:
+			upperHalfItem = _scoreItems.ones;
+			break;
+		case 2:
+			upperHalfItem = _scoreItems.twos;
+			break;
+		case 3:
+			upperHalfItem = _scoreItems.threes;
+			break;
+		case 4:
+			upperHalfItem = _scoreItems.fours;
+			break;
+		case 5:
+			upperHalfItem = _scoreItems.fives;
+			break;
+		case 6:
+			upperHalfItem = _scoreItems.sixes;
+			break;
 		}
 		var upperHalfIsAlreadyScored = (upperHalfItem.buttonModel.disabled);
 		var fiveOfAKindCanCountAsStraight = (fiveOfAKindIsAlreadyScored && upperHalfIsAlreadyScored);
@@ -72,7 +72,7 @@ FIVEDICE.playerState = function (playerName) {
 			else {
 				_scoreItems.smallStraight.score = dice.smallStraightScore();
 			}
-		}
+		}//if
 		if (!_scoreItems.largeStraight.buttonModel.disabled) {
 			if (dice.fiveOfAKindScore() > 0 && fiveOfAKindCanCountAsStraight) {
 				_scoreItems.largeStraight.score = 40;
@@ -80,10 +80,10 @@ FIVEDICE.playerState = function (playerName) {
 			else {
 				_scoreItems.largeStraight.score = dice.largeStraightScore();
 			}
-		}
+		}//if
 		if (!_scoreItems.fiveOfAKind.buttonModel.disabled) { _scoreItems.fiveOfAKind.score = dice.fiveOfAKindScore(); }
 		if (!_scoreItems.chance.buttonModel.disabled) { _scoreItems.chance.score = dice.chanceScore(); }
-	};
+	};//_setScoreSuggestions
 	
 	function _setScore(item, dice) {
 		//See if an extra 5 of a kind is merited.
@@ -96,7 +96,7 @@ FIVEDICE.playerState = function (playerName) {
 					isUpperHalf = true;
 					break;
 				}
-			}
+			}//for
 			if (isUpperHalf) {
 				_scoreItems.fiveOfAKind.score += 100;
 				_lastScoreItemWasExtraFiveOfAKind = true;
@@ -105,24 +105,24 @@ FIVEDICE.playerState = function (playerName) {
 				//For lower-half items, there's an additional requirement that the upper-half item already be set.
 				var upperHalfItem = null;
 				switch (dice.getDie(0).getValue()) {
-					case 1:
-						upperHalfItem = _scoreItems.ones;
-						break;
-					case 2:
-						upperHalfItem = _scoreItems.twos;
-						break;
-					case 3:
-						upperHalfItem = _scoreItems.threes;
-						break;
-					case 4:
-						upperHalfItem = _scoreItems.fours;
-						break;
-					case 5:
-						upperHalfItem = _scoreItems.fives;
-						break;
-					case 6:
-						upperHalfItem = _scoreItems.sixes;
-						break;
+				case 1:
+					upperHalfItem = _scoreItems.ones;
+					break;
+				case 2:
+					upperHalfItem = _scoreItems.twos;
+					break;
+				case 3:
+					upperHalfItem = _scoreItems.threes;
+					break;
+				case 4:
+					upperHalfItem = _scoreItems.fours;
+					break;
+				case 5:
+					upperHalfItem = _scoreItems.fives;
+					break;
+				case 6:
+					upperHalfItem = _scoreItems.sixes;
+					break;
 				}
 				if (upperHalfItem.buttonModel.disabled) {
 					_scoreItems.fiveOfAKind.score += 100;
@@ -131,25 +131,25 @@ FIVEDICE.playerState = function (playerName) {
 				else {
 					_lastScoreItemWasExtraFiveOfAKind = false;
 				}
-			}
-		}
+			}//if
+		}//if
 		//Lock in this item's score by disabling the button.
 		_scoreItems[item].buttonModel.disabled = true;
 		_lastScoreItemSet = item;
-	};
+	};//_setScore
 	
 	function _undoLastScore() {
 		_scoreItems[_lastScoreItemSet].buttonModel.disabled = false;
 		if (_lastScoreItemWasExtraFiveOfAKind) { _scoreItems.fiveOfAKind.score -= 100; }
 		return _lastScoreItemSet;
-	};
+	};//_undoLastScore
 	
 	function _allScoresAreSet() {
 		for (var itemName in _scoreItems) {
 			if (_scoreItems.hasOwnProperty(itemName) && !_scoreItems[itemName].buttonModel.disabled) { return false; }
 		}
 		return true;
-	};
+	};//_allScoresAreSet
 	
 	function _clearAllScores() {
 		for (var itemName in _scoreItems) {
@@ -157,8 +157,8 @@ FIVEDICE.playerState = function (playerName) {
 				_scoreItems[itemName].buttonModel.disabled = false;
 				_scoreItems[itemName].score = 0;
 			}
-		}
-	};
+		}//for
+	};//_clearAllScores
 	
 	function _getSubtotal() {
 		var subtotal = 0;
@@ -168,7 +168,7 @@ FIVEDICE.playerState = function (playerName) {
 			if (_scoreItems[itemName].buttonModel.disabled) { subtotal += _scoreItems[itemName].score; }
 		}
 		return subtotal;
-	};
+	};//_getSubtotal
 	
 	function _getBenchmark() {
 		var benchmark = 0;
@@ -179,7 +179,7 @@ FIVEDICE.playerState = function (playerName) {
 		if (_scoreItems.fives.buttonModel.disabled) { benchmark += 15; }
 		if (_scoreItems.sixes.buttonModel.disabled) { benchmark += 18; }
 		return benchmark;
-	};
+	};//_getBenchmark
 	
 	function _getTotal() {
 		var total = 0;
@@ -188,7 +188,7 @@ FIVEDICE.playerState = function (playerName) {
 		}
 		if (_getSubtotal() >= 63) { total += 35; } //Bonus
 		return total;
-	};
+	};//_getTotal
 	
 	//Public API:
 	return {

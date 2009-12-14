@@ -96,12 +96,7 @@ FIVEDICE.helpContents = function() {
 				"The player selection scene and the game scene have a menu item to view the high scores." +
 				" When a game finishes, each player's name, score, and a time stamp are saved to the" +
 				" high score list. Selecting the <em>High Scores</em> item from the application menu" +
-				" allows you to see a list of scores for games played on your device." +
-				"</div>" +
-				"<div class=\"palm-body-text\">" +
-				"The list comes up initially sorted by score (with a secondary sort by most recent date)." +
-				" You can change the sort column by tapping on the column name for the column you want to" +
-				" sort. Tapping again on the same column name will reverse the sort order on that column." +
+				" allows you to see a list of scores for games played on your device, sorted from high to low." +
 				"</div>"
 		},
 		{

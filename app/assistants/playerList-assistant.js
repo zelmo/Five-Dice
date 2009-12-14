@@ -63,7 +63,7 @@ PlayerListAssistant.prototype.setup = function () {
 	this.controller.listen("playerListWidget", Mojo.Event.propertyChange, this.selectPlayerHandler);
 	this.startButtonHandler = this.startGame.bindAsEventListener(this);
 	this.controller.listen("startButton", Mojo.Event.tap, this.startButtonHandler);
-};
+};//setup
 
 PlayerListAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
@@ -71,7 +71,7 @@ PlayerListAssistant.prototype.activate = function (event) {
 
 	//Enable the start button if players are selected.
 	this.checkForSelectedPlayers();
-};
+};//activate
 
 
 PlayerListAssistant.prototype.deactivate = function (event) {
@@ -80,7 +80,7 @@ PlayerListAssistant.prototype.deactivate = function (event) {
 	
 	//Store the player names and selected states in a cookie.
 	FIVEDICE.storedPlayersCookie.put(FIVEDICE.storedPlayers);
-};
+};//deactivate
 
 PlayerListAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
@@ -90,21 +90,21 @@ PlayerListAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("playerListWidget", Mojo.Event.listReorder, this.reorderPlayersHandler);
 	this.controller.stopListening("playerListWidget", Mojo.Event.propertyChanged, this.selectPlayerHandler);
 	this.controller.stopListening("startButton", Mojo.Event.tap, this.startButtonHandler);
-};
+};//cleanup
 
 PlayerListAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
-		case "do-preferences":
-			Mojo.Controller.stageController.pushScene("preferences");
-			break;
-		case "do-help":
-			Mojo.Controller.stageController.pushScene("help");
-			break;
-		default:
-			break;
+	case "do-preferences":
+		Mojo.Controller.stageController.pushScene("preferences");
+		break;
+	case "do-help":
+		Mojo.Controller.stageController.pushScene("help");
+		break;
+	default:
+		break;
 	}
-};
+};//handleCommand
 
 PlayerListAssistant.prototype.addPlayer = function (event) {
 	//Add a generic new player to the end of the list.
@@ -113,16 +113,16 @@ PlayerListAssistant.prototype.addPlayer = function (event) {
 	this.controller.modelChanged(event.model);
 	//Set focus on the player name.
 	this.playerList.mojo.focusItem(event.model.items[event.model.items.length - 1], "name");
-};
+};//addPlayer
 
 PlayerListAssistant.prototype.deletePlayer = function (event) {
 	event.model.items.splice(event.index, 1);
-};
+};//deletePlayer
 
 PlayerListAssistant.prototype.reorderPlayers = function (event) {
 	event.model.items.splice(event.fromIndex, 1);
 	event.model.items.splice(event.toIndex, 0, event.item);
-};
+};//reorderPlayers
 
 PlayerListAssistant.prototype.checkForSelectedPlayers = function () {
 	//See if any players have been selected to play.
@@ -132,11 +132,11 @@ PlayerListAssistant.prototype.checkForSelectedPlayers = function () {
 			selectedPlayersExist = true;
 			break;
 		}
-	}
+	}//for
 	//Enable or disable the start button depending on whether a player is selected.
 	this.startButtonModel.disabled = !selectedPlayersExist;
 	this.controller.modelChanged(this.startButtonModel); 
-};
+};//checkForSelectedPlayers
 
 PlayerListAssistant.prototype.startGame = function () {
 	//Re-initialize the global playerStateList and add the players who are selected.
@@ -147,4 +147,4 @@ PlayerListAssistant.prototype.startGame = function () {
 	
 	//Swap to the main scene, passing in the first player.
 	Mojo.Controller.stageController.swapScene("main", FIVEDICE.players.firstPlayer());
-};
+};//startGame

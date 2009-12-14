@@ -95,12 +95,12 @@ PreferencesAssistant.prototype.setup = function () {
 	this.controller.listen("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.deviationInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);}.bindAsEventListener(this);
 	this.controller.listen("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
-};
+};//setup
 
 PreferencesAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
-};
+};//activate
 
 
 PreferencesAssistant.prototype.deactivate = function (event) {
@@ -114,7 +114,7 @@ PreferencesAssistant.prototype.deactivate = function (event) {
 		rollButtonDisabledTimeout: FIVEDICE.rollButtonDisabledTimeout,
 		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation
 	});
-};
+};//deactivate
 
 PreferencesAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
@@ -126,15 +126,15 @@ PreferencesAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("shakeInfo", Mojo.Event.tap, this.shakeInfoHandler);
 	this.controller.stopListening("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.controller.stopListening("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
-};
+};//cleanup
 
 PreferencesAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
-		case "do-help":
-			Mojo.Controller.stageController.swapScene("help");
-			break;
-		default:
-			break;
+	case "do-help":
+		Mojo.Controller.stageController.swapScene("help");
+		break;
+	default:
+		break;
 	}
-};
+};//handleCommand

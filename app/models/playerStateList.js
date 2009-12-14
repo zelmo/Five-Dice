@@ -6,28 +6,26 @@ FIVEDICE.playerStateList = function () {
 	//Private functions.
 	function _count() {
 		return _playerStateList.length;
-	};
+	};//_count
 	
 	function _addPlayer(playerName) {
 		_playerStateList.push(FIVEDICE.playerState(playerName));
-	}
+	};//_addPlayer
 	
 	function _firstPlayer() {
 		return _playerStateList[0];
-	};
+	};//_firstPlayer
 	
 	function _nextPlayer(afterWhom) {
 		//Find the "afterWhom" player in the list.
 		var whomIndex;
 		for (whomIndex = 0; whomIndex < _playerStateList.length; whomIndex++) {
-			if (_playerStateList[whomIndex].getName() == afterWhom) {
-				break;
-			}
+			if (_playerStateList[whomIndex].getName() == afterWhom) { break; }
 		}
 		var nextPlayerIndex = whomIndex + 1;
 		if (nextPlayerIndex == _playerStateList.length) { nextPlayerIndex = 0; }
 		return _playerStateList[nextPlayerIndex];
-	};
+	};//_nextPlayer
 	
 	function _getScores() {
 		var scores = [];
@@ -35,7 +33,7 @@ FIVEDICE.playerStateList = function () {
 			scores.push({name: _playerStateList[i].getName(), score: _playerStateList[i].getTotal()});
 		}
 		return scores;
-	};
+	};//_getScores
 	
 	function _allPlayersAreDone() {
 		var allScoresAreSet = true;
@@ -44,15 +42,15 @@ FIVEDICE.playerStateList = function () {
 				allScoresAreSet = false;
 				break;
 			}
-		}
+		}//for
 		return allScoresAreSet;
-	};
+	};//_allPlayersAreDone
 	
 	function _resetAllPlayers() {
 		for (var i = 0; i < _playerStateList.length; i++) {
 			_playerStateList[i].clearAllScores();
 		}
-	};
+	};//_resetAllPlayers
 	
 	//Public API.
 	return {

@@ -42,39 +42,39 @@ HelpAssistant.prototype.setup = function () {
 	this.updateContents();
 	
 	/* add event handlers to listen to events from widgets */
-};
+};//setup
 
 HelpAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
-};
+};//activate
 
 
 HelpAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
-};
+};//deactivate
 
 HelpAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
 	  this.removeListeners();
-};
+};//cleanup
 
 HelpAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
-		case "do-preferences":
-			Mojo.Controller.stageController.swapScene("preferences");
-			break;
-		case "do-nextPage":
-			this.showNextPage();
-			break;
-		case "do-previousPage":
-			this.showPreviousPage();
-			break;
-	}
-};
+	case "do-preferences":
+		Mojo.Controller.stageController.swapScene("preferences");
+		break;
+	case "do-nextPage":
+		this.showNextPage();
+		break;
+	case "do-previousPage":
+		this.showPreviousPage();
+		break;
+	}//switch
+};//handleCommand
 
 HelpAssistant.prototype.showNextPage = function () {
 	if (this.pageIndex < (this.helpContents.pages.length - 1)) {
@@ -82,7 +82,7 @@ HelpAssistant.prototype.showNextPage = function () {
 		this.pageIndex++;
 		this.updateContents();
 	}
-};
+};//showNextPage
 
 HelpAssistant.prototype.showPreviousPage = function () {
 	if (this.pageIndex > 0) {
@@ -90,7 +90,7 @@ HelpAssistant.prototype.showPreviousPage = function () {
 		this.pageIndex--;
 		this.updateContents();
 	}
-};
+};//showPreviousPage
 
 HelpAssistant.prototype.updateContents = function () {
 	//Scroll to the top of the page.
@@ -102,45 +102,45 @@ HelpAssistant.prototype.updateContents = function () {
 	this.setupListeners();
 	//Show the appropriate command menu buttons.
 	switch (this.pageIndex) {
-		case 0:
-			//First page--don't show the back arrow.
-			this.commandMenuModel.items[0] = {};
-			break;
-		case (this.helpContents.pages.length - 1):
-			//Last page--don't show the forward arrow.
-			this.commandMenuModel.items[2] = {};
-			break;
-		default:
-			//Show back and forward arrows if they're not already shown.
-			if (!this.commandMenuModel.items[0].hasOwnProperty("items")) {
-				this.commandMenuModel.items[0] = {items: [{icon: "back", command: "do-previousPage"}]};
-			}
-			if (!this.commandMenuModel.items[2].hasOwnProperty("items")) {
-				this.commandMenuModel.items[2] = {items: [{icon: "forward", command: "do-nextPage"}]};
-			}
-			break;
-	}
+	case 0:
+		//First page--don't show the back arrow.
+		this.commandMenuModel.items[0] = {};
+		break;
+	case (this.helpContents.pages.length - 1):
+		//Last page--don't show the forward arrow.
+		this.commandMenuModel.items[2] = {};
+		break;
+	default:
+		//Show back and forward arrows if they're not already shown.
+		if (!this.commandMenuModel.items[0].hasOwnProperty("items")) {
+			this.commandMenuModel.items[0] = {items: [{icon: "back", command: "do-previousPage"}]};
+		}
+		if (!this.commandMenuModel.items[2].hasOwnProperty("items")) {
+			this.commandMenuModel.items[2] = {items: [{icon: "forward", command: "do-nextPage"}]};
+		}
+		break;
+	}//switch
 	this.controller.modelChanged(this.commandMenuModel);
-};
+};//updateContents
 
 HelpAssistant.prototype.setupListeners = function () {
 	//Set up any listeners needed by the new body text.
 	switch (this.pageIndex) {
-		case 0:
-			this.wikipediaHandler = this.showWikipedia.bindAsEventListener(this);
-			this.controller.listen("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
-			break;
+	case 0:
+		this.wikipediaHandler = this.showWikipedia.bindAsEventListener(this);
+		this.controller.listen("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
+		break;
 	} 
-};
+};//setupListeners
 
 HelpAssistant.prototype.removeListeners = function () {
 	//Remove any listeners from the body text that's about to go away.
 	switch (this.pageIndex) {
-		case 0:
-			this.controller.stopListening("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
-			break;
+	case 0:
+		this.controller.stopListening("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
+		break;
 	}
-};
+};//removeListeners
 
 HelpAssistant.prototype.showWikipedia = function () {
 	//Define the parameters for the service request object.
@@ -155,4 +155,4 @@ HelpAssistant.prototype.showWikipedia = function () {
 	};
 	//Call the service request.
 	this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
-};
+};//showWikipedia

@@ -17,13 +17,13 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 			//function () {_depot.removeAll();}, //for clearing out the database
 			function () {Mojo.Log.warn("No scores were found in the depot.");}
 		);
-	};
+	};//_initializeScores
 	
 	function _addScore(name, unixTime, score) {
 		//Add the score to the private array and update the depot.
 		_scores.items.push({"playerName": name, "timeStamp": unixTime, "score": score});
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
-	};
+	};//_addScore
 	
 	function _clearOutOldestRecordAndTryInsertAgain() {
 		if (_scores.items.length == 0) {
@@ -39,11 +39,11 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 		}
 		_scores.items.splice(0, 1);
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
-	};
+	};//_clearOutOldestRecordAndTryInsertAgain
 	
 	function _getScores() {
 		return _scores.items;
-	};
+	};//_getScores
 	
 	//Public API:
 	return {

@@ -15,23 +15,23 @@ FIVEDICE.sixSidedDie = function () {
 		_value = (Math.round(Math.random() * 5)) + 1;
 		_previousValue = _value;
 		_previousHeld = false;
-	};
+	};//_roll
 	
 	function _toggleHeld() {
 		//Only allow the die to be held if it has a non-zero value.
 		_held = (_value == 0 ? false : !_held);
 		_previousHeld = _held;
-	};
+	};//_toggleHeld
 	
 	function _clear() {
 		_held = false;
 		_value = 0;
-	};
+	};//_clear
 	
 	function _revert() {
 		_held = _previousHeld;
 		_value = _previousValue;
-	};
+	};//_revert
 	
 	//Public API:
 	return {

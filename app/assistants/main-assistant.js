@@ -43,7 +43,7 @@ MainAssistant.prototype.setup = function () {
 		for (var i = 0; i < scoreRowElements.length; i++) {
 			this.controller.get(scoreRowElements[i]).addClassName("pixi");
 		}
-	}
+	}//if
 	
 	/* use Mojo.View.render to render view templates and add them to the scene, if needed. */
 	
@@ -126,7 +126,7 @@ MainAssistant.prototype.setup = function () {
 	this.controller.listen("buttonFiveOfAKind", Mojo.Event.tap, this.fiveOfAKindHandler);
 	this.chanceHandler = function () {this.setScore("chance", false);}.bindAsEventListener(this);
 	this.controller.listen("buttonChance", Mojo.Event.tap, this.chanceHandler);
-};
+};//setup
 
 MainAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
@@ -139,7 +139,7 @@ MainAssistant.prototype.activate = function (event) {
 	
 	//Re-display the scores.
 	this.showActualScores();
-};
+};//activate
 
 
 MainAssistant.prototype.deactivate = function (event) {
@@ -148,7 +148,7 @@ MainAssistant.prototype.deactivate = function (event) {
 	  
 	//Remove listeners that are dependent on the Preferences.
 	this.controller.stopListening(document, "shakeend", this.rollHandler);
-};
+};//deactivate
 
 MainAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
@@ -180,30 +180,30 @@ MainAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("buttonLargeStraight", Mojo.Event.tap, this.largeStraightHandler);
 	this.controller.stopListening("buttonFiveOfAKind", Mojo.Event.tap, this.fiveOfAKindHandler);
 	this.controller.stopListening("buttonChance", Mojo.Event.tap, this.chanceHandler);
-};
+};//cleanup
 
 MainAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
-		case "do-newGame":
-			Mojo.Controller.stageController.swapScene("playerList");
-			break;
-		case "do-undo":
-			this.undo();
-			break;
-		case "do-currentScores":
-		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "currentScores")});
-			break;
-		case "do-preferences":
-			Mojo.Controller.stageController.pushScene("preferences");
-			break;
-		case "do-help":
-			Mojo.Controller.stageController.pushScene("help");
-			break;
-		default:
-			break;
+	case "do-newGame":
+		Mojo.Controller.stageController.swapScene("playerList");
+		break;
+	case "do-undo":
+		this.undo();
+		break;
+	case "do-currentScores":
+	this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "currentScores")});
+		break;
+	case "do-preferences":
+		Mojo.Controller.stageController.pushScene("preferences");
+		break;
+	case "do-help":
+		Mojo.Controller.stageController.pushScene("help");
+		break;
+	default:
+		break;
 	}
-};
+};//handleCommand
 
 MainAssistant.prototype.toggleDie = function (index) {
 	//Toggle the held state of the die.
@@ -211,7 +211,7 @@ MainAssistant.prototype.toggleDie = function (index) {
 	//Find the die's div in the scene and change its image to reflect the new state.
 	var imageStyle = (this.dice.getDie(index).isHeld() ? "Held" : "Plain");
 	this.controller.get("die" + index).innerHTML = "<img src=\"images/Die" + this.dice.getDie(index).getValue() + imageStyle + ".png\"></img>";
-};
+};//toggleDie
 
 //Die roller
 MainAssistant.prototype.roll = function () {
@@ -229,7 +229,7 @@ MainAssistant.prototype.roll = function () {
 		else {
 			this.enableRollButton();
 		}
-	}
+	}//if
 	//Set the dice images.
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
 		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
@@ -238,13 +238,13 @@ MainAssistant.prototype.roll = function () {
 	
 	this.showPossibleScores();
 	this.disableUndo();
-};
+};//roll
 
 MainAssistant.prototype.enableRollButton = function () {
 	this.rollModel.label = "Roll " + (this.dice.getRollCount());
 	this.rollModel.disabled = false;
 	this.controller.modelChanged(this.rollModel);
-};
+};//enableRollButton
 
 MainAssistant.prototype.showPossibleScores = function () {
 	this.player.setScoreSuggestions(this.dice);
@@ -258,8 +258,8 @@ MainAssistant.prototype.showPossibleScores = function () {
 			this.controller.get(scoreValueId).innerHTML = suggestedScore
 			this.controller.get(scoreValueId).style.color = FIVEDICE.suggestedScoreColor;
 		}
-	}
-};
+	}//for
+};//showPossibleScores
 
 MainAssistant.prototype.showActualScores = function () {
 	//Show scores that are set, and blank out any that are unset.
@@ -273,7 +273,7 @@ MainAssistant.prototype.showActualScores = function () {
 		else {
 			this.controller.get(scoreValueId).innerHTML = "";
 		}
-	}
+	}//for
 	//Update the subtotal and total displays.
 	var subtotal = this.player.getSubtotal();
 	var subtotalDisplay = "Subtotal &nbsp;&nbsp; " + subtotal;
@@ -285,7 +285,7 @@ MainAssistant.prototype.showActualScores = function () {
 	var bonus = (subtotal >= 63 ? 35 : 0);
 	this.controller.get("scoreValueBonus").innerHTML = bonus;
 	this.controller.get("scoreValueTotal").innerHTML = this.player.getTotal();
-};
+};//showActualScores
 
 MainAssistant.prototype.setScore = function (itemName) {
 	//Make sure the dice have been rolled.
@@ -315,19 +315,19 @@ MainAssistant.prototype.setScore = function (itemName) {
 			this.controller.get("nextPlayer").innerHTML = "Next Player: " + FIVEDICE.players.nextPlayer(this.player.getName()).getName();
 			this.controller.get("nextPlayer").style.visibility = "visible";
 		}
-	}
-};
+	}//if
+};//setScore
 
 //Auxiliary functions
 MainAssistant.prototype.disableUndo = function () {
 	if (!this.menuModel.items[1].disabled) {
 		this.menuModel.items[1].disabled = true;
 	}
-};
+};//disableUndo
 
 MainAssistant.prototype.enableUndo = function () {
 	this.menuModel.items[1].disabled = false;
-};
+};//enableUndo
 
 MainAssistant.prototype.undo = function () {
 	var undoneItem = this.player.undoLastScore();
@@ -349,13 +349,13 @@ MainAssistant.prototype.undo = function () {
 	//Re-display the possible scores and disable the Undo menu item.
 	this.showPossibleScores();
 	this.disableUndo();
-};
+};//undo
 
 MainAssistant.prototype.nextPlayer = function () {
 	var sceneParameters = {name: "main", transition: Mojo.Transition.none};
 	var nextPlayerState = FIVEDICE.players.nextPlayer(this.player.getName());
 	Mojo.Controller.stageController.swapScene(sceneParameters, nextPlayerState);
-};
+};//nextPlayer
 
 MainAssistant.prototype.releaseDice = function () {
 	//Blank out and un-hold all the dice.
@@ -367,7 +367,7 @@ MainAssistant.prototype.releaseDice = function () {
 	this.rollModel.label = "Roll 1";
 	this.rollModel.disabled = false;
 	this.controller.modelChanged(this.rollModel);
-};
+};//releaseDice
 
 MainAssistant.prototype.checkForEndOfGame = function () {
 	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
@@ -405,10 +405,10 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 	else {
 		//Pop up a final score dialog with buttons to play again or change players.
 		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "finalScores")});
-	}
-};
+	}//if
+};//checkForEndOfGame
 
 MainAssistant.prototype.playAgain = function () {
 	FIVEDICE.players.resetAllPlayers();
 	Mojo.Controller.stageController.swapScene("main", FIVEDICE.players.firstPlayer());
-};
+};//playAgain
