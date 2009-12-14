@@ -36,12 +36,14 @@ HighScoresAssistant.prototype.setup = function () {
 	
 
 	/* add event handlers to listen to events from widgets */
-	this.nameHeaderHandler = function () {this.changeSortCriteria("name");}.bindAsEventListener(this);
-	this.controller.listen("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
-	this.scoreHeaderHandler = function () {this.changeSortCriteria("score");}.bindAsEventListener(this);
-	this.controller.listen("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
-	this.timeStampHeaderHandler = function () {this.changeSortCriteria("timeStamp");}.bindAsEventListener(this);
-	this.controller.listen("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
+	
+	//Sorting by name isn't working, so we'll just always sort by score.
+//	this.nameHeaderHandler = function () {this.changeSort("playerName");}.bindAsEventListener(this);
+//	this.controller.listen("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
+//	this.scoreHeaderHandler = function () {this.changeSort("score");}.bindAsEventListener(this);
+//	this.controller.listen("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
+//	this.timeStampHeaderHandler = function () {this.changeSort("timeStamp");}.bindAsEventListener(this);
+//	this.controller.listen("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
 };
 
 HighScoresAssistant.prototype.activate = function (event) {
@@ -60,9 +62,9 @@ HighScoresAssistant.prototype.deactivate = function (event) {
 HighScoresAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
-	this.controller.stopListening("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
-	this.controller.stopListening("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
-	this.controller.stopListening("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
+//	this.controller.stopListening("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
+//	this.controller.stopListening("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
+//	this.controller.stopListening("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
 };
 
 HighScoresAssistant.prototype.handleCommand = function (event) {
@@ -79,55 +81,73 @@ HighScoresAssistant.prototype.handleCommand = function (event) {
 	}
 };
 
-HighScoresAssistant.prototype.changeSortCriteria = function (column) {
-	//Either reverse the sort order or change the sort column.
-	if (column == this.sortCriteria.column) {
-		this.sortCriteria.ascending = !this.sortCriteria.ascending;
-	}
-	else {
-		this.sortCriteria.column = column;
-	}
-	//Show the results.
-	this.showScores(this.sortCriteria);
-};
+//HighScoresAssistant.prototype.changeSort = function (column) {
+//	//Either reverse the sort order or change the sort column.
+//	if (column == this.sortCriteria.column) {
+//		this.sortCriteria.ascending = !this.sortCriteria.ascending;
+//	}
+//	else {
+//		this.sortCriteria.column = column;
+//	}
+//	//Show the results.
+//	this.showScores(this.sortCriteria);
+//};
 
 HighScoresAssistant.prototype.showScores = function (sortCriteria) {
+	//Blank the scores and scroll to the top.
 	this.names.innerHTML = "";
 	this.scores.innerHTML = "";
 	this.timeStamps.innerHTML = "";
+	this.controller.get("highScoreScroller").mojo.revealTop();
 	
-	var sortFunction = function (a, b) {
-		if (sortCriteria.column == "score") {
-			//If sorting by score, use descending date as the secondary sort.
-			if (a.score == b.score) {
-				return b.timeStamp - a.timeStamp;
-			}
-			else {
-				if (sortCriteria.ascending) {
-						return a.score - b.score;
-				}
-				else {
-					return b.score - a.score;
-				}
-			}
-		}
-		else {
-			//Otherwise, use descending score as the secondary sort.
-			if (a[sortCriteria.column] == b[sortCriteria.column]) {
-				return b.score - a.score;
-			}
-			else {
-				if (sortCriteria.ascending) {
-					return a[sortCriteria.column] - b[sortCriteria.column];
-				}
-				else {
-					return b[sortCriteria.column] - a[sortCriteria.column];
-				}
-			}
-		}
-	};
+//	var sortFunction = function (a, b) {
+//		switch (sortCriteria.column) {
+//		case "score":
+//			//Use descending date as the secondary sort.
+//			if (a.score == b.score) {
+//				return b.timeStamp - a.timeStamp;
+//			}
+//			else {
+//				if (sortCriteria.ascending) {
+//						return a.score - b.score;
+//				}
+//				else {
+//					return b.score - a.score;
+//				}
+//			}
+//			break;
+//		case "playerName":
+//			//Use descending score as the secondary sort.
+//			if (a.playerName == b.playerName) {
+//				return b.score - a.score;
+//			}
+//			else {
+//				if (sortCriteria.ascending) {
+//					return a.playerName - b.playerName;
+//				}
+//				else {
+//					return b.playerName - a.playerName;
+//				}
+//			}
+//			break;
+//		case "timeStamp":
+//			//Use descending score as the secondary sort.
+//			if (a.timeStamp == b.timeStamp) {
+//				return b.score - a.score;
+//			}
+//			else {
+//				if (sortCriteria.ascending) {
+//					return a.timeStamp - b.timeStamp;
+//				}
+//				else {
+//					return b.timeStamp - a.timeStamp;
+//				}
+//			}
+//			break;
+//		}
+//	};
 	
-	var highScores = FIVEDICE.highScores.getScores().sort(sortFunction);
+	var highScores = FIVEDICE.highScores.getScores().sort(function (a, b) {return b.score - a.score;});
 	for (var i = 0; i < highScores.length; i++) {
 		//Convert the time stamp from unix time to a Date object and format it to look nice.
 		var timeStamp = new Date();
@@ -136,7 +156,7 @@ HighScoresAssistant.prototype.showScores = function (sortCriteria) {
 		var day = timeStamp.getDate();
 		var year = timeStamp.getFullYear();
 		var formattedTimeStamp = month + "/" + day + "/" + year;
-		this.names.innerHTML += highScores[i].name + "<br />";
+		this.names.innerHTML += highScores[i].playerName + "<br />";
 		this.scores.innerHTML += highScores[i].score + "<br />";
 		this.timeStamps.innerHTML += formattedTimeStamp + "<br />";
 	}

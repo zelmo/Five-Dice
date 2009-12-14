@@ -21,7 +21,7 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 	
 	function _addScore(name, unixTime, score) {
 		//Add the score to the private array and update the depot.
-		_scores.items.push({"name": name, "timeStamp": unixTime, "score": score});
+		_scores.items.push({"playerName": name, "timeStamp": unixTime, "score": score});
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
 	};
 	
@@ -42,7 +42,6 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 	};
 	
 	function _getScores() {
-		Mojo.Log.info("Returning", _scores.items.length, "scores.");
 		return _scores.items;
 	};
 	

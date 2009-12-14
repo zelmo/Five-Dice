@@ -373,14 +373,28 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
 	
 	//Add the scores to the database.
+	var scores = FIVEDICE.players.getScores().sort(function (a, b) {return b.score - a.score;});
 	var unixTime = new Date().getTime();
-	var scores = FIVEDICE.players.getScores();
 	for (var i = 0; i < scores.length; i++) {
 		FIVEDICE.highScores.addScore(scores[i].name, unixTime, scores[i].score);
 	}
 	
 	//Show end-of-game info and options.
 	if (FIVEDICE.players.count() == 1) {
+		//See if the final score is noteworthy.
+		var storedScores = FIVEDICE.highScores.getScores().sort(function (a, b) {return b.score - a.score;});
+		if (storedScores.length > 0 && scores[0].score == storedScores[0].score) {
+			this.controller.showAlertDialog({title: "New high score!", message: "Congratulations! " + scores[0].score + " is a new high score.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
+		}
+		else if (storedScores.length <= 10 || (storedScores.length > 10 && scores[0].score > storedScores[10].score)) {
+			this.controller.showAlertDialog({title: "New top 10 score!", message: "Well done! " + scores[0].score + " is good enough for the top 10 list.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
+		}
+		else if (storedScores.length > 1 && scores[0].score == storedScores[storedScores.length - 1].score) {
+			this.controller.showAlertDialog({title: "New low score!", message: "Ouch! " + scores[0].score + " is a new low score.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
+		}
+		else if (storedScores.length > 11 && scores[0].score < storedScores[storedScores.length - 11].score) {
+			this.controller.showAlertDialog({title: "New bottom 10 score!", message: "Ooh, tough luck." + scores[0].score + " falls amoung the bottom 10 scores.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
+		}
 		//Don't bother with a score rundown for one person. Just offer the Play Again button.
 		for (i = 0; i < this.dice.numberOfDice(); i++) {
 			this.controller.get("die" + i).style.visibility = "hidden";
