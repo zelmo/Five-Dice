@@ -393,7 +393,7 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 			this.controller.showAlertDialog({title: "New low score!", message: "Ouch! " + scores[0].score + " is a new low score.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
 		}
 		else if (storedScores.length > 11 && scores[0].score < storedScores[storedScores.length - 11].score) {
-			this.controller.showAlertDialog({title: "New bottom 10 score!", message: "Ooh, tough luck." + scores[0].score + " falls amoung the bottom 10 scores.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
+			this.controller.showAlertDialog({title: "New bottom 10 score!", message: "Ooh, tough luck. " + scores[0].score + " falls among the bottom 10 scores.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
 		}
 		//Don't bother with a score rundown for one person. Just offer the Play Again button.
 		for (i = 0; i < this.dice.numberOfDice(); i++) {

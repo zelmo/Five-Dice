@@ -12,7 +12,7 @@ FIVEDICE.sixSidedDie = function () {
 	
 	//Private functions:
 	function _roll() {
-		_value = (Math.round(Math.random() * 5)) + 1;
+		_value = Math.floor((Math.random() * 6) + 1);
 		_previousValue = _value;
 		_previousHeld = false;
 	};//_roll
