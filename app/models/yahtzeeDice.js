@@ -7,17 +7,17 @@ FIVEDICE.yahtzeeDice = function () {
 		FIVEDICE.sixSidedDie(),
 		FIVEDICE.sixSidedDie(),
 		FIVEDICE.sixSidedDie()];
-	function _getDie(index) { return _dieArray[index]; };
+	function _getDie(index) { return _dieArray[index]; }
 	
 	var _rollCount = 1;
-	function _getRollCount() { return _rollCount; };
+	function _getRollCount() { return _rollCount; }
 	
 	var _previousRollCount = _rollCount;
 	
 	//Private functions:
 	function _numberOfDice() {
 		return _dieArray.length;
-	};//_numberOfDice
+	}//_numberOfDice()
 	
 	function _roll() {
 		for (var i = 0; i < _dieArray.length; i++){
@@ -25,21 +25,21 @@ FIVEDICE.yahtzeeDice = function () {
 		}
 		_rollCount++;
 		_previousRollCount = _rollCount;
-	};//_roll
+	}//_roll()
 	
 	function _clear() {
 		for (var i = 0; i < _dieArray.length; i++) {
 			_dieArray[i].clear();
 		}
 		_rollCount = 1;
-	};//_clear
+	}//_clear()
 	
 	function _revert() {
 		for (var i = 0; i < _dieArray.length; i++) {
 			_dieArray[i].revert();
 		}
 		_rollCount = _previousRollCount;
-	};//_revert
+	}//_revert()
 	
 	function _upperHalfScore(targetValue) {
 		var score = 0;
@@ -49,7 +49,7 @@ FIVEDICE.yahtzeeDice = function () {
 			}
 		}//for
 		return score;
-	};//_upperHalfScore
+	}//_upperHalfScore()
 	
 	function _threeOfAKindScore() {
 		var matches = [];
@@ -71,7 +71,7 @@ FIVEDICE.yahtzeeDice = function () {
 			_dieArray[4].getValue();
 		}
 		return score;
-	};//_threeOfAKindScore
+	}//_threeOfAKindScore()
 	
 	function _fourOfAKindScore() {
 		var matches = [];
@@ -93,7 +93,7 @@ FIVEDICE.yahtzeeDice = function () {
 			_dieArray[4].getValue();
 		}
 		return score;
-	};//_fourOfAKindScore
+	}//_fourOfAKindScore()
 	
 	function _fullHouseScore() {
 		//Sort the values of the dice.
@@ -114,7 +114,7 @@ FIVEDICE.yahtzeeDice = function () {
 			score = 25;
 		}
 		return score;
-	};//_fullHouseScore
+	}//_fullHouseScore()
 	
 	function _smallStraightScore() {
 		var score = 0;
@@ -156,7 +156,7 @@ FIVEDICE.yahtzeeDice = function () {
 			}
 		}//if
 		return score;
-	};//_smallStraightScore
+	}//_smallStraightScore()
 	
 	function _largeStraightScore() {
 		var score = 0;
@@ -177,7 +177,7 @@ FIVEDICE.yahtzeeDice = function () {
 			score = 40;
 		}
 		return score;
-	};//_largeStraightScore
+	}//_largeStraightScore()
 	
 	function _fiveOfAKindScore() {
 		if (
@@ -191,7 +191,7 @@ FIVEDICE.yahtzeeDice = function () {
 		else {
 			return 0;
 		}
-	};//_fiveOfAKindScore
+	}//_fiveOfAKindScore()
 	
 	function _chanceScore() {
 		var score = 0;
@@ -199,7 +199,7 @@ FIVEDICE.yahtzeeDice = function () {
 			score += _dieArray[i].getValue();
 		}
 		return score;
-	};//_chanceScore
+	}//_chanceScore()
 	
 	//Public API:
 	return {

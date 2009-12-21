@@ -2,10 +2,10 @@
 FIVEDICE.sixSidedDie = function () {
 	//Private variables and accessors:
 	var _held = false;
-	function _isHeld() { return _held; };
+	function _isHeld() { return _held; }
 	
 	var _value = 0;
-	function _getValue() { return _value; };
+	function _getValue() { return _value; }
 	
 	var _previousHeld = _held;
 	var _previousValue = _value;
@@ -15,23 +15,23 @@ FIVEDICE.sixSidedDie = function () {
 		_value = Math.floor((Math.random() * 6) + 1);
 		_previousValue = _value;
 		_previousHeld = false;
-	};//_roll
+	}//_roll()
 	
 	function _toggleHeld() {
 		//Only allow the die to be held if it has a non-zero value.
-		_held = (_value == 0 ? false : !_held);
+		_held = (_value === 0 ? false : !_held);
 		_previousHeld = _held;
-	};//_toggleHeld
+	}//_toggleHeld()
 	
 	function _clear() {
 		_held = false;
 		_value = 0;
-	};//_clear
+	}//_clear()
 	
 	function _revert() {
 		_held = _previousHeld;
 		_value = _previousValue;
-	};//_revert
+	}//_revert()
 	
 	//Public API:
 	return {

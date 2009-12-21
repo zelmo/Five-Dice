@@ -26,13 +26,13 @@ function StageAssistant() {
 	
 	//Define a namespace-wide high scores database object.
 	FIVEDICE.highScores = FIVEDICE.highScoreDatabaseWrapper();
-};
+}
 
 StageAssistant.prototype.setup = function () {
 	this.loadPreferences();
 	this.loadPlayers();
 	this.controller.pushScene("playerList");
-};//setup
+};//setup()
 
 StageAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
@@ -44,7 +44,7 @@ StageAssistant.prototype.handleCommand = function (event) {
 		this.controller.activeScene().showAlertDialog(this.aboutDialogModel);
 		break;
 	}
-};//handleCommand
+};//handleCommand()
 
 StageAssistant.prototype.loadPreferences = function () {
 	//Update globals with stored preferences.
@@ -55,7 +55,7 @@ StageAssistant.prototype.loadPreferences = function () {
 		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) { FIVEDICE.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
 		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
 	}
-};//loadPreferences
+};//loadPreferences()
 
 StageAssistant.prototype.loadPlayers = function () {
 	//Read in stored players from a cookie.
@@ -65,4 +65,4 @@ StageAssistant.prototype.loadPlayers = function () {
 			FIVEDICE.storedPlayers.items.push({name: storedPlayerObject.items[i].name, selected: storedPlayerObject.items[i].selected});
 		}
 	}//if
-};//loadPlayers
+};//loadPlayers()

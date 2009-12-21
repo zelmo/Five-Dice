@@ -6,15 +6,15 @@ FIVEDICE.playerStateList = function () {
 	//Private functions.
 	function _count() {
 		return _playerStateList.length;
-	};//_count
+	}//_count()
 	
 	function _addPlayer(playerName) {
 		_playerStateList.push(FIVEDICE.playerState(playerName));
-	};//_addPlayer
+	}//_addPlayer()
 	
 	function _firstPlayer() {
 		return _playerStateList[0];
-	};//_firstPlayer
+	}//_firstPlayer()
 	
 	function _nextPlayer(afterWhom) {
 		//Find the "afterWhom" player in the list.
@@ -25,7 +25,7 @@ FIVEDICE.playerStateList = function () {
 		var nextPlayerIndex = whomIndex + 1;
 		if (nextPlayerIndex == _playerStateList.length) { nextPlayerIndex = 0; }
 		return _playerStateList[nextPlayerIndex];
-	};//_nextPlayer
+	}//_nextPlayer()
 	
 	function _getScores() {
 		var scores = [];
@@ -33,7 +33,7 @@ FIVEDICE.playerStateList = function () {
 			scores.push({name: _playerStateList[i].getName(), score: _playerStateList[i].getTotal()});
 		}
 		return scores;
-	};//_getScores
+	}//_getScores()
 	
 	function _allPlayersAreDone() {
 		var allScoresAreSet = true;
@@ -44,13 +44,13 @@ FIVEDICE.playerStateList = function () {
 			}
 		}//for
 		return allScoresAreSet;
-	};//_allPlayersAreDone
+	}//_allPlayersAreDone()
 	
 	function _resetAllPlayers() {
 		for (var i = 0; i < _playerStateList.length; i++) {
 			_playerStateList[i].clearAllScores();
 		}
-	};//_resetAllPlayers
+	}//_resetAllPlayers()
 	
 	//Public API.
 	return {

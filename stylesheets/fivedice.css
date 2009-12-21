@@ -69,6 +69,18 @@
 	height: 320px;
 }
 
+#highScoreSpinner {
+	position: fixed;
+	top: 176px;
+	left: 96px;
+}
+
+#highScoreSpinner.pixi {
+	position: fixed;
+	top: 136px;
+	left: 96px;
+}
+
 #names {
 	position: absolute;
 	left: 3%;
@@ -84,6 +96,15 @@
 	position: absolute;
 	right: 0;
 	width: 35%;
+}
+
+#numberToKeep {
+	display: inline-block;
+}
+
+#whichToKeep {
+	font-size: larger;
+	color: blue;
 }
 
 /* main */

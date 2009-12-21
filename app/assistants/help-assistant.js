@@ -8,7 +8,7 @@ function HelpAssistant() {
 	  this.helpContents = FIVEDICE.helpContents();
 	  //An object-level page index allows the "previous/next" command menu to work.
 	  this.pageIndex = 0;
-};
+}
 
 HelpAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
@@ -42,18 +42,18 @@ HelpAssistant.prototype.setup = function () {
 	this.updateContents();
 	
 	/* add event handlers to listen to events from widgets */
-};//setup
+};//setup()
 
 HelpAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
-};//activate
+};//activate()
 
 
 HelpAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
-};//deactivate
+};//deactivate()
 
 HelpAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
@@ -74,7 +74,7 @@ HelpAssistant.prototype.handleCommand = function (event) {
 		this.showPreviousPage();
 		break;
 	}//switch
-};//handleCommand
+};//handleCommand()
 
 HelpAssistant.prototype.showNextPage = function () {
 	if (this.pageIndex < (this.helpContents.pages.length - 1)) {
@@ -82,7 +82,7 @@ HelpAssistant.prototype.showNextPage = function () {
 		this.pageIndex++;
 		this.updateContents();
 	}
-};//showNextPage
+};//showNextPage()
 
 HelpAssistant.prototype.showPreviousPage = function () {
 	if (this.pageIndex > 0) {
@@ -90,7 +90,7 @@ HelpAssistant.prototype.showPreviousPage = function () {
 		this.pageIndex--;
 		this.updateContents();
 	}
-};//showPreviousPage
+};//showPreviousPage()
 
 HelpAssistant.prototype.updateContents = function () {
 	//Scroll to the top of the page.
@@ -121,7 +121,7 @@ HelpAssistant.prototype.updateContents = function () {
 		break;
 	}//switch
 	this.controller.modelChanged(this.commandMenuModel);
-};//updateContents
+};//updateContents()
 
 HelpAssistant.prototype.setupListeners = function () {
 	//Set up any listeners needed by the new body text.
@@ -131,7 +131,7 @@ HelpAssistant.prototype.setupListeners = function () {
 		this.controller.listen("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
 		break;
 	} 
-};//setupListeners
+};//setupListeners()
 
 HelpAssistant.prototype.removeListeners = function () {
 	//Remove any listeners from the body text that's about to go away.
@@ -140,7 +140,7 @@ HelpAssistant.prototype.removeListeners = function () {
 		this.controller.stopListening("wikipediaLink", Mojo.Event.tap, this.wikipediaHandler);
 		break;
 	}
-};//removeListeners
+};//removeListeners()
 
 HelpAssistant.prototype.showWikipedia = function () {
 	//Define the parameters for the service request object.
@@ -155,4 +155,4 @@ HelpAssistant.prototype.showWikipedia = function () {
 	};
 	//Call the service request.
 	this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
-};//showWikipedia
+};//showWikipedia()

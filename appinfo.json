@@ -1,6 +1,6 @@
 {
 	"id": "net.sytes.zelmo.fivedice",
-	"version": "0.12.1",
+	"version": "0.12.2",
 	"vendor": "Daren Beattie",
 	"type": "web",
 	"main": "index.html",

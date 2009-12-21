@@ -2,7 +2,7 @@
 FIVEDICE.playerState = function (playerName) {
 	//Private variables and accessors:
 	var _playerName = playerName;
-	function _getName() { return _playerName; };
+	function _getName() { return _playerName; }
 	
 	var _scoreItems = {
 		ones:			{buttonModel: {label: "Ones", disabled: false, buttonClass: "small-button"},		score: 0},
@@ -19,8 +19,8 @@ FIVEDICE.playerState = function (playerName) {
 		fiveOfAKind:	{buttonModel: {label: "5 of a kind", disabled: false, buttonClass: "small-button"},	score: 0},
 		chance:			{buttonModel: {label: "Chance", disabled: false, buttonClass: "small-button"},		score: 0}
 	};
-	function _getButtonModel(item) { return _scoreItems[item].buttonModel; };
-	function _getScore(item) { return _scoreItems[item].score; };
+	function _getButtonModel(item) { return _scoreItems[item].buttonModel; }
+	function _getScore(item) { return _scoreItems[item].score; }
 	
 	var _lastScoreItemSet = "";
 	var _lastScoreItemWasExtraFiveOfAKind = false;
@@ -83,7 +83,7 @@ FIVEDICE.playerState = function (playerName) {
 		}//if
 		if (!_scoreItems.fiveOfAKind.buttonModel.disabled) { _scoreItems.fiveOfAKind.score = dice.fiveOfAKindScore(); }
 		if (!_scoreItems.chance.buttonModel.disabled) { _scoreItems.chance.score = dice.chanceScore(); }
-	};//_setScoreSuggestions
+	}//_setScoreSuggestions()
 	
 	function _setScore(item, dice) {
 		//See if an extra 5 of a kind is merited.
@@ -136,20 +136,20 @@ FIVEDICE.playerState = function (playerName) {
 		//Lock in this item's score by disabling the button.
 		_scoreItems[item].buttonModel.disabled = true;
 		_lastScoreItemSet = item;
-	};//_setScore
+	}//_setScore()
 	
 	function _undoLastScore() {
 		_scoreItems[_lastScoreItemSet].buttonModel.disabled = false;
 		if (_lastScoreItemWasExtraFiveOfAKind) { _scoreItems.fiveOfAKind.score -= 100; }
 		return _lastScoreItemSet;
-	};//_undoLastScore
+	}//_undoLastScore()
 	
 	function _allScoresAreSet() {
 		for (var itemName in _scoreItems) {
 			if (_scoreItems.hasOwnProperty(itemName) && !_scoreItems[itemName].buttonModel.disabled) { return false; }
 		}
 		return true;
-	};//_allScoresAreSet
+	}//_allScoresAreSet()
 	
 	function _clearAllScores() {
 		for (var itemName in _scoreItems) {
@@ -158,7 +158,7 @@ FIVEDICE.playerState = function (playerName) {
 				_scoreItems[itemName].score = 0;
 			}
 		}//for
-	};//_clearAllScores
+	}//_clearAllScores()
 	
 	function _getSubtotal() {
 		var subtotal = 0;
@@ -168,7 +168,7 @@ FIVEDICE.playerState = function (playerName) {
 			if (_scoreItems[itemName].buttonModel.disabled) { subtotal += _scoreItems[itemName].score; }
 		}
 		return subtotal;
-	};//_getSubtotal
+	}//_getSubtotal()
 	
 	function _getBenchmark() {
 		var benchmark = 0;
@@ -179,7 +179,7 @@ FIVEDICE.playerState = function (playerName) {
 		if (_scoreItems.fives.buttonModel.disabled) { benchmark += 15; }
 		if (_scoreItems.sixes.buttonModel.disabled) { benchmark += 18; }
 		return benchmark;
-	};//_getBenchmark
+	}//_getBenchmark()
 	
 	function _getTotal() {
 		var total = 0;
@@ -188,7 +188,7 @@ FIVEDICE.playerState = function (playerName) {
 		}
 		if (_getSubtotal() >= 63) { total += 35; } //Bonus
 		return total;
-	};//_getTotal
+	}//_getTotal()
 	
 	//Public API:
 	return {

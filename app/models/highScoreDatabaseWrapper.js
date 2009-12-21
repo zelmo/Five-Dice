@@ -13,20 +13,20 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 	function _initializeScores() {
 		_depot.get(
 			"scores",
-			function (storedScores) {if (storedScores != null ) { _scores = storedScores; }},
+			function (storedScores) {if (storedScores !== null ) { _scores = storedScores; }},
 			//function () {_depot.removeAll();}, //for clearing out the database
 			function () {Mojo.Log.warn("No scores were found in the depot.");}
 		);
-	};//_initializeScores
+	}//_initializeScores()
 	
 	function _addScore(name, unixTime, score) {
 		//Add the score to the private array and update the depot.
 		_scores.items.push({"playerName": name, "timeStamp": unixTime, "score": score});
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
-	};//_addScore
+	}//_addScore()
 	
 	function _clearOutOldestRecordAndTryInsertAgain() {
-		if (_scores.items.length == 0) {
+		if (_scores.items.length === 0) {
 			Mojo.Log.warn("Failed to add any scores to the depot.");
 			return;
 		}
@@ -39,15 +39,36 @@ FIVEDICE.highScoreDatabaseWrapper = function () {
 		}
 		_scores.items.splice(0, 1);
 		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
-	};//_clearOutOldestRecordAndTryInsertAgain
+	}//_clearOutOldestRecordAndTryInsertAgain()
+	
+	function _chopAllExcept(numberToKeep, whichToKeep) {
+		if (numberToKeep >= _scores.items.length) { return; }
+		switch (whichToKeep) {
+		case "Highest":
+			_scores.items.sort(function (a, b) {return b.score - a.score;});
+			break;
+		case "Lowest":
+			_scores.items.sort(function (a, b) {return a.score - b.score;});
+			break;
+		case "Newest":
+			_scores.items.sort(function (a, b) {return b.timeStamp - a.timeStamp;});
+			break;
+		case "Oldest":
+			_scores.items.sort(function (a, b) {return a.timeStamp - b.timeStamp;});
+			break;
+		}
+		_scores.items.splice(numberToKeep, _scores.items.length - numberToKeep);
+		_depot.add("scores", _scores, function () {_failedAttemptsAtSaving = 0;}, _clearOutOldestRecordAndTryInsertAgain);
+	}//_chopAllExcept()
 	
 	function _getScores() {
 		return _scores.items;
-	};//_getScores
+	}//_getScores
 	
 	//Public API:
 	return {
 		addScore: _addScore,
+		chopAllExcept: _chopAllExcept,
 		getScores: _getScores
 	};
 };

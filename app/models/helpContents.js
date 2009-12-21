@@ -97,6 +97,24 @@ FIVEDICE.helpContents = function() {
 				" When a game finishes, each player's name, score, and a time stamp are saved to the" +
 				" high score list. Selecting the <em>High Scores</em> item from the application menu" +
 				" allows you to see a list of scores for games played on your device, sorted from high to low." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"The game has no limit on how many scores it will store, but keeping too many scores can" +
+				" make the high score screen very slow to load. To alleviate this problem, you have the option" +
+				" of selecting the <em>Delete Scores...</em> item from the High Scores menu. This will present" +
+				" you with a dialog from which you can choose how many scores to keep (up to 100) and which end" +
+				" of the score spectrum to keep: highest, lowest, newest, or oldest." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"<strong>Tip 1:</strong> The number picker for the scores to keep starts with the number" +
+				" of scores you currently have, so if you have a lot of scores, the <em>Delete Scores...</em>" +
+				" dialog is a handy way to see exactly how many scores you have." +
+				"</div>" +
+				"<div class=\"palm-body-text\">" +
+				"<strong>Tip 2:</strong> Keeping your highest scores is a good way to challenge yourself to keep" +
+				" getting higher scores, but keeping your newest scores gives you a more real-life set of scores" +
+				" to try to beat. In statistical terms, a sample of scores based on a span of time should give you" +
+				" a normal distribution, whereas keeping only the highest scores skews the curve heavily to the right." +
 				"</div>"
 		},
 		{

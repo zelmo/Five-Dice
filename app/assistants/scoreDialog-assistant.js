@@ -1,7 +1,7 @@
 function ScoreDialogAssistant(sceneAssistant, mode) {
 	this.sceneAssistant = sceneAssistant;
 	this.mode = mode;
-};
+}
 
 ScoreDialogAssistant.prototype.setup = function (widget) {
 	this.widget = widget;
@@ -58,7 +58,7 @@ ScoreDialogAssistant.prototype.setup = function (widget) {
 			}
 		}//if
 	}//for
-};//setup
+};//setup()
 
 ScoreDialogAssistant.prototype.cleanup = function () {
 	//Stop listening to whichever events were set up in the setup method.
@@ -71,10 +71,10 @@ ScoreDialogAssistant.prototype.cleanup = function () {
 		this.sceneAssistant.controller.stopListening("changePlayersButton", Mojo.Event.tap, this.changePlayersHandler);
 		break;
 	}//switch
-};//cleanup
+};//cleanup()
 
 ScoreDialogAssistant.prototype.playAgain = function () {
 	FIVEDICE.players.resetAllPlayers();
 	Mojo.Controller.stageController.swapScene("main", FIVEDICE.players.firstPlayer());
-	this.widget.mojo.close;
-};//playAgain
+	this.widget.mojo.close();
+};//playAgain()

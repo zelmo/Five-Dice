@@ -3,9 +3,7 @@ function HighScoresAssistant() {
 	   additional parameters (after the scene name) that were passed to pushScene. The reference
 	   to the scene controller (this.controller) has not be established yet, so any initialization
 	   that needs the scene controller should be done in the setup function below. */
-	
-	this.sortCriteria = {column: "score", ascending: false};
-};
+}
 
 HighScoresAssistant.prototype.setup = function () {
 	/* this function is for setup tasks that have to happen when the scene is first created */
@@ -19,6 +17,7 @@ HighScoresAssistant.prototype.setup = function () {
 	//Add the "pixi" CSS class to certain elements if DeviceInfo.touchableRows is less than what's defined for Pre.
 	if (Mojo.Environment.DeviceInfo.touchableRows < 8) {
 		this.controller.get("highScoreScrollerContent").addClassName("pixi");
+		this.controller.get("highScoreSpinner").addClassName("pixi");
 	}
 
 	/* setup widgets here */
@@ -27,6 +26,7 @@ HighScoresAssistant.prototype.setup = function () {
 	var menuModel = {
 		visible: true,
 		items: [
+			{label: "Delete Scores...", command: "do-delete"},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
 			{label: "Help", command: "do-help"}
@@ -34,24 +34,21 @@ HighScoresAssistant.prototype.setup = function () {
 	};
 	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, menuModel);
 	
+	//Spinner
+	this.controller.setupWidget("highScoreSpinner", {spinnerSize: "large"}, {spinning: true});
+	this.spinner = this.controller.get("highScoreSpinner");
+	
 
 	/* add event handlers to listen to events from widgets */
 	
-	//Sorting by name isn't working, so we'll just always sort by score.
-//	this.nameHeaderHandler = function () {this.changeSort("playerName");}.bindAsEventListener(this);
-//	this.controller.listen("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
-//	this.scoreHeaderHandler = function () {this.changeSort("score");}.bindAsEventListener(this);
-//	this.controller.listen("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
-//	this.timeStampHeaderHandler = function () {this.changeSort("timeStamp");}.bindAsEventListener(this);
-//	this.controller.listen("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
-};//setup
+};//setup()
 
 HighScoresAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
 
-	this.showScores(this.sortCriteria);
-};//activate
+	this.showScores();
+};//activate()
 
 
 HighScoresAssistant.prototype.deactivate = function (event) {
@@ -62,14 +59,14 @@ HighScoresAssistant.prototype.deactivate = function (event) {
 HighScoresAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
-//	this.controller.stopListening("nameHeader", Mojo.Event.tap, this.nameHeaderHandler);
-//	this.controller.stopListening("scoreHeader", Mojo.Event.tap, this.scoreHeaderHandler);
-//	this.controller.stopListening("timeStampHeader", Mojo.Event.tap, this.timeStampHeaderHandler);
-};//cleanup
+};//cleanup()
 
 HighScoresAssistant.prototype.handleCommand = function (event) {
 	if (event.type != Mojo.Event.command) { return; }
 	switch (event.command) {
+	case "do-delete":
+		this.controller.showDialog({template: "highScores/delete-dialog", assistant: new DeleteDialogAssistant(this)});
+		break;
 	case "do-preferences":
 		Mojo.Controller.stageController.pushScene("preferences");
 		break;
@@ -79,73 +76,16 @@ HighScoresAssistant.prototype.handleCommand = function (event) {
 	default:
 		break;
 	}
-};//handleCommand
+};//handleCommand()
 
-//HighScoresAssistant.prototype.changeSort = function (column) {
-//	//Either reverse the sort order or change the sort column.
-//	if (column == this.sortCriteria.column) {
-//		this.sortCriteria.ascending = !this.sortCriteria.ascending;
-//	}
-//	else {
-//		this.sortCriteria.column = column;
-//	}
-//	//Show the results.
-//	this.showScores(this.sortCriteria);
-//};//changeSort
-
-HighScoresAssistant.prototype.showScores = function (sortCriteria) {
+HighScoresAssistant.prototype.showScores = function () {
 	//Blank the scores and scroll to the top.
 	this.names.innerHTML = "";
 	this.scores.innerHTML = "";
 	this.timeStamps.innerHTML = "";
 	this.controller.get("highScoreScroller").mojo.revealTop();
 	
-//	var sortFunction = function (a, b) {
-//		switch (sortCriteria.column) {
-//		case "score":
-//			//Use descending date as the secondary sort.
-//			if (a.score == b.score) {
-//				return b.timeStamp - a.timeStamp;
-//			}
-//			else {
-//				if (sortCriteria.ascending) {
-//						return a.score - b.score;
-//				}
-//				else {
-//					return b.score - a.score;
-//				}
-//			}
-//			break;
-//		case "playerName":
-//			//Use descending score as the secondary sort.
-//			if (a.playerName == b.playerName) {
-//				return b.score - a.score;
-//			}
-//			else {
-//				if (sortCriteria.ascending) {
-//					return a.playerName - b.playerName;
-//				}
-//				else {
-//					return b.playerName - a.playerName;
-//				}
-//			}
-//			break;
-//		case "timeStamp":
-//			//Use descending score as the secondary sort.
-//			if (a.timeStamp == b.timeStamp) {
-//				return b.score - a.score;
-//			}
-//			else {
-//				if (sortCriteria.ascending) {
-//					return a.timeStamp - b.timeStamp;
-//				}
-//				else {
-//					return b.timeStamp - a.timeStamp;
-//				}
-//			}
-//			break;
-//		}
-//	};
+	this.spinner.mojo.start();
 	
 	var highScores = FIVEDICE.highScores.getScores().sort(function (a, b) {return b.score - a.score;});
 	for (var i = 0; i < highScores.length; i++) {
@@ -160,4 +100,6 @@ HighScoresAssistant.prototype.showScores = function (sortCriteria) {
 		this.scores.innerHTML += highScores[i].score + "<br />";
 		this.timeStamps.innerHTML += formattedTimeStamp + "<br />";
 	}
-};//showScores
+	
+	this.spinner.mojo.stop();
+};//showScores()
