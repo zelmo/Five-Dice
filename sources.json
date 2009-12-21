@@ -1,0 +1,32 @@
+[
+    {"source": "app/models/FIVEDICE.js"},
+    {"source": "app/models/helpContents.js"},
+    {"source": "app/models/highScoreDatabaseWrapper.js"},
+    {"source": "app/models/sixSidedDie.js"},
+    {"source": "app/models/yahtzeeDice.js"},
+    {"source": "app/models/playerState.js"},
+    {"source": "app/models/playerStateList.js"},
+    {"source": "app/assistants/stage-assistant.js"},
+    {"source": "app/assistants/scoreDialog-assistant.js"},
+    {"source": "app/assistants/deleteDialog-assistant.js"},
+    {
+        "scenes": "main",
+        "source": "app/assistants/main-assistant.js"
+    },
+    {
+        "scenes": "help",
+        "source": "app/assistants/help-assistant.js"
+    },
+    {
+        "scenes": "preferences",
+        "source": "app/assistants/preferences-assistant.js"
+    },
+    {
+        "scenes": "playerList",
+        "source": "app/assistants/playerList-assistant.js"
+    },
+    {
+        "scenes": "highScores",
+        "source": "app/assistants/highScores-assistant.js"
+    }
+]
