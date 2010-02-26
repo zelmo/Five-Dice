@@ -35,8 +35,8 @@ HighScoresAssistant.prototype.setup = function () {
 	this.controller.setupWidget(Mojo.Menu.appMenu, FIVEDICE.MenuAttributes, menuModel);
 	
 	//Spinner
-	this.controller.setupWidget("highScoreSpinner", {spinnerSize: "large"}, {spinning: true});
-	this.spinner = this.controller.get("highScoreSpinner");
+	this.spinnerModel = {spinning: true};
+	this.controller.setupWidget("highScoreSpinner", {spinnerSize: "large"}, this.spinnerModel);
 	
 
 	/* add event handlers to listen to events from widgets */
@@ -85,7 +85,8 @@ HighScoresAssistant.prototype.showScores = function () {
 	this.timeStamps.innerHTML = "";
 	this.controller.get("highScoreScroller").mojo.revealTop();
 	
-	this.spinner.mojo.start();
+	this.spinnerModel.spinning = true;
+	this.controller.modelChanged(this.spinnerModel);
 	
 	var highScores = FIVEDICE.highScores.getScores().sort(function (a, b) {return b.score - a.score;});
 	for (var i = 0; i < highScores.length; i++) {
@@ -101,5 +102,6 @@ HighScoresAssistant.prototype.showScores = function () {
 		this.timeStamps.innerHTML += formattedTimeStamp + "<br />";
 	}
 	
-	this.spinner.mojo.stop();
+	this.spinnerModel.spinning = false;
+	this.controller.modelChanged(this.spinnerModel);
 };//showScores()
