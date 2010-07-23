@@ -1,0 +1,62 @@
+<!-- Page header -->
+<div class="palm-page-header">
+	<div class="palm-page-header-wrapper">
+		<div id="headerIcon" class="icon header-icon"></div>
+		<div id="headerTitle" class="title">
+			Five Dice Preferences
+		</div>
+	</div>
+</div>
+
+<!-- Shake check box -->
+<div id="shakeGroup" class="palm-group unlabeled">
+	<div class="palm-list">
+		<div class="palm-row single">
+			<div class="palm-row-wrapper">
+				<div id="shakeInfo" class="icon right"><img class="listInfoIcon" src="images/Info.png" /></div>
+				<div id="shakeCheckBox" x-mojo-element="CheckBox"></div>
+				<div class="checkBoxLabel single-line">Shake to roll</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Disable roll check box and delay slider -->
+<div id="rollDelayGroup" class="palm-group">
+	<div class="palm-group-title">Disable roll button</div>
+	
+	<div class="palm-row first">
+			<div id="disableRollInfo" class="icon right"><img class="infoIcon" src="images/Info.png" /></div>
+			<div id="disableRollCheckBox" x-mojo-element="CheckBox"></div>
+			<div class="checkBoxLabel multi-line">Disable the Roll button between rolls</div>
+	</div>
+	
+	<div class="palm-row last">
+			<div class="sliderLabel">Disabled duration</div>
+			<div id="rollDelaySlider" x-mojo-element="Slider"></div>
+			<div class="sliderMarkerLeft">1/4 sec</div>
+			<div class="sliderMarkerRight">2 sec</div>
+	</div>
+</div>
+
+<!-- Subtotal deviation check box -->
+<div id="subtotalDeviationGroup" class="palm-group unlabeled">
+	<div class="palm-list">
+		<div class="palm-row single">
+			<div class="palm-row-wrapper">
+				<div id="subtotalDeviationInfo" class="icon right"><img class="listInfoIcon" src="images/Info.png" /></div>
+				<div id="subtotalDeviationCheckBox" x-mojo-element="CheckBox"></div>
+				<div class="checkBoxLabel multi-line">Show deviation in subtotal</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Colors -->
+<div id="colorGroup" class="palm-group">
+	<div class="palm-group-title">Colors</div>
+	<div id="backgroundColorChooser" class="palm-row first">Background...</div>
+	<div id="suggestedScoresColorChooser" class="palm-row">Suggested scores...</div>
+	<div id="actualScoresColorChooser" class="palm-row">Actual scores...</div>
+	<div id="totalsColorChooser" class="palm-row last">Totals...</div>
+</div>

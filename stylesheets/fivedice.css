@@ -1,0 +1,298 @@
+/* playerList */
+#mojo-scene-playerList-scene-scroller {
+	background-color: AliceBlue;
+}
+
+#playerListScene h2 {
+	color: #68E;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: -20px;
+	padding-bottom: 0;
+}
+
+#playerListScene p {
+	padding: 10px;
+	padding-bottom: 0;
+}
+
+#playerListScene h2 img {
+	margin-bottom: -5px;
+}
+
+#playerListGroup, #playerListScrollerContent {
+	height: 210px;
+}
+
+#playerListGroup.pixi, #playerListScrollerContent.pixi {
+	height: 130px;
+}
+
+#playerListWidget .palm-row-wrapper,
+#playerListWidget .palm-swipe-delete {
+	min-height: 0;
+	height: 30px;
+	margin-top: -10px;
+	padding-bottom: 11px;
+}
+
+/* highScores */
+#highScoresHeader {
+	background-color: navy;
+	color: white;
+	height: 50px;
+}
+
+#nameHeader {
+	position: relative;
+	top: 10px;
+	left: 5%;
+}
+
+#scoreHeader {
+	position: relative;
+	top: 10px;
+	left: 24%;
+}
+
+#timeStampHeader {
+	position: relative;
+	top: 10px;
+	left: 35%;
+}
+
+#highScoreScrollerContent {
+	height: 400px;
+}
+
+#highScoreScrollerContent.pixi {
+	height: 320px;
+}
+
+#highScoreSpinner {
+	position: fixed;
+	top: 176px;
+	left: 96px;
+}
+
+#highScoreSpinner.pixi {
+	position: fixed;
+	top: 136px;
+	left: 96px;
+}
+
+#names {
+	position: absolute;
+	left: 3%;
+	width: 42%;
+}
+
+#scores {
+	position: absolute;
+	left: 45%;
+}
+
+#timeStamps {
+	position: absolute;
+	right: 0;
+	width: 35%;
+}
+
+#numberToKeep {
+	display: inline-block;
+}
+
+#whichToKeep {
+	font-size: larger;
+	color: blue;
+}
+
+/* main */
+#mojo-scene-main-scene-scroller {
+	background-color: #3C6;
+}
+
+#playerName {
+	text-align: center;
+	font-size: large;
+	line-height: 1.4em;
+	margin-bottom: -3px;
+	background-color: white;
+}
+
+#upperHalf, #lowerHalf {
+	width: 50%;
+	font-size: large;
+}
+
+#upperHalf {
+	float: left;
+}
+
+#lowerHalf {
+	float: right;
+}
+
+#subtotal {
+	position: relative;
+	margin-top: 13px;
+	margin-bottom: 13px;
+	left: 17px;
+}
+
+#subtotal.pixi {
+	margin-bottom: 7px;
+}
+
+.scoreRow {
+	margin-top: 4px;
+}
+
+.scoreRow.pixi {
+	margin-bottom: -6px;
+}
+
+.scoreButton, .scoreLabel {
+	display: inline-block;
+	width: 80%;
+}
+
+.scoreButton {
+	color: black;
+}
+
+.scoreButton .palm-button-wrapper {
+	font-size: large;
+	text-transform: none;
+}
+
+.scoreLabel, .scoreLabelValue, #subtotal {
+	color: purple;
+}
+
+.scoreValue, .scoreLabelValue {
+	float: right;
+	position: relative;
+	right: 17px;
+}
+
+.scoreLabel {
+	text-align: center;
+}
+
+.scoreValue {
+	top: 8px;
+}
+
+#dice {
+	visibility: visible;
+	float: left;
+	width: 70%;
+	margin-left: 7px;
+}
+
+.dice {
+	position: relative;
+	display: inline-block;
+	top: 15px;
+	height: 38px;
+	width: 38px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.dice>img {
+	height: 100%;
+	width: 100%;
+}
+
+#playAgain {
+	visibility: hidden;
+	float: left;
+	width: 50%;
+	margin-top: -26px;
+}
+
+#nextPlayer {
+	visibility: hidden;
+	float: left;
+	padding: 0;
+	font-size: large;
+	margin-top: -36px;
+}
+
+#roll {
+	float: right;
+	width: 25%;
+	margin-top: -50px;
+}
+
+/* score dialog */
+#names {
+	float: left;
+	width: 50%;
+}
+
+#scores {
+	width: 15%;
+}
+
+#notes {
+	float: right;
+	width: 35%;
+	color: red;
+}
+
+#buttonGroup {
+	margin-top: 3.5em;
+}
+
+/* help & preferences*/
+#headerIcon {
+	background: url(../images/Die5Held.png) no-repeat;
+	margin-top: 10px;
+	margin-left: 15px;
+}
+
+#rollDelayGroup {
+	height: 7em;
+}
+
+.infoIcon {
+	height: 32px;
+	width: 32px;
+}
+
+.listInfoIcon {
+	margin-top: 9px;
+	margin-right: 9px;
+	height: 32px;
+	width: 32px;
+}
+
+.checkBoxLabel.single-line {
+	height: 51px;
+	line-height: 51px;
+}
+
+.checkBoxLabel.multi-line {
+	padding: 5px;
+}
+
+.sliderLabel {
+	padding: 10px;
+}
+
+.sliderMarkerLeft {
+	float: left;
+	padding: 5px;
+}
+
+.sliderMarkerRight {
+	float: right;
+	padding: 5px;
+}
+
+.colorListItem {
+	margin-left: 1em;
+}
