@@ -96,6 +96,11 @@ FIVEDICE.yahtzeeDice = function () {
 	}//_fourOfAKindScore()
 	
 	function _fullHouseScore() {
+		//If the dice haven't been rolled, their values will all be 0,
+		//which can look like a full house going by the logic below.
+		//Just return 0 in that case.
+		if (_dieArray[0].getValue() == 0) {return 0;}
+		
 		//Sort the values of the dice.
 		var values = [
 			_dieArray[0].getValue(),
@@ -180,6 +185,11 @@ FIVEDICE.yahtzeeDice = function () {
 	}//_largeStraightScore()
 	
 	function _fiveOfAKindScore() {
+		//If the dice haven't been rolled, their values will all be 0,
+		//which is technically five of a kind but really isn't worth beans.
+		//Just return 0 in that case.
+		if (_dieArray[0].getValue() == 0) {return 0;}
+		
 		if (
 			_dieArray[0].getValue() == _dieArray[1].getValue() &&
 			_dieArray[1].getValue() == _dieArray[2].getValue() &&

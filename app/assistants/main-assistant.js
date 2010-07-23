@@ -137,8 +137,15 @@ MainAssistant.prototype.activate = function (event) {
 		this.controller.listen(document, "shakeend", this.rollHandler);
 	}
 	
-	//Re-display the scores.
+	//Set attributes that may have changed in the Preferences.
+	this.controller.get("mojo-scene-main-scene-scroller").style.backgroundColor = FIVEDICE.defaultBackgroundColor;
+	this.controller.get("subtotal").style.color = FIVEDICE.totalsColor;
+	this.controller.get("labelBonus").style.color = FIVEDICE.totalsColor;
+	this.controller.get("scoreValueBonus").style.color = FIVEDICE.totalsColor;
+	this.controller.get("labelTotal").style.color = FIVEDICE.totalsColor;
+	this.controller.get("scoreValueTotal").style.color = FIVEDICE.totalsColor;
 	this.showActualScores();
+	this.showPossibleScores();
 };//activate()
 
 

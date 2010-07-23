@@ -52,7 +52,7 @@ FIVEDICE.playerState = function (playerName) {
 			upperHalfItem = _scoreItems.sixes;
 			break;
 		}
-		var upperHalfIsAlreadyScored = (upperHalfItem.buttonModel.disabled);
+		var upperHalfIsAlreadyScored = (upperHalfItem != null && upperHalfItem.buttonModel.disabled);
 		var fiveOfAKindCanCountAsStraight = (fiveOfAKindIsAlreadyScored && upperHalfIsAlreadyScored);
 		
 		//Set scores for items that aren't already set.

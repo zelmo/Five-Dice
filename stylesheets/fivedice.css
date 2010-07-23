@@ -292,3 +292,7 @@
 	float: right;
 	padding: 5px;
 }
+
+.colorListItem {
+	margin-left: 1em;
+}

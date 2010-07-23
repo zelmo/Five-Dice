@@ -22,6 +22,10 @@
         "source": "app/assistants/preferences-assistant.js"
     },
     {
+        "scenes": "colorChooser",
+        "source": "app/assistants/colorChooser-assistant.js"
+    },
+    {
         "scenes": "playerList",
         "source": "app/assistants/playerList-assistant.js"
     },

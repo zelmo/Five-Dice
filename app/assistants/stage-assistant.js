@@ -54,6 +54,10 @@ StageAssistant.prototype.loadPreferences = function () {
 		if (storedPreferences.hasOwnProperty("disableRollButtonBetweenRolls")) { FIVEDICE.disableRollButtonBetweenRolls = storedPreferences.disableRollButtonBetweenRolls; }
 		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) { FIVEDICE.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
 		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
+		if (storedPreferences.hasOwnProperty("defaultBackgroundColor")) { FIVEDICE.defaultBackgroundColor = storedPreferences.defaultBackgroundColor; }
+		if (storedPreferences.hasOwnProperty("suggestedScoreColor")) { FIVEDICE.suggestedScoreColor = storedPreferences.suggestedScoreColor; }
+		if (storedPreferences.hasOwnProperty("setScoreColor")) { FIVEDICE.setScoreColor = storedPreferences.setScoreColor; }
+		if (storedPreferences.hasOwnProperty("totalsColor")) { FIVEDICE.totalsColor = storedPreferences.totalsColor; }
 	}
 };//loadPreferences()
 

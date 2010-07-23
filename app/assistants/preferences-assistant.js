@@ -95,11 +95,25 @@ PreferencesAssistant.prototype.setup = function () {
 	this.controller.listen("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.deviationInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);}.bindAsEventListener(this);
 	this.controller.listen("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
+	this.backgroundColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "defaultBackgroundColor");}
+	this.controller.listen("backgroundColorChooser", Mojo.Event.tap, this.backgroundColorHandler);
+	this.suggestedScoreColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "suggestedScoreColor");}
+	this.controller.listen("suggestedScoresColorChooser", Mojo.Event.tap, this.suggestedScoreColorHandler);
+	this.actualScoreColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "setScoreColor");}
+	this.controller.listen("actualScoresColorChooser", Mojo.Event.tap, this.actualScoreColorHandler);
+	this.totalsColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "totalsColor");}
+	this.controller.listen("totalsColorChooser", Mojo.Event.tap, this.totalsColorHandler);
 };//setup()
 
 PreferencesAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+	   
+	   //Set the background colors of the color choosers to reflect the current colors.
+	   this.controller.get("backgroundColorChooser").style.backgroundColor = FIVEDICE.defaultBackgroundColor;
+	   this.controller.get("suggestedScoresColorChooser").style.backgroundColor = FIVEDICE.suggestedScoreColor;
+	   this.controller.get("actualScoresColorChooser").style.backgroundColor = FIVEDICE.setScoreColor;
+	   this.controller.get("totalsColorChooser").style.backgroundColor = FIVEDICE.totalsColor;
 };//activate()
 
 
@@ -112,7 +126,11 @@ PreferencesAssistant.prototype.deactivate = function (event) {
 		shakeToRoll: FIVEDICE.shakeToRoll,
 		disableRollButtonBetweenRolls: FIVEDICE.disableRollButtonBetweenRolls,
 		rollButtonDisabledTimeout: FIVEDICE.rollButtonDisabledTimeout,
-		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation
+		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation,
+		defaultBackgroundColor: FIVEDICE.defaultBackgroundColor,
+		suggestedScoreColor: FIVEDICE.suggestedScoreColor,
+		setScoreColor: FIVEDICE.setScoreColor,
+		totalsColor: FIVEDICE.totalsColor
 	});
 };//deactivate()
 
@@ -126,6 +144,10 @@ PreferencesAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("shakeInfo", Mojo.Event.tap, this.shakeInfoHandler);
 	this.controller.stopListening("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.controller.stopListening("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
+	this.controller.stopListening("backgroundColorChooser", Mojo.Event.tap, this.backgroundColorHandler);
+	this.controller.stopListening("suggestedScoresColorChooser", Mojo.Event.tap, this.suggestedScoreColorHandler);
+	this.controller.stopListening("actualScoresColorChooser", Mojo.Event.tap, this.actualScoreColorHandler);
+	this.controller.stopListening("totalsColorChooser", Mojo.Event.tap, this.totalsColorHandler);
 };//cleanup()
 
 PreferencesAssistant.prototype.handleCommand = function (event) {
