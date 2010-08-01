@@ -7,8 +7,12 @@ function PreferencesAssistant() {
 	//Define models for the scene elements.
 	this.widgetModels = {
 		shakeCheckBox: {
-		value: FIVEDICE.shakeToRoll,
-		disabled: false
+			value: FIVEDICE.shakeToRoll,
+			disabled: false
+		},
+		freezeDiceCheckBox: {
+			value: FIVEDICE.freezeDiceAfterRoll,
+			disabled: false
 		},
 		disableRollCheckBox: {
 			value: FIVEDICE.disableRollButtonBetweenRolls,
@@ -30,6 +34,13 @@ function PreferencesAssistant() {
 			title: "Shake to roll",
 			message: "If checked, the game will listen for the phone's accelerometer" +
 				" and roll the dice when the phone is shaken.",
+			choices: [{label: "OK", value: "ok"}]
+		},
+		freezeDiceInfo: {
+			onChoose: function (value) {},
+			title: "Freeze dice after rolling",
+			message: "If checked, all dice will be frozen (held) after each roll." +
+				" Tap on the dice you want to re-roll, and they will be unfrozen.",
 			choices: [{label: "OK", value: "ok"}]
 		},
 		disableRollInfo: {
@@ -76,6 +87,7 @@ PreferencesAssistant.prototype.setup = function () {
 		updateInterval: 0
 	};
 	this.controller.setupWidget("shakeCheckBox", {}, this.widgetModels.shakeCheckBox);
+	this.controller.setupWidget("freezeDiceCheckBox", {}, this.widgetModels.freezeDiceCheckBox);
 	this.controller.setupWidget("disableRollCheckBox", {}, this.widgetModels.disableRollCheckBox);
 	this.controller.setupWidget("rollDelaySlider", rollDelaySliderAttributes, this.widgetModels.rollDelaySlider);
 	this.controller.setupWidget("subtotalDeviationCheckBox", {}, this.widgetModels.subtotalDeviationCheckBox);
@@ -83,6 +95,8 @@ PreferencesAssistant.prototype.setup = function () {
 	/* add event handlers to listen to events from widgets */
 	this.shakeCheckBoxHandler = function () {FIVEDICE.shakeToRoll = this.widgetModels.shakeCheckBox.value;}.bindAsEventListener(this);
 	this.controller.listen("shakeCheckBox", Mojo.Event.propertyChange, this.shakeCheckBoxHandler);
+	this.freezeDiceCheckBoxHandler = function () {FIVEDICE.freezeDiceAfterRoll = this.widgetModels.freezeDiceCheckBox.value;}.bindAsEventListener(this);
+	this.controller.listen("freezeDiceCheckBox", Mojo.Event.propertyChange, this.freezeDiceCheckBoxHandler);
 	this.disableRollCheckBoxHandler = function () {FIVEDICE.disableRollButtonBetweenRolls = this.widgetModels.disableRollCheckBox.value;}.bindAsEventListener(this);
 	this.controller.listen("disableRollCheckBox", Mojo.Event.propertyChange, this.disableRollCheckBoxHandler);
 	this.rollDelaySliderHandler = function () {FIVEDICE.rollButtonDisabledTimeout = this.widgetModels.rollDelaySlider.value * 250;}.bindAsEventListener(this);
@@ -91,6 +105,8 @@ PreferencesAssistant.prototype.setup = function () {
 	this.controller.listen("subtotalDeviationCheckBox", Mojo.Event.propertyChange, this.subtotalDeviationCheckBoxHandler);
 	this.shakeInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.shakeInfo);}.bindAsEventListener(this);
 	this.controller.listen("shakeInfo", Mojo.Event.tap, this.shakeInfoHandler);
+	this.freezeDiceInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.freezeDiceInfo);}.bindAsEventListener(this);
+	this.controller.listen("freezeDiceInfo", Mojo.Event.tap, this.freezeDiceInfoHandler);
 	this.disableRollInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.disableRollInfo);}.bindAsEventListener(this);
 	this.controller.listen("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.deviationInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);}.bindAsEventListener(this);
@@ -127,6 +143,7 @@ PreferencesAssistant.prototype.deactivate = function (event) {
 		disableRollButtonBetweenRolls: FIVEDICE.disableRollButtonBetweenRolls,
 		rollButtonDisabledTimeout: FIVEDICE.rollButtonDisabledTimeout,
 		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation,
+		freezeDiceAfterRoll: FIVEDICE.freezeDiceAfterRoll,
 		defaultBackgroundColor: FIVEDICE.defaultBackgroundColor,
 		suggestedScoreColor: FIVEDICE.suggestedScoreColor,
 		setScoreColor: FIVEDICE.setScoreColor,
@@ -138,10 +155,12 @@ PreferencesAssistant.prototype.cleanup = function (event) {
 	/* this function should do any cleanup needed before the scene is destroyed as 
 	   a result of being popped off the scene stack */
 	this.controller.stopListening("shakeCheckBox", Mojo.Event.propertyChange, this.shakeCheckBoxHandler);
+	this.controller.stopListening("freezeDiceCheckBox", Mojo.Event.propertyChange, this.freezeDiceCheckBoxHandler);
 	this.controller.stopListening("disableRollCheckBox", Mojo.Event.propertyChange, this.disableRollCheckBoxHandler);
 	this.controller.stopListening("rollDelaySlider", Mojo.Event.propertyChange, this.rollDelaySliderHandler);
 	this.controller.stopListening("subtotalDeviationCheckBox", Mojo.Event.propertyChange, this.subtotalDeviationCheckBoxHandler);
 	this.controller.stopListening("shakeInfo", Mojo.Event.tap, this.shakeInfoHandler);
+	this.controller.stopListening("freezeDiceInfo", Mojo.Event.tap, this.freezeDiceInfoHandler);
 	this.controller.stopListening("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.controller.stopListening("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
 	this.controller.stopListening("backgroundColorChooser", Mojo.Event.tap, this.backgroundColorHandler);

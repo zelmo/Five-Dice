@@ -2,7 +2,7 @@ function StageAssistant() {
 	//Define the About dialog model.
 	this.aboutDialogModel = {
 		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
-		message: "Copyleft 2009, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
+		message: "Copyleft 2010, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
 		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}],
 		onChoose: function (value) {
 			switch (value) {
@@ -54,6 +54,7 @@ StageAssistant.prototype.loadPreferences = function () {
 		if (storedPreferences.hasOwnProperty("disableRollButtonBetweenRolls")) { FIVEDICE.disableRollButtonBetweenRolls = storedPreferences.disableRollButtonBetweenRolls; }
 		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) { FIVEDICE.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
 		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
+		if (storedPreferences.hasOwnProperty("freezeDiceAfterRoll")) { FIVEDICE.freezeDiceAfterRoll = storedPreferences.freezeDiceAfterRoll; }
 		if (storedPreferences.hasOwnProperty("defaultBackgroundColor")) { FIVEDICE.defaultBackgroundColor = storedPreferences.defaultBackgroundColor; }
 		if (storedPreferences.hasOwnProperty("suggestedScoreColor")) { FIVEDICE.suggestedScoreColor = storedPreferences.suggestedScoreColor; }
 		if (storedPreferences.hasOwnProperty("setScoreColor")) { FIVEDICE.setScoreColor = storedPreferences.setScoreColor; }

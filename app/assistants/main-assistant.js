@@ -237,8 +237,16 @@ MainAssistant.prototype.roll = function () {
 			this.enableRollButton();
 		}
 	}//if
+
+	//Freeze all the dice if that's what the user prefers.
+	if (FIVEDICE.freezeDiceAfterRoll) {
+		for (i = 0; i < this.dice.numberOfDice(); i++) {
+			if (!this.dice.getDie(i).isHeld()) { this.dice.getDie(i).toggleHeld(); }
+		}
+	}
+		
 	//Set the dice images.
-	for (var i = 0; i < this.dice.numberOfDice(); i++) {
+	for (i = 0; i < this.dice.numberOfDice(); i++) {
 		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
 		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
 	}

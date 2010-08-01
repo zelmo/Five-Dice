@@ -11,6 +11,7 @@ var FIVEDICE = {
 	disableRollButtonBetweenRolls: false, 
 	rollButtonDisabledTimeout: 500, //Length of time (ms) the Roll button stays disabled between rolls.
 	showSubtotalDeviation: true,
+	freezeDiceAfterRoll: false,
 	//Cookie and empty array for stored players.
 	storedPlayersCookie: new Mojo.Model.Cookie("FiveDicePlayers"),
 	storedPlayers: {listTitle: "Stored Players", items: []}
