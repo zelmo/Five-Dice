@@ -8,8 +8,7 @@ var FIVEDICE = {
 	//Initial values for Preferences globals (these will be set by the Preferences scene):
 	preferencesCookie: new Mojo.Model.Cookie("FiveDicePreferences"),
 	shakeToRoll: false,
-	disableRollButtonBetweenRolls: false, 
-	rollButtonDisabledTimeout: 500, //Length of time (ms) the Roll button stays disabled between rolls.
+	rollSpeed: 8, //Speed at which rolled dice display their values, on a scale from 0 (1/2 sec) to 10 (instant).
 	showSubtotalDeviation: true,
 	freezeDiceAfterRoll: false,
 	//Cookie and empty array for stored players.

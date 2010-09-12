@@ -283,14 +283,8 @@
 	padding: 10px;
 }
 
-.sliderMarkerLeft {
-	float: left;
-	padding: 5px;
-}
-
-.sliderMarkerRight {
-	float: right;
-	padding: 5px;
+#rollSpeedSlider {
+	padding-bottom: 15px;
 }
 
 .colorListItem {

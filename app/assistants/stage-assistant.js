@@ -51,8 +51,7 @@ StageAssistant.prototype.loadPreferences = function () {
 	var storedPreferences = FIVEDICE.preferencesCookie.get();
 	if (storedPreferences) {
 		if (storedPreferences.hasOwnProperty("shakeToRoll")) { FIVEDICE.shakeToRoll = storedPreferences.shakeToRoll; }
-		if (storedPreferences.hasOwnProperty("disableRollButtonBetweenRolls")) { FIVEDICE.disableRollButtonBetweenRolls = storedPreferences.disableRollButtonBetweenRolls; }
-		if (storedPreferences.hasOwnProperty("rollButtonDisabledTimeout")) { FIVEDICE.rollButtonDisabledTimeout = storedPreferences.rollButtonDisabledTimeout; }
+		if (storedPreferences.hasOwnProperty("rollSpeed")) { FIVEDICE.rollSpeed = storedPreferences.rollSpeed; }
 		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
 		if (storedPreferences.hasOwnProperty("freezeDiceAfterRoll")) { FIVEDICE.freezeDiceAfterRoll = storedPreferences.freezeDiceAfterRoll; }
 		if (storedPreferences.hasOwnProperty("defaultBackgroundColor")) { FIVEDICE.defaultBackgroundColor = storedPreferences.defaultBackgroundColor; }

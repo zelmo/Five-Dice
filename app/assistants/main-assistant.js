@@ -228,32 +228,55 @@ MainAssistant.prototype.roll = function () {
 	this.dice.roll();
 	this.rollModel.disabled = true;
 	this.controller.modelChanged(this.rollModel);
-	//If we still have rolls left, re-enable the button (either by timer or immediately).
-	if (this.dice.getRollCount() <= 3) {
-		if (FIVEDICE.disableRollButtonBetweenRolls) {
-			this.controller.window.setTimeout(this.enableRollButton.bind(this), FIVEDICE.rollButtonDisabledTimeout);
-		}
-		else {
-			this.enableRollButton();
-		}
-	}//if
-
-	//Freeze all the dice if that's what the user prefers.
-	if (FIVEDICE.freezeDiceAfterRoll) {
-		for (i = 0; i < this.dice.numberOfDice(); i++) {
-			if (!this.dice.getDie(i).isHeld()) { this.dice.getDie(i).toggleHeld(); }
-		}
-	}
-		
-	//Set the dice images.
+	
+	//Blank the dice that are being rolled.
 	for (i = 0; i < this.dice.numberOfDice(); i++) {
-		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
+		if (!this.dice.getDie(i).isHeld()) {
+			this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
+		}
 	}
 	
+	//Set a timeout for displaying each rolled die and doing end-of-roll housekeeping.
+	var timeout = 0;
+	for (i = 0; i < this.dice.numberOfDice(); i++) {
+		if (!this.dice.getDie(i).isHeld()) {
+			timeout += (500 - (FIVEDICE.rollSpeed * 50));
+			//We have to pass a literal die number to the callback, because a variable as a parameter
+			//wouldn't get evaluated until the callback runs, at which point it's always 5.
+			switch (i) {
+				case 0:
+					this.controller.window.setTimeout(function () {this.showDie(0)}.bind(this), timeout);
+					break;
+				case 1:
+					this.controller.window.setTimeout(function () {this.showDie(1)}.bind(this), timeout);
+					break;
+				case 2:
+					this.controller.window.setTimeout(function () {this.showDie(2)}.bind(this), timeout);
+					break;
+				case 3:
+					this.controller.window.setTimeout(function () {this.showDie(3)}.bind(this), timeout);
+					break;
+				case 4:
+					this.controller.window.setTimeout(function () {this.showDie(4)}.bind(this), timeout);
+					break;
+			}//switch
+		}//if
+	}//for
+	this.controller.window.setTimeout(function () {this.endRoll()}.bind(this), timeout);
+};//roll()
+
+MainAssistant.prototype.showDie = function (dieNumber) {
+	//Freeze the die if that's what the user prefers.
+	if (FIVEDICE.freezeDiceAfterRoll && !this.dice.getDie(dieNumber).isHeld()) { this.dice.getDie(dieNumber).toggleHeld(); }
+	var imageStyle = (this.dice.getDie(dieNumber).isHeld() ? "Held" : "Plain");
+	this.controller.get("die" + dieNumber).innerHTML = "<img src=\"images/Die" + this.dice.getDie(dieNumber).getValue() + imageStyle + ".png\"></img>";
+};//showDie()
+
+MainAssistant.prototype.endRoll = function () {
+	if (this.dice.getRollCount() <= 3) { this.enableRollButton(); }
 	this.showPossibleScores();
 	this.disableUndo();
-};//roll()
+};//endRoll()
 
 MainAssistant.prototype.enableRollButton = function () {
 	this.rollModel.label = "Roll " + (this.dice.getRollCount());

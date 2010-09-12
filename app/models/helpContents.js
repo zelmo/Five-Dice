@@ -53,7 +53,8 @@ FIVEDICE.helpContents = function() {
 				" indicates which roll number you are on." +
 				"</div>" +
 				"<div class='palm-body-text'>" +
-				"After each roll, you can \"freeze\" any dice you want by tapping on them." +
+				"After each roll, you can \"freeze\" any dice you want by tapping on them" +
+				" (or \"unfreeze\" them if you've opted to have them automatically frozen after each roll)." +
 				" Dice that are frozen will not be rolled when you roll again." +
 				" You can un-freeze dice by tapping on them again." +
 				"</div>" +
@@ -122,12 +123,6 @@ FIVEDICE.helpContents = function() {
 			headerTitle: "Special Features",
 			bodyHtml: "<div class=\"palm-body-text\">" +
 				"<em>Note that most special features can be configured in the game's Preferences.</em>" +
-				"</div>" +
-				"<div class=\"palm-body-text\">" +
-				"<strong>Delay between rolls:</strong> After each roll, the <strong>Roll</strong> button" +
-				" remains disabled for a brief amount of time to help avoid accidentally re-rolling." +
-				" This can be useful when you're riding a bouncy bus and your thumb keeps double-tapping" +
-				" the button, or you have shake enabled during an earthquake." +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
 				"<strong>Subtotal deviation:</strong> 63 may sound like an arbitrary score to have" +
