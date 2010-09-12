@@ -52,17 +52,17 @@ FIVEDICE.yahtzeeDice = function () {
 	}//_upperHalfScore()
 	
 	function _threeOfAKindScore() {
-		var matches = [];
-		for (var startingDie = 0; startingDie < 3 && matches.length < 3; startingDie++) {
-			matches = [_dieArray[startingDie].getValue()];
+		var matches = 0;
+		for (var startingDie = 0; startingDie < 3 && matches < 3; startingDie++) {
+			matches = 1;
 			for (var i = startingDie + 1; i < _dieArray.length; i++) {
 				if (_dieArray[i].getValue() == _dieArray[startingDie].getValue()) {
-					matches.push(_dieArray[i].getValue());
+					matches++;
 				}
 			}//for
 		}//for
 		var score = 0;
-		if (matches.length >= 3) {
+		if (matches >= 3) {
 			score =
 			_dieArray[0].getValue() +
 			_dieArray[1].getValue() +
@@ -74,17 +74,17 @@ FIVEDICE.yahtzeeDice = function () {
 	}//_threeOfAKindScore()
 	
 	function _fourOfAKindScore() {
-		var matches = [];
-		for (var startingDie = 0; startingDie < 4 && matches.length < 4; startingDie++) {
-			matches = [_dieArray[startingDie].getValue()];
+		var matches = 0;
+		for (var startingDie = 0; startingDie < 2 && matches < 4; startingDie++) {
+			matches = 1;
 			for (var i = startingDie + 1; i < _dieArray.length; i++) {
 				if (_dieArray[i].getValue() == _dieArray[startingDie].getValue()) {
-					matches.push(_dieArray[i].getValue());
+					matches++;
 				}
 			}//for
 		}//for
 		var score = 0;
-		if (matches.length >= 4) {
+		if (matches >= 4) {
 			score =
 			_dieArray[0].getValue() +
 			_dieArray[1].getValue() +
@@ -137,26 +137,16 @@ FIVEDICE.yahtzeeDice = function () {
 		}
 		//We can only have a small straight if we have four or more distinct values.
 		if (distinctValues.length == 5) {
-			//See if we got a straight across the middle three values, plus one of the outer values.
-			var centerStraight = (
-				distinctValues[1] == (distinctValues[2] - 1) &&
-				distinctValues[2] == (distinctValues[3] - 1)
-			);
-			var consecutiveEnd = (
-				distinctValues[0] == (distinctValues[1] - 1) ||
-				distinctValues[3] == (distinctValues[4] - 1)
-			);
-			if (centerStraight && consecutiveEnd) {
+			//See if we got a straight across the first four or last four dice.
+			var firstFourStraight = (distinctValues[3] - distinctValues[0] == 3);
+			var lastFourStraight = (distinctValues[4] - distinctValues[1] == 3);
+			if (firstFourStraight || lastFourStraight) {
 				score = 30;
 			}
 		}
 		else if (distinctValues.length == 4) {
 			//See if we got a straight across all four distinct values.
-			if (
-				distinctValues[0] == (distinctValues[1] - 1) &&
-				distinctValues[1] == (distinctValues[2] - 1) &&
-				distinctValues[2] == (distinctValues[3] - 1)
-			) {
+			if (distinctValues[3] - distinctValues[0] == 3) {
 				score = 30;
 			}
 		}//if
@@ -172,14 +162,17 @@ FIVEDICE.yahtzeeDice = function () {
 			_dieArray[2].getValue(),
 			_dieArray[3].getValue(),
 			_dieArray[4].getValue()].sort();
-		//See if we got a straight across all the dice.
-		if (
-			values[0] == (values[1] - 1) &&
-			values[1] == (values[2] - 1) &&
-			values[2] == (values[3] - 1) &&
-			values[3] == (values[4] - 1)
-		) {
-			score = 40;
+		//To eliminate having to work around duplicate values, get an array of distinct values.
+		var distinctValues = [values[0]];
+		for (var i = 1; i < values.length; i++) {
+			if (values[i] != values[i - 1]) { distinctValues.push(values[i]); }
+		}
+		//We can only have a large straight if we have five distinct values.
+		if (distinctValues.length == 5) {
+			//See if we got a straight across all the dice.
+			if (values[4] - values[0] == 4) {
+				score = 40;
+			}
 		}
 		return score;
 	}//_largeStraightScore()
@@ -190,12 +183,16 @@ FIVEDICE.yahtzeeDice = function () {
 		//Just return 0 in that case.
 		if (_dieArray[0].getValue() == 0) {return 0;}
 		
-		if (
-			_dieArray[0].getValue() == _dieArray[1].getValue() &&
-			_dieArray[1].getValue() == _dieArray[2].getValue() &&
-			_dieArray[2].getValue() == _dieArray[3].getValue() &&
-			_dieArray[3].getValue() == _dieArray[4].getValue()
-		) {
+		var score = 0;
+		//Sort the values of the dice.
+		var values = [
+			_dieArray[0].getValue(),
+			_dieArray[1].getValue(),
+			_dieArray[2].getValue(),
+			_dieArray[3].getValue(),
+			_dieArray[4].getValue()].sort();
+		//See if the values are all the same.
+		if (values[0] == values[4]) {
 			return 50;
 		}
 		else {
