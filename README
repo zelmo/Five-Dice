@@ -1,0 +1,3 @@
+To build a Five Dice package, you must have the Palm SDK installed.
+Then run the following command from this directory:
+palm-package src
