@@ -2,7 +2,7 @@ function StageAssistant() {
 	//Define the About dialog model.
 	this.aboutDialogModel = {
 		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
-		message: "Copyleft 2010, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
+		message: "Copyleft 2009-2010, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
 		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}],
 		onChoose: function (value) {
 			switch (value) {
