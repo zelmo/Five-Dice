@@ -134,18 +134,7 @@ PreferencesAssistant.prototype.activate = function (event) {
 PreferencesAssistant.prototype.deactivate = function (event) {
 	/* remove any event handlers you added in activate and do any other cleanup that should happen before
 	   this scene is popped or another scene is pushed on top */
-	  
-	//Save the preferences to the cookie.
-	FIVEDICE.preferencesCookie.put({
-		rollSpeed: FIVEDICE.rollSpeed,
-		shakeToRoll: FIVEDICE.shakeToRoll,
-		freezeDiceAfterRoll: FIVEDICE.freezeDiceAfterRoll,
-		showSubtotalDeviation: FIVEDICE.showSubtotalDeviation,
-		defaultBackgroundColor: FIVEDICE.defaultBackgroundColor,
-		suggestedScoreColor: FIVEDICE.suggestedScoreColor,
-		setScoreColor: FIVEDICE.setScoreColor,
-		totalsColor: FIVEDICE.totalsColor
-	});
+	FIVEDICE.writePreferencesCookie();
 };//deactivate()
 
 PreferencesAssistant.prototype.cleanup = function (event) {

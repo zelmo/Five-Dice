@@ -23,7 +23,7 @@ DeleteDialogAssistant.prototype.setup = function (widget) {
 
 DeleteDialogAssistant.prototype.cleanup = function () {
 	//Remove listeners.
-	this.sceneAssistant.controller.stopListening("deleteOptions", Mojo.Event.tap, this.whichToKeepHandler);
+	this.sceneAssistant.controller.stopListening("whichToKeep", Mojo.Event.tap, this.whichToKeepHandler);
 	this.sceneAssistant.controller.stopListening("okButton", Mojo.Event.tap, this.okButtonHandler);
 	this.sceneAssistant.controller.stopListening("cancelButton", Mojo.Event.tap, this.widget.mojo.close);
 };//cleanup()

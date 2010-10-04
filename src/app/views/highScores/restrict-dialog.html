@@ -1,0 +1,30 @@
+<div id="restrict-dialog-content" class="palm-dialog-content">
+	<div id="title" class="palm-dialog-title">
+		Restriction Options
+	</div>
+	<div class="palm-dialog-separator"></div>
+
+	<div class="palm-list">
+		<div class="palm-row single">
+			<div class="palm-row-wrapper">
+				<div id="restrictScoresCheckBox" x-mojo-element="CheckBox"></div>
+				<div class="checkBoxLabel single-line">Restrict scores</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="restrictScoresDrawer" x-mojo-element="Drawer">
+		<div id="restrictOptions">
+			Number to keep: &nbsp;
+			<div id="numberToKeep" x-mojo-element="IntegerPicker"></div>
+			<br />
+			...of the: &nbsp; &nbsp;
+			<span id="whichToKeep">Newest</span>
+		</div>
+	
+		<div id="buttonGroup" class="palm-dialog-buttons">
+			<div id="okButton" x-mojo-element="Button"></div>
+			<div id="cancelButton" x-mojo-element="Button"></div>
+		</div>
+	</div>
+</div>

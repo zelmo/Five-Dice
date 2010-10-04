@@ -406,7 +406,7 @@ MainAssistant.prototype.releaseDice = function () {
 };//releaseDice()
 
 MainAssistant.prototype.checkForEndOfGame = function () {
-	if (!FIVEDICE.players.allPlayersAreDone()) { return; }
+	if (!FIVEDICE.players.allPlayersAreDone()) { return false; }
 	
 	//Add the scores to the database.
 	var scores = FIVEDICE.players.getScores().sort(function (a, b) {return b.score - a.score;});
@@ -435,10 +435,18 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 		for (i = 0; i < this.dice.numberOfDice(); i++) {
 			this.controller.get("die" + i).style.visibility = "hidden";
 		}
+		//Trim the high score list if the player has opted to do so.
+		if (FIVEDICE.scoreRestrictions.restrictScores) {
+			FIVEDICE.highScores.chopAllExcept(FIVEDICE.scoreRestrictions.numberToKeep, FIVEDICE.scoreRestrictions.whichToKeep);
+		}
 		this.controller.get("playAgain").style.visibility = "visible";
 		return true;
 	}
 	else {
+		//Trim the high score list if the player has opted to do so.
+		if (FIVEDICE.scoreRestrictions.restrictScores) {
+			FIVEDICE.highScores.chopAllExcept(FIVEDICE.scoreRestrictions.numberToKeep, FIVEDICE.scoreRestrictions.whichToKeep);
+		}
 		//Pop up a final score dialog with buttons to play again or change players.
 		this.controller.showDialog({template: "main/score-dialog", assistant: new ScoreDialogAssistant(this, "finalScores")});
 	}//if

@@ -29,7 +29,7 @@ function StageAssistant() {
 }
 
 StageAssistant.prototype.setup = function () {
-	this.loadPreferences();
+	FIVEDICE.readPreferencesCookie();
 	this.loadPlayers();
 	this.controller.pushScene("playerList");
 };//setup()
@@ -45,21 +45,6 @@ StageAssistant.prototype.handleCommand = function (event) {
 		break;
 	}
 };//handleCommand()
-
-StageAssistant.prototype.loadPreferences = function () {
-	//Update globals with stored preferences.
-	var storedPreferences = FIVEDICE.preferencesCookie.get();
-	if (storedPreferences) {
-		if (storedPreferences.hasOwnProperty("shakeToRoll")) { FIVEDICE.shakeToRoll = storedPreferences.shakeToRoll; }
-		if (storedPreferences.hasOwnProperty("rollSpeed")) { FIVEDICE.rollSpeed = storedPreferences.rollSpeed; }
-		if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { FIVEDICE.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
-		if (storedPreferences.hasOwnProperty("freezeDiceAfterRoll")) { FIVEDICE.freezeDiceAfterRoll = storedPreferences.freezeDiceAfterRoll; }
-		if (storedPreferences.hasOwnProperty("defaultBackgroundColor")) { FIVEDICE.defaultBackgroundColor = storedPreferences.defaultBackgroundColor; }
-		if (storedPreferences.hasOwnProperty("suggestedScoreColor")) { FIVEDICE.suggestedScoreColor = storedPreferences.suggestedScoreColor; }
-		if (storedPreferences.hasOwnProperty("setScoreColor")) { FIVEDICE.setScoreColor = storedPreferences.setScoreColor; }
-		if (storedPreferences.hasOwnProperty("totalsColor")) { FIVEDICE.totalsColor = storedPreferences.totalsColor; }
-	}
-};//loadPreferences()
 
 StageAssistant.prototype.loadPlayers = function () {
 	//Read in stored players from a cookie.

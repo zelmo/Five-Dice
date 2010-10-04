@@ -27,6 +27,7 @@ HighScoresAssistant.prototype.setup = function () {
 		visible: true,
 		items: [
 			{label: "Delete Scores...", command: "do-delete"},
+			{label: "Restrict Scores...", command: "do-restrict"},
 			{label: "Preferences", command: "do-preferences"},
 			{label: "About #{appName}".interpolate({appName: Mojo.Controller.appInfo.title}), command: "do-about"},
 			{label: "Help", command: "do-help"}
@@ -66,6 +67,9 @@ HighScoresAssistant.prototype.handleCommand = function (event) {
 	switch (event.command) {
 	case "do-delete":
 		this.controller.showDialog({template: "highScores/delete-dialog", assistant: new DeleteDialogAssistant(this)});
+		break;
+	case "do-restrict":
+		this.controller.showDialog({template: "highScores/restrict-dialog", assistant: new RestrictDialogAssistant(this)});
 		break;
 	case "do-preferences":
 		Mojo.Controller.stageController.pushScene("preferences");
