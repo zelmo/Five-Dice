@@ -3,21 +3,29 @@ function StageAssistant() {
 	this.aboutDialogModel = {
 		title: "#{appName} #{version}".interpolate({appName: Mojo.Controller.appInfo.title, version: Mojo.Controller.appInfo.version}),
 		message: "Copyleft 2009-2010, #{vendor}".interpolate({vendor: Mojo.Controller.appInfo.vendor}),
-		choices: [{label: "OK", value: "ok"}, {label: "View License", value: "license"}],
+		choices: [
+			{label: "OK", value: "ok", type: "primary"},
+			{label: "View License", value: "license", type: "secondary"},
+			{label: "Go to Wiki", value: "wiki", type: "secondary"},
+			{label: "Go to Support Page", value: "support", type: "secondary"}
+		],
 		onChoose: function (value) {
+			var serviceParameters = {id: "com.palm.app.browser"};
+			var serviceObject = {method: "open"};
 			switch (value) {
 				case "license":
-					//Define the parameters for the service request object.
-					var serviceParameters = {
-						id: "com.palm.app.browser",
-						params: {target: "http://www.gnu.org/licenses/gpl-3.0-standalone.html"}
-					};
-					//Define the service request object, using the above parameters.
-					var serviceObject = {
-						method: "open",
-						parameters: serviceParameters
-					};
-					//Call the service request.
+					serviceParameters.params = {target: "http://www.gnu.org/licenses/gpl-3.0-standalone.html"};
+					serviceObject.parameters = serviceParameters;
+					this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
+					break;
+				case "wiki":
+					serviceParameters.params = {target: "http://github.com/zelmo/Five-Dice/wiki/Five-Dice"};
+					serviceObject.parameters = serviceParameters;
+					this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
+					break;
+				case "support":
+					serviceParameters.params = {target: "http://github.com/zelmo/Five-Dice/issues"};
+					serviceObject.parameters = serviceParameters;
 					this.controller.serviceRequest("palm://com.palm.applicationManager", serviceObject);
 					break;
 			}

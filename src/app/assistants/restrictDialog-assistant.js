@@ -16,8 +16,6 @@ RestrictDialogAssistant.prototype.setup = function (widget) {
 	this.sceneAssistant.controller.setupWidget("restrictScoresCheckBox", {}, this.restrictScoresCheckBoxModel);
 	this.sceneAssistant.controller.setupWidget("restrictScoresDrawer", {}, this.restrictScoresDrawerModel);
 	this.sceneAssistant.controller.setupWidget("numberToKeep", numberToKeepAttributes, this.numberToKeep);
-	this.sceneAssistant.controller.setupWidget("okButton", {}, {label: "OK", disabled: false});
-	this.sceneAssistant.controller.setupWidget("cancelButton", {}, {label: "Cancel", disabled: false});
 	
 	//Set up listeners.
 	this.restrictScoresCheckBoxHandler = this.setDrawerModel.bindAsEventListener(this);

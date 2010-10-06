@@ -10,8 +10,6 @@ DeleteDialogAssistant.prototype.setup = function (widget) {
 	//Set up the widgets.
 	var numberToKeepAttributes = {min: 0, max: 100};
 	this.sceneAssistant.controller.setupWidget("numberToKeep", numberToKeepAttributes, this.numberToKeep);
-	this.sceneAssistant.controller.setupWidget("okButton", {}, {label: "OK", disabled: false});
-	this.sceneAssistant.controller.setupWidget("cancelButton", {}, {label: "Cancel", disabled: false});
 	
 	//Set up listeners.
 	this.whichToKeepHandler = this.setWhichToKeep.bindAsEventListener(this);
