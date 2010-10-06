@@ -100,11 +100,15 @@ FIVEDICE.helpContents = function() {
 				" allows you to see a list of scores for games played on your device, sorted from high to low." +
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
-				"The game has no limit on how many scores it will store, but keeping too many scores can" +
-				" make the high score screen very slow to load. To alleviate this problem, you have the option" +
-				" of selecting the <em>Delete Scores...</em> item from the High Scores menu. This will present" +
-				" you with a dialog from which you can choose how many scores to keep (up to 100) and which end" +
-				" of the score spectrum to keep: highest, lowest, newest, or oldest." +
+				"By default, the game has no limit on how many scores it will store, but keeping too many" +
+				" scores can make the high score screen very slow to load. To alleviate this problem, you" +
+				" have two options available from the High Scores menu:<br />" +
+				"<em>Delete Scores...</em>  will present you with a dialog from which you can choose" +
+				" how many of your highest, lowest, newest, or oldest scores to keep.<br />" +
+				"<em>Restrict Scores...</em> will present you with a dialog that initially just has a" +
+				" check box offering to restrict the number of scores the game will save. If you check" +
+				" the box, more options will appear to let you select a limit to number of scores" +
+				" (up to 100) and whether to keep the highest, lowest, newest, or oldest." + 
 				"</div>" +
 				"<div class=\"palm-body-text\">" +
 				"<strong>Tip 1:</strong> The number picker for the scores to keep starts with the number" +

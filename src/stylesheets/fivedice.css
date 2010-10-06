@@ -107,6 +107,13 @@
 	color: blue;
 }
 
+.palm-drawer-container {
+	padding-top: 0.7em;
+	padding-bottom: 1em;
+	-webkit-border-image: none;
+	-webkit-box-sizing: padding-box;
+}
+
 /* main */
 #mojo-scene-main-scene-scroller {
 	background-color: #3C6;

@@ -419,25 +419,35 @@ MainAssistant.prototype.checkForEndOfGame = function () {
 	if (FIVEDICE.players.count() == 1) {
 		//See if the final score is noteworthy.
 		var storedScores = FIVEDICE.highScores.getScores().sort(function (a, b) {return b.score - a.score;});
-		if (storedScores.length > 0 && scores[0].score == storedScores[0].score) {
+		var scoreIsNewHigh = (storedScores.length > 0 && scores[0].score == storedScores[0].score);
+		var scoreIsNewLow = (storedScores.length > 1 && scores[0].score == storedScores[storedScores.length - 1].score);
+		var scoreIsTopTen = (storedScores.length <= 10 || (storedScores.length > 10 && scores[0].score > storedScores[10].score));
+		var scoreIsBottomTen = (storedScores.length > 11 && scores[0].score < storedScores[storedScores.length - 11].score);
+		//Determine whether noteworthy scores are meaningful, given the user's restrictions on which scores are saved.
+		var highScoreIsMeaningful = (!FIVEDICE.scoreRestrictions.restrictScores || FIVEDICE.scoreRestrictions.whichToKeep != "Lowest");
+		var lowScoreIsMeaningful = (!FIVEDICE.scoreRestrictions.restrictScores || FIVEDICE.scoreRestrictions.whichToKeep != "Highest");
+		var topTenScoreIsMeaningful = (!FIVEDICE.scoreRestrictions.restrictScores || (FIVEDICE.scoreRestrictions.numberToKeep > 10 && FIVEDICE.scoreRestrictions.whichToKeep != "Lowest"));
+		var bottomTenScoreIsMeaningful = (!FIVEDICE.scoreRestrictions.restrictScores || (FIVEDICE.scoreRestrictions.numberToKeep > 10 && FIVEDICE.scoreRestrictions.whichToKeep != "Highest"));
+		//Show a message if appropriate.
+		if (scoreIsNewHigh && highScoreIsMeaningful) {
 			this.controller.showAlertDialog({title: "New high score!", message: "Congratulations! " + scores[0].score + " is a new high score.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
 		}
-		else if (storedScores.length <= 10 || (storedScores.length > 10 && scores[0].score > storedScores[10].score)) {
+		else if (scoreIsTopTen && topTenScoreIsMeaningful) {
 			this.controller.showAlertDialog({title: "New top 10 score!", message: "Well done! " + scores[0].score + " is good enough for the top 10 list.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
 		}
-		else if (storedScores.length > 1 && scores[0].score == storedScores[storedScores.length - 1].score) {
+		else if (scoreIsNewLow && lowScoreIsMeaningful) {
 			this.controller.showAlertDialog({title: "New low score!", message: "Ouch! " + scores[0].score + " is a new low score.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
 		}
-		else if (storedScores.length > 11 && scores[0].score < storedScores[storedScores.length - 11].score) {
+		else if (scoreIsBottomTen && bottomTenScoreIsMeaningful) {
 			this.controller.showAlertDialog({title: "New bottom 10 score!", message: "Ooh, tough luck. " + scores[0].score + " falls among the bottom 10 scores.", choices: [{label: "OK", value: "ok"}], onChoose: function (value) {}});
-		}
-		//Don't bother with a score rundown for one person. Just offer the Play Again button.
-		for (i = 0; i < this.dice.numberOfDice(); i++) {
-			this.controller.get("die" + i).style.visibility = "hidden";
 		}
 		//Trim the high score list if the player has opted to do so.
 		if (FIVEDICE.scoreRestrictions.restrictScores) {
 			FIVEDICE.highScores.chopAllExcept(FIVEDICE.scoreRestrictions.numberToKeep, FIVEDICE.scoreRestrictions.whichToKeep);
+		}
+		//Don't bother with a score rundown for one person. Just offer the Play Again button.
+		for (i = 0; i < this.dice.numberOfDice(); i++) {
+			this.controller.get("die" + i).style.visibility = "hidden";
 		}
 		this.controller.get("playAgain").style.visibility = "visible";
 		return true;
