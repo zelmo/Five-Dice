@@ -1,2 +1,6 @@
 # Don't track the packaged app.
 *.ipk
+
+# I'm keeping screen shots in here for now, but don't want them tracked.
+screenshots/
+

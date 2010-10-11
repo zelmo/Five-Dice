@@ -8,7 +8,7 @@ DeleteDialogAssistant.prototype.setup = function (widget) {
 	this.widget = widget;
 	
 	//Set up the widgets.
-	var numberToKeepAttributes = {min: 0, max: 100};
+	var numberToKeepAttributes = {min: 1, max: FIVEDICE.highScores.getScores().length};
 	this.sceneAssistant.controller.setupWidget("numberToKeep", numberToKeepAttributes, this.numberToKeep);
 	
 	//Set up listeners.
