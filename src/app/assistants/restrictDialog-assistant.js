@@ -13,6 +13,7 @@ RestrictDialogAssistant.prototype.setup = function (widget) {
 	
 	//Set up the widgets.
 	var numberToKeepAttributes = {min: 1, max: 100};
+	this.sceneAssistant.controller.get("whichToKeep").innerHTML = FIVEDICE.scoreRestrictions.whichToKeep;
 	this.sceneAssistant.controller.setupWidget("restrictScoresCheckBox", {}, this.restrictScoresCheckBoxModel);
 	this.sceneAssistant.controller.setupWidget("restrictScoresDrawer", {}, this.restrictScoresDrawerModel);
 	this.sceneAssistant.controller.setupWidget("numberToKeep", numberToKeepAttributes, this.numberToKeep);
