@@ -125,9 +125,13 @@ PreferencesAssistant.prototype.activate = function (event) {
 	   
 	   //Set the background colors of the color choosers to reflect the current colors.
 	   this.controller.get("backgroundColorChooser").style.backgroundColor = FIVEDICE.defaultBackgroundColor;
+	   this.controller.get("backgroundColorChooser").style.color = FIVEDICE.getContrastingColor(FIVEDICE.defaultBackgroundColor);
 	   this.controller.get("suggestedScoresColorChooser").style.backgroundColor = FIVEDICE.suggestedScoreColor;
+	   this.controller.get("suggestedScoresColorChooser").style.color = FIVEDICE.getContrastingColor(FIVEDICE.suggestedScoreColor);
 	   this.controller.get("actualScoresColorChooser").style.backgroundColor = FIVEDICE.setScoreColor;
+	   this.controller.get("actualScoresColorChooser").style.color = FIVEDICE.getContrastingColor(FIVEDICE.setScoreColor);
 	   this.controller.get("totalsColorChooser").style.backgroundColor = FIVEDICE.totalsColor;
+	   this.controller.get("totalsColorChooser").style.color = FIVEDICE.getContrastingColor(FIVEDICE.totalsColor);
 };//activate()
 
 
