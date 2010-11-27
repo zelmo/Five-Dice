@@ -109,6 +109,8 @@ PreferencesAssistant.prototype.setup = function () {
 	this.controller.listen("freezeDiceInfo", Mojo.Event.tap, this.freezeDiceInfoHandler);
 	this.deviationInfoHandler = function () {this.controller.showAlertDialog(this.dialogModels.showDeviationInfo);}.bindAsEventListener(this);
 	this.controller.listen("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
+	this.overlayColorHandler = function () {Mojo.Controller.stageController.pushScene("overlayChooser");}
+	this.controller.listen("heldDiceOverlay", Mojo.Event.tap, this.overlayColorHandler);
 	this.backgroundColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "defaultBackgroundColor");}
 	this.controller.listen("backgroundColorChooser", Mojo.Event.tap, this.backgroundColorHandler);
 	this.suggestedScoreColorHandler = function () {Mojo.Controller.stageController.pushScene("colorChooser", "suggestedScoreColor");}
@@ -122,6 +124,20 @@ PreferencesAssistant.prototype.setup = function () {
 PreferencesAssistant.prototype.activate = function (event) {
 	/* put in event handlers here that should only be in effect when this scene is active. For
 	   example, key handlers that are observing the document */
+	   
+	   //Set the held dice images with the selected overlay color.
+	   this.controller.get("dieOverlay1").innerHTML = "<img src=\"images/Die1.png\"></img>";
+	   this.controller.get("dieOverlay1").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+	   this.controller.get("dieOverlay2").innerHTML = "<img src=\"images/Die2.png\"></img>";
+	   this.controller.get("dieOverlay2").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+	   this.controller.get("dieOverlay3").innerHTML = "<img src=\"images/Die3.png\"></img>";
+	   this.controller.get("dieOverlay3").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+	   this.controller.get("dieOverlay4").innerHTML = "<img src=\"images/Die4.png\"></img>";
+	   this.controller.get("dieOverlay4").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+	   this.controller.get("dieOverlay5").innerHTML = "<img src=\"images/Die5.png\"></img>";
+	   this.controller.get("dieOverlay5").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+	   this.controller.get("dieOverlay6").innerHTML = "<img src=\"images/Die6.png\"></img>";
+	   this.controller.get("dieOverlay6").innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
 	   
 	   //Set the background colors of the color choosers to reflect the current colors.
 	   this.controller.get("backgroundColorChooser").style.backgroundColor = FIVEDICE.defaultBackgroundColor;
@@ -152,6 +168,7 @@ PreferencesAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("freezeDiceInfo", Mojo.Event.tap, this.freezeDiceInfoHandler);
 	this.controller.stopListening("disableRollInfo", Mojo.Event.tap, this.disableRollInfoHandler);
 	this.controller.stopListening("subtotalDeviationInfo", Mojo.Event.tap, this.deviationInfoHandler);
+	this.controller.stopListening("heldDiceOverlay", Mojo.Event.tap, this.overlayColorHandler);
 	this.controller.stopListening("backgroundColorChooser", Mojo.Event.tap, this.backgroundColorHandler);
 	this.controller.stopListening("suggestedScoresColorChooser", Mojo.Event.tap, this.suggestedScoreColorHandler);
 	this.controller.stopListening("actualScoresColorChooser", Mojo.Event.tap, this.actualScoreColorHandler);

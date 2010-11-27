@@ -71,7 +71,7 @@ MainAssistant.prototype.setup = function () {
 	
 	//Dice and Roll button
 	for (i = 0; i < this.dice.numberOfDice(); i++) {
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + "Plain.png\"></img>";
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + ".png\"></img>";
 	}
 	this.controller.setupWidget("buttonRoll", {}, this.rollModel);
 
@@ -146,6 +146,7 @@ MainAssistant.prototype.activate = function (event) {
 	this.controller.get("scoreValueTotal").style.color = FIVEDICE.totalsColor;
 	this.showActualScores();
 	this.showPossibleScores();
+	for (var i = 0; i < this.dice.numberOfDice(); i++) { this.showDie(i); }
 };//activate()
 
 
@@ -212,12 +213,19 @@ MainAssistant.prototype.handleCommand = function (event) {
 	}
 };//handleCommand()
 
-MainAssistant.prototype.toggleDie = function (index) {
+MainAssistant.prototype.toggleDie = function (dieNumber) {
+	var dieElement = this.controller.get("die" + dieNumber);
+	var dieImage = "images/Die" + this.dice.getDie(dieNumber).getValue() + ".png";
+	var overlayImage = "images/Overlay" + FIVEDICE.heldColor + ".png";
+
 	//Toggle the held state of the die.
-	this.dice.getDie(index).toggleHeld();
-	//Find the die's div in the scene and change its image to reflect the new state.
-	var imageStyle = (this.dice.getDie(index).isHeld() ? "Held" : "Plain");
-	this.controller.get("die" + index).innerHTML = "<img src=\"images/Die" + this.dice.getDie(index).getValue() + imageStyle + ".png\"></img>";
+	this.dice.getDie(dieNumber).toggleHeld();
+
+	//Find the die's div in the scene and re-apply its image to reflect the new state.
+	this.controller.get("die" + dieNumber).innerHTML = "<img src=\"images/Die" + this.dice.getDie(dieNumber).getValue() + ".png\"></img>";
+	if (this.dice.getDie(dieNumber).isHeld()){
+		dieElement.innerHTML += "<img src=\"" + overlayImage + "\"></img>";
+	}
 };//toggleDie()
 
 //Die roller
@@ -230,9 +238,10 @@ MainAssistant.prototype.roll = function () {
 	this.controller.modelChanged(this.rollModel);
 	
 	//Blank the dice that are being rolled.
+	var i = 0;
 	for (i = 0; i < this.dice.numberOfDice(); i++) {
 		if (!this.dice.getDie(i).isHeld()) {
-			this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
+			this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0.png\"></img>";
 		}
 	}
 	
@@ -266,10 +275,18 @@ MainAssistant.prototype.roll = function () {
 };//roll()
 
 MainAssistant.prototype.showDie = function (dieNumber) {
+	var dieElement = this.controller.get("die" + dieNumber);
+	var dieImage = "images/Die" + this.dice.getDie(dieNumber).getValue() + ".png";
+	var overlayImage = "images/Overlay" + FIVEDICE.heldColor + ".png";
+
 	//Freeze the die if that's what the user prefers.
 	if (FIVEDICE.freezeDiceAfterRoll && !this.dice.getDie(dieNumber).isHeld()) { this.dice.getDie(dieNumber).toggleHeld(); }
-	var imageStyle = (this.dice.getDie(dieNumber).isHeld() ? "Held" : "Plain");
-	this.controller.get("die" + dieNumber).innerHTML = "<img src=\"images/Die" + this.dice.getDie(dieNumber).getValue() + imageStyle + ".png\"></img>";
+	
+	//Show the die and, if held, the overlay.
+	dieElement.innerHTML = "<img src=\"" + dieImage + "\"></img>";
+	if (this.dice.getDie(dieNumber).isHeld()) {
+		dieElement.innerHTML += "<img src=\"" + overlayImage + "\"></img>";
+	}
 };//showDie()
 
 MainAssistant.prototype.endRoll = function () {
@@ -373,8 +390,10 @@ MainAssistant.prototype.undo = function () {
 	this.rollModel.label = "Roll " + (this.dice.getRollCount() > 3 ? 3 : this.dice.getRollCount());
 	this.controller.modelChanged(this.rollModel);
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		imageStyle = (this.dice.getDie(i).isHeld() ? "Held" : "Plain");
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + imageStyle + ".png\"></img>";
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die" + this.dice.getDie(i).getValue() + ".png\"></img>";
+		if (this.dice.getDie(i).isHeld()) {
+			this.controller.get("die" + i).innerHTML += "<img src=\"images/Overlay" + FIVEDICE.heldColor + ".png\"></img>";
+		}
 	}
 	//Make sure the dice are visible.
 	this.controller.get("nextPlayer").style.visibility = "hidden";
@@ -397,7 +416,7 @@ MainAssistant.prototype.releaseDice = function () {
 	//Blank out and un-hold all the dice.
 	this.dice.clear();
 	for (var i = 0; i < this.dice.numberOfDice(); i++) {
-		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0Plain.png\"></img>";
+		this.controller.get("die" + i).innerHTML = "<img src=\"images/Die0.png\"></img>";
 	}
 	//Enable the Roll button.
 	this.rollModel.label = "Roll 1";

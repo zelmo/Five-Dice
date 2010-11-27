@@ -4,6 +4,7 @@ var FIVEDICE = {
 	suggestedScoreColor: "Yellow", //Color of the possible scores displayed after each roll.
 	setScoreColor: "Black", //Color of the scores after they've been set.
 	totalsColor: "Purple", //Color of the subtotal, bonus, and total scores.
+	heldColor: "Blue", //Color overlay for held dice.
 	MenuAttributes: {omitDefaultItems: true},
 	//Initial values for Preferences globals (these will be set by the Preferences scene):
 	preferencesCookie: new Mojo.Model.Cookie("FiveDicePreferences"),
@@ -23,6 +24,7 @@ var FIVEDICE = {
 			if (storedPreferences.hasOwnProperty("rollSpeed")) { this.rollSpeed = storedPreferences.rollSpeed; }
 			if (storedPreferences.hasOwnProperty("showSubtotalDeviation")) { this.showSubtotalDeviation = storedPreferences.showSubtotalDeviation; }
 			if (storedPreferences.hasOwnProperty("freezeDiceAfterRoll")) { this.freezeDiceAfterRoll = storedPreferences.freezeDiceAfterRoll; }
+			if (storedPreferences.hasOwnProperty("heldColor")) { this.heldColor = storedPreferences.heldColor; }
 			if (storedPreferences.hasOwnProperty("defaultBackgroundColor")) { this.defaultBackgroundColor = storedPreferences.defaultBackgroundColor; }
 			if (storedPreferences.hasOwnProperty("suggestedScoreColor")) { this.suggestedScoreColor = storedPreferences.suggestedScoreColor; }
 			if (storedPreferences.hasOwnProperty("setScoreColor")) { this.setScoreColor = storedPreferences.setScoreColor; }
@@ -40,6 +42,7 @@ var FIVEDICE = {
 			shakeToRoll: this.shakeToRoll,
 			freezeDiceAfterRoll: this.freezeDiceAfterRoll,
 			showSubtotalDeviation: this.showSubtotalDeviation,
+			heldColor: this.heldColor,
 			defaultBackgroundColor: this.defaultBackgroundColor,
 			suggestedScoreColor: this.suggestedScoreColor,
 			setScoreColor: this.setScoreColor,

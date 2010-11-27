@@ -27,6 +27,10 @@
         "source": "app/assistants/colorChooser-assistant.js"
     },
     {
+        "scenes": "overlayChooser",
+        "source": "app/assistants/overlayChooser-assistant.js"
+    },
+    {
         "scenes": "playerList",
         "source": "app/assistants/playerList-assistant.js"
     },
