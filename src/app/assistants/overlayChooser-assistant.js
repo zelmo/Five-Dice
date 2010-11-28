@@ -8,7 +8,6 @@ function OverlayChooserAssistant() {
 	this.colors = {items: [
 		{value: "Blue"},
 		{value: "Cyan"},
-		{value: "Gray"},
 		{value: "Green"},
 		{value: "Magenta"},
 		{value: "Orange"},
